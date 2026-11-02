@@ -221,3 +221,6 @@ __marimo__/
 
 # Activities
 activities/
+
+# Local browser mockups
+.superpowers/
