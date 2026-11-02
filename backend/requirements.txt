@@ -1,0 +1,4 @@
+fastapi[standard]
+numpy
+opencv-contrib-python-headless
+scikit-learn
