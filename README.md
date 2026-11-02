@@ -1,8 +1,9 @@
 # Optiq
 
 Interactive computer vision learning and experimentation platform for Labs 1–7.
-Currently includes the React/TypeScript frontend foundation and a FastAPI health endpoint.
-The laboratory modules are not implemented yet.
+Includes a homepage with a full-screen introduction, a selectable seven-lab map,
+and a FastAPI health endpoint. Lab 1 links to a browser-only prototype; the Python
+laboratory modules are not implemented yet.
 
 ## Requirements
 
@@ -38,7 +39,13 @@ npm ci
 npm run dev
 ```
 
-Visit http://127.0.0.1:5173 and click **Check backend connection**.
+Visit http://127.0.0.1:5173 and select **Explore the labs** to view the map.
+Selecting a node displays its learning goal and availability. Lab 1's **Open
+preview** link opens `/previews/lab-1.html`; use **Back to labs** to return.
+This prototype processes images locally in the browser, not through FastAPI.
+
+For the API check, expand **Development connection check** in the footer and
+click **Check backend connection**.
 With the backend running, the status reads **Optiq backend is connected**.
 If it is unavailable, the page displays an error and allows another attempt.
 
@@ -54,3 +61,8 @@ npm run build
 ```
 
 The original activity documents in `activities/` are currently excluded from Git.
+
+The homepage separates its catalogue (`frontend/src/data/labs.ts`), map selection
+(`frontend/src/components/LabMap.tsx`), and backend connection utility
+(`frontend/src/components/BackendStatus.tsx`). Visual conventions are recorded in
+`docs/DESIGN_FOUNDATION.md`.

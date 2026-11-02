@@ -63,4 +63,4 @@ The chosen node treatment is not approval of the entire comparison screen as the
 
 The local browser comparison is stored in `.superpowers/brainstorm/81780-1793602108/content/map-node-comparison.html`. This directory is ignored by Git; the durable decisions are recorded here.
 
-Explore the introduction and seven-lab map together in the next homepage mockup. Validate readability, navigation, responsive behavior, and contrast before implementing the homepage. Product scope remains governed by [PRD.md](PRD.md).
+The homepage is now implemented with a viewport-height introduction followed by a two-column lab browser: a vertical winding seven-lab map on the left and selected-lab information on the right. The information panel stays visible while scrolling on wider screens and stacks below the map on smaller screens. Green and system typography carry forward the approved mockup for this implementation without settling the final brand identity. Continue validating readability, navigation, responsive behavior, and contrast as the application evolves. Product scope remains governed by [PRD.md](PRD.md).

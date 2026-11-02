@@ -1,150 +1,36 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+import LabMap from './components/LabMap'
+import BackendStatus from './components/BackendStatus'
 import './App.css'
 
-function App() {
-  const [status, setStatus] = useState('Check the connection to the Optiq backend.')
-  const [loading, setLoading] = useState(false)
-
-  async function checkBackend() {
-    setLoading(true)
-    setStatus('Connecting…')
-
-    try {
-      const response = await fetch('/api/health', {
-        signal: AbortSignal.timeout(10000),
-      })
-      if (!response.ok) throw new Error('Backend request failed')
-
-      const data: unknown = await response.json()
-      if (
-        typeof data !== 'object' || data === null ||
-        !('status' in data) || data.status !== 'ok' ||
-        !('message' in data) || typeof data.message !== 'string'
-      ) throw new Error('Unexpected backend response')
-
-      setStatus(data.message)
-    } catch {
-      setStatus('Could not connect. Start the FastAPI backend and try again.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+export default function App() {
+  return <>
+    <a className="skip-link" href="#main">Skip to content</a>
+    <header className="site-header">
+      <a className="brand" href="#home" aria-label="Optiq home">optiq<span>.</span></a>
+      <nav aria-label="Main navigation">
+        <a href="#labs">Explore labs</a>
+        <a href="https://github.com/fyodorrrrr/optiq" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      </nav>
+    </header>
+    <main id="main" className="page-content">
+      <section className="intro" id="home" aria-labelledby="intro-title">
+        <div className="intro-content">
+          <h1 id="intro-title">A different way<br />to see.</h1>
+          <div className="intro-copy">
+            <p>Get hands-on with computer vision. Explore an image, change the parameters, and discover why the result changes.</p>
+            <div className="intro-links">
+              <a className="button" href="#labs">Explore the labs <span aria-hidden="true">→</span></a>
+              <a className="quiet-link" href="/previews/lab-1.html">Try Lab 1 preview</a>
+            </div>
+          </div>
         </div>
-        <div>
-          <h1>Optiq</h1>
-          <p>
-            Learn computer vision through experimentation.
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={checkBackend}
-          disabled={loading}
-        >
-          {loading ? 'Connecting…' : 'Check backend connection'}
-        </button>
-        <p role="status" aria-live="polite">{status}</p>
+        <a className="scroll-cue" href="#labs">Your next experiment is below <span aria-hidden="true">↓</span></a>
       </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <LabMap />
+      <footer className="site-footer">
+        <div><p>Optiq — computer vision, through experimentation.</p><BackendStatus /></div>
+        <p>For students and developers.<br />Built one lab at a time.</p>
+      </footer>
+    </main>
+  </>
 }
-
-export default App
