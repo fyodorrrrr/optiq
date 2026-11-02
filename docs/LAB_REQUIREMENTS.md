@@ -4,7 +4,7 @@
 
 Map the seven supplied CSST106 laboratory documents to functional modules in one web application for students and developers. Users should understand techniques, experiment with parameters, compare results, and connect outputs to implementations. Every module is directly accessible without completing learning prompts. Assignment review uses this same experience; no separate instructor role or workflow is planned.
 
-This document records source requirements and proposed web adaptations. It does not claim that any laboratory is implemented. The repository currently provides only the frontend/backend foundation.
+This document records source requirements and proposed web adaptations. Lab 1 is implemented in React and Python/OpenCV; Labs 2–7 remain unimplemented. The final section records implementation evidence.
 
 Printed, handwritten, and PDF report submission requirements are excluded at the developer's request. Their conceptual questions and analysis tasks remain useful learning content. Standalone scripts alone do not satisfy the Web UI requirement.
 
@@ -60,7 +60,7 @@ For completion, verify source requirements, representative outputs, meaningful n
 
 **Completion checks:** all listed operations run; reported dimensions match actual arrays; pixel edits affect the selected location; crop and resize bounds are validated; rotation has the expected dimensions and orientation. Include color and grayscale samples.
 
-**Dependencies/open items:** OpenCV and NumPy; choose sample assets and coordinate conventions before implementation.
+**Implemented choices:** OpenCV/NumPy processing with Pillow header validation. Generated color/grayscale samples require no external assets. Coordinates are zero-based `(x, y)` from the top-left; crop uses left/top/width/height; rotation is clockwise. Every operation starts from the original. See [ARCHITECTURE.md](ARCHITECTURE.md) for limits and data flow.
 
 ## Lab 2 — Sobel and Canny Edge Detection
 
@@ -206,4 +206,11 @@ For completion, verify source requirements, representative outputs, meaningful n
 
 ## Completion Tracking
 
-Every module is currently **not implemented**. During development, track each required item as pending, implemented, verified, or blocked, with its code location and real evidence. Proposed extensions must not obscure incomplete source requirements. Update this document when approved interpretations change, preserving the reason.
+| Module | Status | Evidence |
+| --- | --- | --- |
+| Lab 1 | Implemented and locally verified | `backend/tests/test_lab1.py`: exact pixel values, BGR/RGB order, grayscale shape, single-pixel edits, crop, resize, rotation, upload handling, and validation. Browser checks exercised actual API requests, samples/uploads, zoom, all six tools, navigation, error/retry, stale request cancellation, and responsive layouts. |
+| Labs 2–7 | Not implemented | Their source requirements and open decisions remain above. |
+
+Lab 1 code: `frontend/src/labs/lab1/`, `backend/routers/lab1.py`, `backend/schemas/lab1.py`, and `backend/services/`. Local verification is not evidence of production deployment or measured learning effectiveness. No source-required Lab 1 operation is intentionally deferred. Optional enhancements such as drag-to-crop, progress storage, and scored practice are not completion criteria.
+
+For subsequent modules, track required items as pending, implemented, verified, or blocked with code locations and evidence. Proposed extensions must not obscure incomplete source requirements. Preserve the reasons for approved interpretation changes.

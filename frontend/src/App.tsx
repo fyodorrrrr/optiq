@@ -1,8 +1,11 @@
 import LabMap from './components/LabMap'
 import BackendStatus from './components/BackendStatus'
+import { useEffect } from 'react'
+import { Link, Route, Routes, useLocation } from 'react-router'
+import Lab1 from './labs/lab1/Lab1'
 import './App.css'
 
-export default function App() {
+function Home() {
   return <>
     <a className="skip-link" href="#main">Skip to content</a>
     <header className="site-header">
@@ -20,7 +23,7 @@ export default function App() {
             <p>Get hands-on with computer vision. Explore an image, change the parameters, and discover why the result changes.</p>
             <div className="intro-links">
               <a className="button" href="#labs">Explore the labs <span aria-hidden="true">→</span></a>
-              <a className="quiet-link" href="/previews/lab-1.html">Try Lab 1 preview</a>
+              <a className="quiet-link" href="/labs/1">Open Lab 1</a>
             </div>
           </div>
         </div>
@@ -33,4 +36,22 @@ export default function App() {
       </footer>
     </main>
   </>
+}
+
+export default function App() {
+  const { pathname, hash } = useLocation()
+  useEffect(() => {
+    document.title = pathname === '/labs/1' ? 'Lab 1 · Image fundamentals — Optiq' : 'Optiq — Computer vision through experimentation'
+    const frame = requestAnimationFrame(() => {
+      if (hash) document.getElementById(hash.slice(1))?.scrollIntoView()
+      else window.scrollTo({ top: 0, behavior: 'instant' })
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [pathname, hash])
+
+  return <Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/labs/1" element={<Lab1 />} />
+    <Route path="*" element={<main className="lab-main"><h1>Page not found</h1><p>This page is not available.</p><Link to="/">Return to Optiq</Link></main>} />
+  </Routes>
 }

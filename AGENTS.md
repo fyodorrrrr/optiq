@@ -12,12 +12,12 @@ Read `docs/PRD.md` and `docs/ARCHITECTURE.md` when they exist. This guide govern
 
 ## Project Structure & Module Organization
 
-Optiq is a computer vision learning platform for Labs 1–7. The repository currently contains the application foundation; laboratory modules are not implemented yet.
+Optiq is a computer vision learning platform for Labs 1–7. The homepage and Lab 1 are implemented; Labs 2–7 are planned.
 
-- `frontend/src/`: React and TypeScript source; `App.tsx` includes the backend connection check.
+- `frontend/src/`: React and TypeScript source; `App.tsx` defines routes, `components/` holds shared UI, and `labs/lab1/` implements Lab 1.
 - `frontend/src/assets/`: imported images and SVGs; `frontend/public/`: static public assets.
 - `frontend/vite.config.ts`: React, Tailwind, and development API proxy configuration.
-- `backend/main.py`: FastAPI application and `/api/health` endpoint.
+- `backend/main.py`: FastAPI application and `/api/health`; `routers/`, `schemas/`, and `services/` separate lab HTTP handling, validation, and processing. `backend/tests/` contains unittest API tests.
 - `backend/requirements.txt`: direct dependencies; `requirements-lock.txt`: recorded package versions.
 - `activities/`: original laboratory documents, currently excluded from Git.
 
@@ -88,7 +88,7 @@ Use four-space indentation and snake_case names in Python. Keep computer vision 
 
 ## Testing Guidelines
 
-No automated test suite, test script, or coverage threshold is configured yet. Run lint and build for frontend changes. With both servers running, verify `/api/health` through port 5173 and exercise the connection button, including backend-unavailable behavior. For future tests, use descriptive names such as `test_edge_detection.py` or `EdgeDetection.test.tsx`, and document the runner when introduced.
+Run backend tests from `backend/` with `.venv/bin/python -m unittest discover -s tests -v`. No coverage threshold or permanent frontend test runner is configured. Run lint and build for frontend changes. With both servers running, exercise relevant UI/API flows, including backend-unavailable behavior. Name backend tests `test_*.py`; document any frontend runner when introduced.
 
 Add or update tests for meaningful algorithm behavior, input validation, and regressions. Avoid tests that merely mirror trivial implementation details. Exercise relevant edge cases and failure scenarios; verify expected visual or numerical outputs for computer vision changes when practical. Run applicable checks, report checks that could not run, and never claim verification that was not performed.
 

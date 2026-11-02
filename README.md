@@ -2,8 +2,7 @@
 
 Interactive computer vision learning and experimentation platform for Labs 1–7.
 Includes a homepage with a full-screen introduction, a selectable seven-lab map,
-and a FastAPI health endpoint. Lab 1 links to a browser-only prototype; the Python
-laboratory modules are not implemented yet.
+and a working Python/OpenCV Lab 1 workspace. Labs 2–7 are planned.
 
 ## Requirements
 
@@ -41,8 +40,19 @@ npm run dev
 
 Visit http://127.0.0.1:5173 and select **Explore the labs** to view the map.
 Selecting a node displays its learning goal and availability. Lab 1's **Open
-preview** link opens `/previews/lab-1.html`; use **Back to labs** to return.
-This prototype processes images locally in the browser, not through FastAPI.
+lab** link opens `/labs/1`; use **Back to labs** to return. The previous
+`/previews/lab-1.html` URL redirects to the working module.
+
+Lab 1 uses FastAPI/OpenCV for loading, metadata, pixel inspection/editing,
+grayscale conversion, cropping, resizing, and clockwise 90-degree rotation.
+Choose a color/grayscale sample or upload an 8-bit PNG/JPEG. Every operation
+starts from the original image; the result includes actual array metadata and
+can be downloaded as a PNG. Explanations and Python examples are available in
+the optional **Understand this experiment** section.
+
+Uploads are limited to 5 MiB, 4096 pixels per side, and 4 million pixels total.
+Transparency is composited onto white; EXIF orientation is not applied. Images
+are not retained after processing. Both the frontend and backend must be running.
 
 For the API check, expand **Development connection check** in the footer and
 click **Check backend connection**.
@@ -51,6 +61,8 @@ If it is unavailable, the page displays an error and allows another attempt.
 
 Vite forwards `/api` requests to port 8000 during development. Production hosting
 must also route `/api` to FastAPI; the development proxy is not included in the build.
+Production hosting must serve `frontend/dist` and fall back to `index.html` for
+application routes such as `/labs/1`, while forwarding `/api` to the backend.
 
 ## Checks
 
@@ -60,9 +72,23 @@ npm run lint
 npm run build
 ```
 
+From `backend/` with its environment installed:
+
+```bash
+.venv/bin/python -m unittest discover -s tests -v
+```
+
+The unittest suite checks real image values, shapes, channel order, independent
+operations, grayscale/alpha/JPEG handling, and invalid inputs/resource limits.
+
 The original activity documents in `activities/` are currently excluded from Git.
 
 The homepage separates its catalogue (`frontend/src/data/labs.ts`), map selection
 (`frontend/src/components/LabMap.tsx`), and backend connection utility
 (`frontend/src/components/BackendStatus.tsx`). Visual conventions are recorded in
 `docs/DESIGN_FOUNDATION.md`.
+
+For Lab 1, read `frontend/src/labs/lab1/Lab1.tsx`, `useLab1.ts`, and `api.ts`,
+then `backend/routers/lab1.py`, `backend/schemas/lab1.py`, and
+`backend/services/lab1.py`. Shared image validation/encoding is in
+`backend/services/images.py`.
