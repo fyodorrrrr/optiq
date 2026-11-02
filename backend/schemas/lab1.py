@@ -2,6 +2,8 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
+from schemas.images import Frame
+
 Coordinate = Annotated[int, Field(strict=True, ge=0, le=4095)]
 Dimension = Annotated[int, Field(strict=True, ge=1, le=4096)]
 Byte = Annotated[int, Field(strict=True, ge=0, le=255)]
@@ -46,21 +48,11 @@ class Resize(Settings):
 
 class Rotate(Settings):
     operation: Literal["rotate"]
+    quarter_turns: Annotated[int, Field(strict=True, ge=0, le=3)] = 1
 
 
 Experiment = Annotated[Inspect | Edit | Grayscale | Crop | Resize | Rotate, Field(discriminator="operation")]
 experiment_adapter = TypeAdapter(Experiment)
-
-
-class Frame(BaseModel):
-    image: str
-    width: int
-    height: int
-    channels: int
-    shape: list[int]
-    dtype: str
-    color_space: Literal["BGR", "Grayscale"]
-    notes: list[str]
 
 
 class PixelValue(BaseModel):

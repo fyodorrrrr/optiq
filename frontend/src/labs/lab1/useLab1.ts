@@ -12,29 +12,38 @@ const initialFields: Fields = { x: '0', y: '0', width: '320', height: '240', col
 export default function useLab1() {
   const [source, setSource] = useState<{ file: File; frame: Frame; name: string } | null>(null)
   const [operation, setOperation] = useState<Operation>('inspect')
-  const [fields, setFields] = useState(initialFields)
+  const [settings, setSettings] = useState<Partial<Record<Operation, Fields>>>({})
+  const fields = settings[operation] ?? initialFields
+  const [resultIsPrevious, setResultIsPrevious] = useState(false)
   const [output, setOutput] = useState<ExperimentResult | null>(null)
+  const [rotationTurns, setRotationTurns] = useState(0)
   const [busy, setBusy] = useState(true)
   const [error, setError] = useState('')
   const active = useRef<AbortController | null>(null)
 
-  const begin = useCallback(() => {
+  const begin = useCallback((clearOutput = false) => {
     active.current?.abort()
     const controller = new AbortController()
     active.current = controller
     setBusy(true)
     setError('')
-    setOutput(null)
+    if (clearOutput) {
+      setOutput(null)
+      setResultIsPrevious(false)
+    }
     return controller
   }, [])
 
   const acceptSource = useCallback((frame: Frame, file: File, name: string) => {
     setSource({ frame, file, name })
-    setFields({ ...initialFields, width: String(Math.max(1, Math.floor(frame.width / 2))), height: String(Math.max(1, Math.floor(frame.height / 2))) })
+    const defaults = { ...initialFields, width: String(Math.max(1, Math.floor(frame.width / 2))), height: String(Math.max(1, Math.floor(frame.height / 2))) }
+    setSettings(Object.fromEntries(['inspect', 'edit', 'grayscale', 'crop', 'resize', 'rotate'].map(key => [key, { ...defaults }])))
+    setResultIsPrevious(false)
+    setRotationTurns(0)
   }, [])
 
   const loadSample = useCallback(async (kind: 'color' | 'grayscale') => {
-    const controller = begin()
+    const controller = begin(true)
     try {
       const frame = await getSample(kind, controller.signal)
       if (!controller.signal.aborted) acceptSource(frame, sampleFile(frame), `${kind === 'color' ? 'Color' : 'Grayscale'} study · sample`)
@@ -63,7 +72,7 @@ export default function useLab1() {
       setError('Choose a PNG or JPEG no larger than 5 MiB.')
       return
     }
-    const controller = begin()
+    const controller = begin(true)
     try {
       const frame = await loadImage(file, controller.signal)
       if (!controller.signal.aborted) acceptSource(frame, file, file.name)
@@ -79,16 +88,27 @@ export default function useLab1() {
     setBusy(false)
     setOutput(null)
     setError('')
+    setResultIsPrevious(false)
+    setRotationTurns(0)
+  }
+
+  function invalidateResult() {
+    active.current?.abort()
+    setBusy(false)
+    setError('')
+    setResultIsPrevious(true)
   }
 
   function select(next: Operation) {
-    reset()
+    if (next === operation) return
+    invalidateResult()
     setOperation(next)
   }
 
   function change(key: keyof Fields, value: string | boolean) {
-    reset()
-    setFields(previous => {
+    invalidateResult()
+    setSettings(all => {
+      const previous = all[operation] ?? initialFields
       const next = { ...previous, [key]: value }
       if (source && operation === 'resize' && previous.keepRatio && (key === 'width' || key === 'height') && value !== '') {
         const ratio = source.frame.width / source.frame.height
@@ -98,17 +118,17 @@ export default function useLab1() {
       if (source && key === 'keepRatio' && value === true) {
         next.height = String(Math.max(1, Math.round(Number(previous.width) * source.frame.height / source.frame.width)))
       }
-      return next
+      return { ...all, [operation]: next }
     })
   }
 
   function pick(x: number, y: number) {
-    reset()
-    setFields(previous => ({ ...previous, x: String(x), y: String(y) }))
+    invalidateResult()
+    setSettings(all => ({ ...all, [operation]: { ...(all[operation] ?? initialFields), x: String(x), y: String(y) } }))
   }
 
   async function run() {
-    if (!source) return
+    if (!source || busy) return
     const controller = begin()
     try {
       const settings: Record<string, unknown> = { operation }
@@ -119,12 +139,17 @@ export default function useLab1() {
       if (operation === 'inspect' || operation === 'edit' || operation === 'crop') Object.assign(settings, { x: number('x'), y: number('y') })
       if (operation === 'crop' || operation === 'resize') Object.assign(settings, { width: number('width'), height: number('height') })
       if (operation === 'resize') settings.interpolation = fields.interpolation
+      if (operation === 'rotate') settings.quarter_turns = (rotationTurns + 1) % 4
       if (operation === 'edit') {
         if (source.frame.channels === 1) settings.intensity = number('intensity')
         else settings.color = [1, 3, 5].map(offset => parseInt(fields.color.slice(offset, offset + 2), 16))
       }
       const response = await runExperiment(source.file, settings, controller.signal)
-      if (!controller.signal.aborted) setOutput(response)
+      if (!controller.signal.aborted) {
+        setOutput(response)
+        setResultIsPrevious(false)
+        if (operation === 'rotate') setRotationTurns(Number(response.parameters.quarter_turns))
+      }
     } catch (error) {
       if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Processing failed. Try again.')
     } finally {
@@ -132,5 +157,5 @@ export default function useLab1() {
     }
   }
 
-  return { source, operation, fields, output, busy, error, loadSample, upload, select, change, pick, run, reset }
+  return { source, operation, fields, output, rotationTurns, resultIsPrevious, busy, error, loadSample, upload, select, change, pick, run, reset }
 }

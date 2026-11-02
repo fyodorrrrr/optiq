@@ -39,7 +39,9 @@ def execute(content, settings):
         methods = {"nearest": cv2.INTER_NEAREST, "linear": cv2.INTER_LINEAR, "area": cv2.INTER_AREA}
         result = cv2.resize(image, (settings.width, settings.height), interpolation=methods[settings.interpolation])
     elif operation == "rotate":
-        result = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+        rotations = {1: cv2.ROTATE_90_CLOCKWISE, 2: cv2.ROTATE_180, 3: cv2.ROTATE_90_COUNTERCLOCKWISE}
+        if settings.quarter_turns:
+            result = cv2.rotate(image, rotations[settings.quarter_turns])
     elif operation in {"inspect", "edit"}:
         if operation == "edit":
             if image.ndim == 2:

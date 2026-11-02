@@ -41,7 +41,7 @@ async function request<T>(path: string, signal: AbortSignal, body?: FormData): P
     })
   } catch (error) {
     if (signal.aborted) throw error
-    throw new Error('Could not reach the image service. Check that FastAPI is running, then try again.', { cause: error })
+    throw new Error('The image service is unavailable. Please try again in a moment.', { cause: error })
   }
   if (!response.ok) {
     const data = await response.json().catch(() => null)

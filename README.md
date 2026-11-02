@@ -2,7 +2,7 @@
 
 Interactive computer vision learning and experimentation platform for Labs 1–7.
 Includes a homepage with a full-screen introduction, a selectable seven-lab map,
-and a working Python/OpenCV Lab 1 workspace. Labs 2–7 are planned.
+and working Python/OpenCV workspaces for Labs 1–2. Labs 3–7 are planned.
 
 ## Requirements
 
@@ -50,9 +50,22 @@ starts from the original image; the result includes actual array metadata and
 can be downloaded as a PNG. Explanations and Python examples are available in
 the optional **Understand this experiment** section.
 
+Rotation advances one clockwise quarter-turn per successful click:
+90° → 180° → 270° → 0°. The current angle is shown, and the accumulated angle
+is applied to the original pixels. Clearing the result or loading a new image
+resets it. Other operations remain independent experiments.
+
 Uploads are limited to 5 MiB, 4096 pixels per side, and 4 million pixels total.
 Transparency is composited onto white; EXIF orientation is not applied. Images
 are not retained after processing. Both the frontend and backend must be running.
+
+Lab 2 at `/labs/2` compares a grayscale original, combined Sobel magnitude, and
+Canny edges. Start with Gaussian 3×3, Sobel size 3, and Canny thresholds 100/200,
+then adjust settings and run both detectors again. Intermediate blur/gradient
+views and explanations are optional. Sobel previews are display-scaled to 0–255;
+raw ranges and exact settings are included with each run. Download either edge
+map as PNG. The shapes and seeded noisy samples are generated replacements for
+the activity's missing `input.jpg`.
 
 For the API check, expand **Development connection check** in the footer and
 click **Check backend connection**.
@@ -80,6 +93,9 @@ From `backend/` with its environment installed:
 
 The unittest suite checks real image values, shapes, channel order, independent
 operations, grayscale/alpha/JPEG handling, and invalid inputs/resource limits.
+Lab 2 tests additionally cover exact baseline preprocessing/Canny output,
+directional derivatives, scaled magnitude, uniform images, seeded noise,
+parameter effects, and invalid kernels/thresholds.
 
 The original activity documents in `activities/` are currently excluded from Git.
 
@@ -92,3 +108,15 @@ For Lab 1, read `frontend/src/labs/lab1/Lab1.tsx`, `useLab1.ts`, and `api.ts`,
 then `backend/routers/lab1.py`, `backend/schemas/lab1.py`, and
 `backend/services/lab1.py`. Shared image validation/encoding is in
 `backend/services/images.py`.
+
+Both labs use the common UI in `frontend/src/components/lab/`. Edit `LabPage.tsx`
+for the shell/navigation, `ToolSidebar.tsx` for tools, `SourceActions.tsx` and
+`SamplePicker.tsx` for inputs, `ImagePanel.tsx` for viewers, `Fields.tsx` for
+controls, and `LabUI.css` for their appearance. These changes apply to both labs.
+Lab 1's viewer/sample-picker files are compatibility adapters to this shared layer.
+
+Lab-specific content, settings, result handling, and hooks stay under
+`frontend/src/labs/lab1/` and `lab2/`; specialized pixel-zoom and edge-result
+styles remain local. Backend algorithms also remain per lab. Common transport
+lives in `frontend/src/api/images.ts`; common backend upload helpers and image
+contracts live in `routers/image_io.py` and `schemas/images.py`.

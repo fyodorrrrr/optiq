@@ -3,6 +3,7 @@ import BackendStatus from './components/BackendStatus'
 import { useEffect } from 'react'
 import { Link, Route, Routes, useLocation } from 'react-router'
 import Lab1 from './labs/lab1/Lab1'
+import Lab2 from './labs/lab2/Lab2'
 import './App.css'
 
 function Home() {
@@ -41,7 +42,8 @@ function Home() {
 export default function App() {
   const { pathname, hash } = useLocation()
   useEffect(() => {
-    document.title = pathname === '/labs/1' ? 'Lab 1 · Image fundamentals — Optiq' : 'Optiq — Computer vision through experimentation'
+    document.title = pathname === '/labs/1' ? 'Lab 1 · Image fundamentals — Optiq'
+      : pathname === '/labs/2' ? 'Lab 2 · Edge detection — Optiq' : 'Optiq — Computer vision through experimentation'
     const frame = requestAnimationFrame(() => {
       if (hash) document.getElementById(hash.slice(1))?.scrollIntoView()
       else window.scrollTo({ top: 0, behavior: 'instant' })
@@ -52,6 +54,7 @@ export default function App() {
   return <Routes>
     <Route path="/" element={<Home />} />
     <Route path="/labs/1" element={<Lab1 />} />
+    <Route path="/labs/2" element={<Lab2 />} />
     <Route path="*" element={<main className="lab-main"><h1>Page not found</h1><p>This page is not available.</p><Link to="/">Return to Optiq</Link></main>} />
   </Routes>
 }

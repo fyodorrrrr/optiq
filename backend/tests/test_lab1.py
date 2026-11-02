@@ -86,6 +86,26 @@ class Lab1Tests(unittest.TestCase):
         self.assertEqual(self.decoded(edited).getpixel((0, 0)), 200)
         self.assertEqual(self.run_op("edit", gray, x=0, y=0, color=[1, 2, 3]).status_code, 422)
 
+    def test_rotation_supports_full_clockwise_cycle(self):
+        # Top-left pixels distinguish clockwise rotations even when dimensions match.
+        expected = [(1, [3, 2, 3], (255, 255, 255)),
+                    (2, [2, 3, 3], (10, 20, 30)),
+                    (3, [3, 2, 3], (0, 0, 255)),
+                    (0, [2, 3, 3], (255, 0, 0))]
+        for turns, shape, top_left in expected:
+            with self.subTest(quarter_turns=turns):
+                response = self.run_op("rotate", quarter_turns=turns)
+                self.assertEqual(response.status_code, 200, response.text)
+                data = response.json()
+                self.assertEqual(data["parameters"]["quarter_turns"], turns)
+                self.assertEqual(data["result"]["shape"], shape)
+                self.assertEqual(self.decoded(data["result"]).getpixel((0, 0)), top_left)
+                if turns == 0:
+                    self.assertEqual(self.decoded(data["result"]).tobytes(),
+                                     Image.open(io.BytesIO(self.image)).tobytes())
+        for invalid in [-1, 4, 1.5, True]:
+            self.assertEqual(self.run_op("rotate", quarter_turns=invalid).status_code, 422)
+
     def test_alpha_is_composited_on_white(self):
         rgba = png("RGBA", (1, 1), [(255, 0, 0, 0)])
         frame = self.upload(rgba).json()

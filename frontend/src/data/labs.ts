@@ -1,6 +1,6 @@
 export const labs = [
   { id: 1, title: 'Image fundamentals', description: 'Inspect pixels and color channels. Try grayscale, cropping, resizing, and rotation, then compare what changed.', icon: 'M3 3h7v7H3ZM14 3h7v7h-7ZM3 14h7v7H3ZM14 14h7v7h-7Z', href: '/labs/1' },
-  { id: 2, title: 'Edge detection', description: 'Explore how Sobel and Canny reveal image boundaries. Compare edge maps and investigate the effect of thresholds.', icon: 'M3 20V4h7v6h5V4h6v16h-6v-6h-5v6Z' },
+  { id: 2, title: 'Edge detection', description: 'Explore how Sobel and Canny reveal image boundaries. Compare edge maps and investigate the effect of thresholds.', icon: 'M3 20V4h7v6h5V4h6v16h-6v-6h-5v6Z', href: '/labs/2' },
   { id: 3, title: 'Histograms & contrast', description: 'Investigate global equalization, CLAHE, and linear adjustment. Connect changes in image detail with intensity histograms.', icon: 'M3 21h19M5 17v-5M10 17V5M15 17V8M20 17V3' },
   { id: 4, title: 'Features & matching', description: 'Find keypoints, compare descriptors, and investigate matching across SURF, SIFT, and ORB.', icon: 'M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm12 1a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm-7 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 6l8 1M7 8l3 8m7-7-5 7' },
   { id: 5, title: 'PCA & eigenfaces', description: 'Explore dimensionality reduction, eigenfaces, and explained variance. Evaluate recognition and inspect its failures.', icon: 'M3 5h7v14H3ZM14 7h7M14 12h5M14 17h3' },

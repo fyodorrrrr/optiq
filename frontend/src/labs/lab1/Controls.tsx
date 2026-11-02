@@ -1,3 +1,4 @@
+import { NumberField, SelectField } from '../../components/lab/Fields'
 import type { Frame, Operation } from './api'
 import type { Fields } from './useLab1'
 
@@ -6,8 +7,8 @@ export default function Controls({ operation, fields, frame, change }: {
   change: (key: keyof Fields, value: string | boolean) => void
 }) {
   function numeric(key: 'x' | 'y' | 'width' | 'height' | 'intensity', label: string, min: number, max: number) {
-    return <label className="lab-field" key={key}>{label}<input type="number" min={min} max={max} step="1" required
-      value={fields[key]} onChange={event => change(key, event.target.value)} /></label>
+    return <NumberField key={key} label={label} min={min} max={max} step="1" required
+      value={fields[key]} onChange={value => change(key, value)} />
   }
 
   return <>
@@ -15,15 +16,17 @@ export default function Controls({ operation, fields, frame, change }: {
       {numeric('x', operation === 'crop' ? 'Left (x)' : 'X coordinate', 0, frame.width - 1)}
       {numeric('y', operation === 'crop' ? 'Top (y)' : 'Y coordinate', 0, frame.height - 1)}
     </div>}
+    {(operation === 'inspect' || operation === 'edit' || operation === 'crop') && <p className="lab-hint">Coordinates start at (0, 0) in the top-left. X moves right; Y moves down.</p>}
     {(operation === 'crop' || operation === 'resize') && <div className="lab-field-row">
       {numeric('width', 'Width (px)', 1, operation === 'crop' ? frame.width - Number(fields.x) : 4096)}
       {numeric('height', 'Height (px)', 1, operation === 'crop' ? frame.height - Number(fields.y) : 4096)}
     </div>}
+    {operation === 'crop' && <p className="lab-hint">The rectangle on the original previews your crop. It must fit inside the image.</p>}
     {operation === 'resize' && <>
-      <label className="lab-check"><input type="checkbox" checked={fields.keepRatio} onChange={event => change('keepRatio', event.target.checked)} />Keep aspect ratio</label>
-      <label className="lab-field">Interpolation<select value={fields.interpolation} onChange={event => change('interpolation', event.target.value)}>
-        <option value="linear">Linear · blend neighbors</option><option value="nearest">Nearest · keep hard edges</option><option value="area">Area · useful for shrinking</option>
-      </select></label>
+      <label className="lab-check"><input type="checkbox" checked={fields.keepRatio} onChange={event => change('keepRatio', event.target.checked)} />Keep aspect ratio (avoid stretching)</label>
+      <SelectField label="Interpolation" value={fields.interpolation} onChange={value => change('interpolation', value)} options={[
+        { value: 'linear', label: 'Linear · blend neighbors' }, { value: 'nearest', label: 'Nearest · keep hard edges' }, { value: 'area', label: 'Area · useful for shrinking' },
+      ]} />
     </>}
     {operation === 'edit' && (frame.channels === 1
       ? numeric('intensity', 'New intensity', 0, 255)

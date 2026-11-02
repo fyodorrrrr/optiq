@@ -12,9 +12,9 @@ Read `docs/PRD.md` and `docs/ARCHITECTURE.md` when they exist. This guide govern
 
 ## Project Structure & Module Organization
 
-Optiq is a computer vision learning platform for Labs 1–7. The homepage and Lab 1 are implemented; Labs 2–7 are planned.
+Optiq is a computer vision learning platform for Labs 1–7. The homepage and Labs 1–2 are implemented; Labs 3–7 are planned.
 
-- `frontend/src/`: React and TypeScript source; `App.tsx` defines routes, `components/` holds shared UI, and `labs/lab1/` implements Lab 1.
+- `frontend/src/`: React and TypeScript source; `App.tsx` defines routes. `components/lab/` holds shared lab UI; `labs/lab1/` and `labs/lab2/` own experiment state, settings, and content. `api/images.ts` holds common image transport for Lab 2/future modules.
 - `frontend/src/assets/`: imported images and SVGs; `frontend/public/`: static public assets.
 - `frontend/vite.config.ts`: React, Tailwind, and development API proxy configuration.
 - `backend/main.py`: FastAPI application and `/api/health`; `routers/`, `schemas/`, and `services/` separate lab HTTP handling, validation, and processing. `backend/tests/` contains unittest API tests.
@@ -28,6 +28,7 @@ As labs are added, organize endpoints under `backend/routers/`, algorithms under
 - Prioritize readable, maintainable, testable code and straightforward solutions.
 - Inspect existing execution paths and applicable documentation before changing behavior.
 - Follow established conventions, reuse suitable components and utilities, and separate responsibilities.
+- Edit common lab UI in `frontend/src/components/lab/` and `LabUI.css` so changes propagate across labs. Keep algorithms and experiment state separate; avoid copying shared components or styles into individual lab folders.
 - Avoid unrelated refactoring, speculative abstractions, and dependencies without a clear benefit.
 - Explain significant architectural decisions and tradeoffs before implementation.
 - Obtain approval before changing the agreed stack, deployment architecture, data persistence strategy, or execution model substantially. Routine implementation choices should proceed without unnecessary confirmation.

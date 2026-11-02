@@ -42,7 +42,7 @@ export default function LabMap() {
           : <p className="planned-action">Module not implemented yet.</p>}</div>
       </div>
       </div>
-      <p className="preview-note">Lab 1 is available. Labs 2–7 are planned; all implemented labs are freely accessible.</p>
+      <p className="preview-note">Labs 1–2 are available. Labs 3–7 are planned; all implemented labs are freely accessible.</p>
     </section>
   )
 }

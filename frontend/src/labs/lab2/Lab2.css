@@ -1,0 +1,7 @@
+/* Only edge-specific result presentation. Common UI: components/lab/LabUI.css. */
+.edge-scaling { margin-top: 12px; font-size: 12px; line-height: 1.7; color: var(--ink-soft); }
+.edge-downloads { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; margin-top: 18px; }
+.edge-intermediates, .edge-run { font-size: 13px; margin-top: 20px; }
+.edge-intermediates > summary, .edge-run > summary { cursor: pointer; color: var(--accent); }
+.edge-intermediates .lab-image-grid { margin-top: 20px; }
+.edge-run pre { font-size: 12px; line-height: 1.7; padding: 16px; background: var(--paper); border-radius: var(--radius-control); overflow: auto; max-width: 100%; margin-top: 16px; }

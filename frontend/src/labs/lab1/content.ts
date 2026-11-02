@@ -40,10 +40,10 @@ export const experiments: Record<Operation, {
     code: 'result = cv2.resize(image, (width, height),\n                    interpolation=cv2.INTER_LINEAR)\n# Also available: INTER_NEAREST, INTER_AREA',
   },
   rotate: {
-    title: 'Rotate', action: 'Rotate 90° clockwise', description: 'Turn the original image one quarter-turn clockwise.',
+    title: 'Rotate', action: 'Rotate 90° clockwise', description: 'Add a clockwise quarter-turn with each click.',
     prediction: 'What will happen to width and height after a quarter-turn?', heading: 'The same pixels in a new arrangement.',
-    explanation: 'A 90-degree rotation rearranges the pixel grid and swaps width and height without resizing. A 640 × 480 image becomes 480 × 640. Repeating this experiment gives the same result because each run starts from the original.',
+    explanation: 'Each successful click advances 90° → 180° → 270° → 0° (the original orientation). A quarter-turn swaps width and height without resizing. The accumulated angle is applied directly to the original pixels. Clearing the result or loading a new image resets the angle; failed or cancelled runs do not apply a turn.',
     reflection: 'Try a non-square image and inspect its new shape. Why would a square image hide the dimension swap?',
-    code: 'result = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)',
+    code: '# Apply the accumulated clockwise angle to the original.\nrotations = {1: cv2.ROTATE_90_CLOCKWISE,\n             2: cv2.ROTATE_180,\n             3: cv2.ROTATE_90_COUNTERCLOCKWISE}\nresult = (cv2.rotate(image, rotations[quarter_turns])\n          if quarter_turns else image.copy())',
   },
 }

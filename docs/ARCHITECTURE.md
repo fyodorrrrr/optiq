@@ -2,7 +2,7 @@
 
 ## Current Boundaries
 
-React/TypeScript renders the homepage and Lab 1 at `/labs/1`; React Router handles navigation. FastAPI provides `/api/health` and Lab 1 endpoints. Vite proxies `/api` to port 8000 in development. Production hosting is undecided and must support API forwarding and SPA route fallback.
+React/TypeScript renders the homepage, Lab 1 at `/labs/1`, and Lab 2 at `/labs/2`; React Router handles navigation. FastAPI provides `/api/health` and per-lab endpoints. Vite proxies `/api` to port 8000 in development. Production hosting is undecided and must support API forwarding and SPA route fallback.
 
 ## Lab 1 Request Flow
 
@@ -15,6 +15,18 @@ React/TypeScript renders the homepage and Lab 1 at `/labs/1`; React Router handl
 7. React displays the returned PNG and metadata. Abort controllers prevent responses from superseded inputs or operations from replacing current state. Downloads use the returned PNG directly.
 
 Stateless requests trade repeated upload/decoding work for a simpler lifecycle. This is suitable for bounded Lab 1 images; expensive model workflows will need their own design.
+
+## Lab 2 Separation and Processing
+
+Lab-specific state, API clients, settings, algorithms, and learning content stay under their own modules. Both labs consume the common UI below. `frontend/src/api/images.ts` provides common image transport/types for Lab 2 and future modules; Lab 1 retains its existing API client and per-tool state behavior.
+
+Both backend routers share the image schema in `schemas/images.py`, upload/thread-pool helpers in `routers/image_io.py`, and validation/encoding in `services/images.py`. `schemas/lab1.py` re-exports the common Frame contract for compatibility. Shared helpers preserve existing Lab 1 behavior.
+
+Lab 2 has `/api/labs/2/sample`, `/load`, and `/experiment` endpoints. Its service converts to grayscale, applies one Gaussian blur, then feeds that same array to Sobel x/y, combined magnitude, and Canny. Responses include all comparison and intermediate frames, raw ranges, edge-pixel count, display-scaling description, settings, and OpenCV version.
+
+Defaults match the activity: Gaussian 3×3, Sobel size 3, Canny 100/200. Canny retains aperture 3 and `L2gradient=False`. Gaussian sizes are odd 1–9; Sobel sizes are 3/5/7; thresholds are whole numbers with `0 ≤ lower < upper ≤ 2048`. Limits are engineering choices for exploration. Sobel magnitude/absolute derivatives are display-scaled independently to 0–255 with zero-safe normalization; signed gradient extrema remain available numerically. Edge-pixel percentage describes output density, not accuracy.
+
+Generated shapes and noisy shapes replace the absent source image, with noise seed 42 and standard deviation 18. Each run resends the original input; changed settings invalidate previous output and abort pending requests. Sidebar sections focus controls without hiding the required three-way comparison.
 
 ## API
 
@@ -32,18 +44,31 @@ A Frame contains a PNG data URL, width, height, channels, shape, dtype, color sp
 - File limit: 5 MiB; dimensions: at most 4096 per side and four million pixels. Resize outputs obey the same dimension/pixel bounds.
 - OpenCV color arrays are BGR; encoded PNGs display correctly as RGB in the browser. Grayscale arrays retain a two-dimensional shape and one channel.
 - Transparency is composited onto white. EXIF orientation is not applied; coordinates follow decoded array orientation. No automatic downscaling.
-- Coordinates are zero-based `(x, y)`; array indexing is `[y, x]`. Crop uses exclusive end bounds derived from left/top/width/height. Rotation is 90 degrees clockwise.
+- Coordinates are zero-based `(x, y)`; array indexing is `[y, x]`. Crop uses exclusive end bounds derived from left/top/width/height. Rotation accepts `quarter_turns` 0–3 (default 1); the client advances one clockwise step per successful run and applies the total angle to the original. Failed or superseded runs do not advance it. Clearing results or accepting a new image resets the angle.
 - Color edits accept RGB values and reverse them for BGR assignment; grayscale edits accept one intensity. Pixel zoom uses nearest-neighbor display and edge replication, leaving the real image unchanged.
 - Images are not retained after requests. Framework-managed temporary upload spooling may occur; no application upload store or persistent filesystem is used.
 
 ## Interface and Learning
 
-On wider screens, tools occupy the left sidebar, image comparisons the center, and settings the right. Smaller layouts stack content and use a horizontal tool row. Numerical controls provide keyboard alternatives to clicking pixels.
+`frontend/src/components/lab/` is the canonical lab UI layer:
+
+- `LabPage.tsx`: page shell, navigation, introduction/actions, and footer.
+- `LabWorkspace.tsx` and `ToolSidebar.tsx`: shared workspace, responsive ordering, and tools.
+- `LabButton.tsx`, `Fields.tsx`, and `LabFeedback.tsx`: controls and feedback states.
+- `SourceActions.tsx` and `SamplePicker.tsx`: upload control and configurable dropdown with dismissal and focus restoration.
+- `ImagePanel.tsx`: fit-to-panel viewer, optional pixel/crop overlays, metadata, and metadata help. Lab 1 retains a compatibility re-export; Lab 2's EdgeFigure adapter supplies edge-specific captions.
+- `LabGuide.tsx`: optional learning disclosure. `LabUI.css` owns common visual rules.
+
+Changes to these components affect both labs. Local styles cover only specialized results such as pixel zoom or edge information. Hooks and settings remain independent: sharing UI does not share experiment state or algorithms.
+
+On wider screens, tools occupy the left sidebar, image comparisons the center, and settings the right. Smaller layouts place settings before image comparisons; mobile tools wrap into two columns. Numerical controls provide keyboard alternatives to clicking pixels. Original-image overlays preview the selected pixel or valid crop region, using the same contained image coordinates as pointer selection.
+
+Lab 1 retains separate settings for each operation. Editing settings or switching tools cancels superseded processing while retaining the last completed result, labeled as previous output with its original operation and parameters. A new source clears results and initializes settings. Result summaries describe the actual returned changes; previews explicitly fit images to their panels and do not imply a shared display scale.
 
 Keep brief prediction prompts near controls. Put deeper theory, Python examples, reflection prompts, and preprocessing explanations in optional collapsed learning content. No account, progress gate, or scoring is required.
 
 ## Verification and Remaining Scope
 
-`backend/tests/test_lab1.py` uses standard-library unittest and FastAPI TestClient against real PNG/JPEG inputs and actual OpenCV outputs. Browser checks have exercised all tools and responsive behavior locally; no permanent frontend browser-test runner is configured.
+`backend/tests/test_lab1.py` and `test_lab2.py` use standard-library unittest and FastAPI TestClient against real PNG/JPEG inputs and actual OpenCV outputs. Browser checks have exercised all tools and responsive behavior locally; no permanent frontend browser-test runner is configured.
 
-Lab 1 processing is implemented; production hosting and deployment resource limits have not been validated. Labs 2–7, datasets, SURF capability, model training, and inference infrastructure remain separate pending work. See `LAB_REQUIREMENTS.md` for their obligations.
+Labs 1–2 are implemented; production hosting and deployment resource limits have not been validated. Labs 3–7, datasets, SURF capability, model training, and inference infrastructure remain separate pending work. See `LAB_REQUIREMENTS.md` for their obligations.

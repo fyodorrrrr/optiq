@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 from PIL import Image, UnidentifiedImageError
 
-from schemas.lab1 import Frame
+from schemas.images import Frame
 
 MAX_BYTES = 5 * 1024 * 1024
 MAX_SIDE = 4096

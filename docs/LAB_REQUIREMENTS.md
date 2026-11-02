@@ -4,7 +4,7 @@
 
 Map the seven supplied CSST106 laboratory documents to functional modules in one web application for students and developers. Users should understand techniques, experiment with parameters, compare results, and connect outputs to implementations. Every module is directly accessible without completing learning prompts. Assignment review uses this same experience; no separate instructor role or workflow is planned.
 
-This document records source requirements and proposed web adaptations. Lab 1 is implemented in React and Python/OpenCV; Labs 2–7 remain unimplemented. The final section records implementation evidence.
+This document records source requirements and proposed web adaptations. Labs 1–2 are implemented in React and Python/OpenCV; Labs 3–7 remain unimplemented. The final section records implementation evidence.
 
 Printed, handwritten, and PDF report submission requirements are excluded at the developer's request. Their conceptual questions and analysis tasks remain useful learning content. Standalone scripts alone do not satisfy the Web UI requirement.
 
@@ -60,7 +60,7 @@ For completion, verify source requirements, representative outputs, meaningful n
 
 **Completion checks:** all listed operations run; reported dimensions match actual arrays; pixel edits affect the selected location; crop and resize bounds are validated; rotation has the expected dimensions and orientation. Include color and grayscale samples.
 
-**Implemented choices:** OpenCV/NumPy processing with Pillow header validation. Generated color/grayscale samples require no external assets. Coordinates are zero-based `(x, y)` from the top-left; crop uses left/top/width/height; rotation is clockwise. Every operation starts from the original. See [ARCHITECTURE.md](ARCHITECTURE.md) for limits and data flow.
+**Implemented choices:** OpenCV/NumPy processing with Pillow header validation. Generated color/grayscale samples require no external assets. Coordinates are zero-based `(x, y)` from the top-left; crop uses left/top/width/height. Rotation advances clockwise 90° → 180° → 270° → 0° across successful clicks, with an angle display and reset on clear/new input. The accumulated angle is applied to original pixels; other operations remain independent. See [ARCHITECTURE.md](ARCHITECTURE.md) for limits and data flow.
 
 ## Lab 2 — Sobel and Canny Edge Detection
 
@@ -82,7 +82,7 @@ For completion, verify source requirements, representative outputs, meaningful n
 
 **Completion checks:** both methods use the same input/preprocessing; all three views are present; parameter changes execute actual processing; uniform and sharp-boundary samples produce sensible results; invalid settings fail clearly.
 
-**Dependencies/open items:** OpenCV and NumPy. The source references `input.jpg`; no standalone image is present in the supplied folder. Obtain it or explicitly identify a replacement sample.
+**Implemented choices:** OpenCV/NumPy; same bounded PNG/JPEG decoding as Lab 1. Generated shapes and deterministic noisy shapes (seed 42) explicitly replace the absent `input.jpg`; the assigned image can be uploaded when available. Every run computes both methods from the same Gaussian-blurred grayscale input. Gaussian sizes 1/3/5/7/9, Sobel sizes 3/5/7, and ordered Canny thresholds are validated. Sobel previews scale absolute values to 0–255 separately per view; raw gradient ranges and exact settings are retained. The 3×3/3/100/200 baseline remains one reset away.
 
 ## Lab 3 — Histograms and Contrast
 
@@ -209,8 +209,11 @@ For completion, verify source requirements, representative outputs, meaningful n
 | Module | Status | Evidence |
 | --- | --- | --- |
 | Lab 1 | Implemented and locally verified | `backend/tests/test_lab1.py`: exact pixel values, BGR/RGB order, grayscale shape, single-pixel edits, crop, resize, rotation, upload handling, and validation. Browser checks exercised actual API requests, samples/uploads, zoom, all six tools, navigation, error/retry, stale request cancellation, and responsive layouts. |
-| Labs 2–7 | Not implemented | Their source requirements and open decisions remain above. |
+| Lab 2 | Implemented and locally verified | `backend/tests/test_lab2.py`: baseline preprocessing/Canny equality, directional Sobel response, scaled magnitude, zero-edge uniform input, color/tiny input, deterministic noise, parameter effects, and invalid files/settings. Browser checks exercised real comparison requests, all settings sections, uploads, downloads links, intermediate views, reset, errors/retry, cancellation, keyboard operation, and layouts from 320px to 1440px. |
+| Labs 3–7 | Not implemented | Their source requirements and open decisions remain above. |
 
 Lab 1 code: `frontend/src/labs/lab1/`, `backend/routers/lab1.py`, `backend/schemas/lab1.py`, and `backend/services/`. Local verification is not evidence of production deployment or measured learning effectiveness. No source-required Lab 1 operation is intentionally deferred. Optional enhancements such as drag-to-crop, progress storage, and scored practice are not completion criteria.
+
+Lab 2 code: `frontend/src/labs/lab2/`, `backend/routers/lab2.py`, `backend/schemas/lab2.py`, and `backend/services/lab2.py`. All required Lab 2 operations are implemented. Fidelity to the particular missing `input.jpg` cannot be verified until that asset is supplied. Existing source numbering conflicts remain documented in the source register.
 
 For subsequent modules, track required items as pending, implemented, verified, or blocked with code locations and evidence. Proposed extensions must not obscure incomplete source requirements. Preserve the reasons for approved interpretation changes.
