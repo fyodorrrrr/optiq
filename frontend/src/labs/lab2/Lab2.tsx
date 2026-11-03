@@ -1,5 +1,4 @@
 import DownloadLink from '../../components/lab/DownloadLink'
-import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import { useRef, useState } from 'react'
 import { pythonExample, sections } from './content'
 import type { Section } from './content'
@@ -23,7 +22,6 @@ export default function Lab2() {
 
   return <LabPage labNumber={2} title="Find where the image changes."
     description="Lab 2 — Edge detection. Compare Sobel and Canny on the same image."
-    inputNote="PNG or JPEG · up to 5 MiB · color inputs become grayscale. Uploads are not retained."
     guideId="edge-guide" onOpenGuide={() => { if (guide.current) guide.current.open = true }} wide
     actions={<SourceActions busy={lab.busy} onSample={lab.sample} onUpload={lab.upload} samples={[
       { value: 'shapes', label: 'Shapes sample', description: 'Compare crisp boundaries with different contrast.' },
@@ -35,10 +33,10 @@ export default function Lab2() {
             icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[key].icon} /></svg>,
           }))} />}
         controls={<><h2>{content.title === 'Compare' ? 'Compare edges' : content.title}</h2>
-          <PredictionPrompt>{content.prompt}</PredictionPrompt><EdgeControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} /></>}>
+          <EdgeControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} onOpenHelp={() => { if (guide.current) guide.current.open = true }} /></>}>
           <div className="lab-image-grid" data-columns={3}>
             <EdgeFigure title="Original (grayscale)" frame={lab.source?.frame ?? null} description="Input before Gaussian smoothing" pending={lab.busy} />
-            <EdgeFigure title="Sobel combined" frame={lab.result?.sobel ?? null} description="Brighter pixels show stronger changes · scaled for display" pending={lab.busy} />
+                        <EdgeFigure title="Sobel combined" frame={lab.result?.sobel ?? null} description="Brighter pixels show stronger changes · scaled for display" pending={lab.busy} />
             <EdgeFigure title="Canny edges" frame={lab.result?.canny ?? null} description="White pixels are detected edges · values 0 or 255" pending={lab.busy} />
           </div>
           {lab.source && <details className="lab-metadata-help"><summary>Image details</summary>
@@ -49,7 +47,7 @@ export default function Lab2() {
             : lab.error ? 'The request failed. Check the message above and try again.'
               : lab.resultIsPrevious ? 'Settings changed. Previous results are still shown; run both detectors to update them.'
                 : lab.result ? 'Both detectors complete.'
-              : lab.source ? 'Ready. Run both detectors to compare their edge maps.' : 'Choose a sample or upload an image to begin.'}</LabStatus>
+              : lab.source ? 'Run both detectors to see Sobel and Canny edge maps beside the original.' : 'Choose a sample or upload an image to begin.'}</LabStatus>
           {lab.result && <>
 
             <div className="edge-downloads lab-downloads"><DownloadLink href={lab.result.sobel.image} download="optiq-lab2-sobel.png">Sobel PNG</DownloadLink><DownloadLink href={lab.result.canny.image} download="optiq-lab2-canny.png">Canny PNG</DownloadLink></div>
@@ -63,7 +61,11 @@ export default function Lab2() {
             <details className="edge-run"><summary>Run settings & measurements</summary>            <p className="edge-scaling">Sobel is scaled to 0–255 for display; raw magnitude max: {Number(lab.result.statistics.sobel_max.toFixed(2))}. Canny edge pixels: {lab.result.statistics.canny_edge_pixels.toLocaleString()} ({lab.result.statistics.canny_edge_percent}%).</p><p>Edge-pixel percentage measures output density, not accuracy.</p><pre>{JSON.stringify({ engine: lab.result.engine, parameters: lab.result.parameters, statistics: lab.result.statistics, display_scaling: lab.result.display_scaling, canny_aperture: 3, canny_L2gradient: false }, null, 2)}</pre></details>
           </>}
       </LabWorkspace>
-      <LabGuide id="edge-guide" ref={guide}>
+      <LabGuide id="edge-guide" ref={guide} settingsHelp={<>
+        <p>Choose settings, then run both detectors. They always use the same input and Gaussian blur.</p>
+        <p>Larger Gaussian kernels smooth more noise and fine detail. The Sobel kernel sets the neighborhood used to measure brightness changes.</p>
+        <p>Higher Canny thresholds generally retain fewer weak edges. The lower threshold must be smaller than the upper threshold.</p>
+       </>}>
         <div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p>
           </article>
           <article><h2>Try thinking about this</h2><p>{content.reflection}</p></article></div>

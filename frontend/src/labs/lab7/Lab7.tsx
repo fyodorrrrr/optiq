@@ -5,7 +5,6 @@ import LabWorkspace from '../../components/lab/LabWorkspace'
 import ToolSidebar from '../../components/lab/ToolSidebar'
 import SourceActions from '../../components/lab/SourceActions'
 import ImagePanel from '../../components/lab/ImagePanel'
-import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import LabGuide from '../../components/lab/LabGuide'
 import { LabError, LabStatus } from '../../components/lab/LabFeedback'
 import SegmentationControls from './SegmentationControls'
@@ -20,7 +19,6 @@ export default function Lab7() {
   const result = lab.result
   return <LabPage labNumber={7} title="Give each pixel a place." processingLabel="OpenCV/PyTorch segmentation"
     description="Lab 7 — Segmentation. Compare brightness, connected regions, boundaries, and learned pixel classes."
-    inputNote="PNG or JPEG · up to 5 MiB and one million pixels. Uploads are not retained."
     guideId="segmentation-guide" onOpenGuide={() => { if (guide.current) guide.current.open = true }} wide
     actions={<SourceActions busy={lab.busy} onUpload={lab.upload} onSample={lab.sample} samples={[
       { value: 'touching', label: 'Touching objects', description: 'Compare one foreground mask with separated watershed regions.' },
@@ -32,7 +30,7 @@ export default function Lab7() {
       tools={<ToolSidebar<Method> value={lab.method} onChange={lab.choose} tools={(Object.keys(sections) as Method[]).map(id => ({ id, label: sections[id].title,
         icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[id].icon} /></svg>,
       }))} />}
-      controls={<><h2>{content.title}</h2><PredictionPrompt>{content.prompt}</PredictionPrompt><SegmentationControls lab={lab} /></>}>
+      controls={<><h2>{content.title}</h2><SegmentationControls lab={lab} /></>}>
       <ImagePanel title="Input image" frame={lab.source?.frame ?? null} showMetadata={false} description={lab.method === 'region' ? `${lab.source?.name ?? ''} · click to select a seed, or enter x/y coordinates.` : lab.source?.name}
         onPick={lab.method === 'region' ? lab.seed : undefined} selection={lab.method === 'region' ? { x: Number(lab.draft.seed_x), y: Number(lab.draft.seed_y) } : undefined} />
       {lab.error && <LabError title="Could not segment this image." message={lab.error} />}

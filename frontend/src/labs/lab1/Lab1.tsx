@@ -1,6 +1,5 @@
 import DownloadLink from '../../components/lab/DownloadLink'
 import ControlHelp from '../../components/lab/ControlHelp'
-import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import { useRef } from 'react'
 import type { Operation } from './api'
 import { experiments } from './content'
@@ -34,7 +33,6 @@ export default function Lab1() {
 
   return <LabPage labNumber={1} title="See what an image is made of."
     description="Lab 1 — Image representation & manipulation. Explore pixels, change an image, and discover what happens underneath."
-    inputNote="PNG or JPEG · up to 5 MiB. Uploads are not retained."
     guideId="lab-explanation" onOpenGuide={() => { if (guide.current) guide.current.open = true }}
     actions={<SourceActions busy={lab.busy} samples={samples} onSample={lab.loadSample} onUpload={lab.upload} />}>
       <LabWorkspace label="Image experimentation workspace" resultsId="lab-results" busy={lab.busy}
@@ -44,7 +42,7 @@ export default function Lab1() {
         controls={<>
 
             <div className="lab-control-introduction"><h2>{current.title}</h2><p>{current.description}</p></div>
-            <PredictionPrompt>{current.prediction}</PredictionPrompt>
+
             {lab.operation === 'rotate' && <p className="lab-rotation-angle">Rotation: {lab.rotationTurns * 90}°{lab.rotationTurns === 0 ? ' · original orientation' : ' clockwise'}</p>}
             <form onSubmit={event => { event.preventDefault(); void lab.run() }}>
               <fieldset disabled={lab.busy || !lab.source}>
@@ -52,10 +50,10 @@ export default function Lab1() {
                 {lab.source && <Controls operation={lab.operation} fields={lab.fields} frame={lab.source.frame} change={lab.change} />}
                 <LabButton variant="primary" type="submit">{lab.busy ? 'Processing…' : current.action}</LabButton>
               </fieldset>
-              <LabButton variant={lab.busy ? 'secondary' : 'quiet'} disabled={!lab.output && !lab.busy} onClick={lab.reset}>{lab.busy ? 'Cancel processing' : 'Clear result'}</LabButton>
+              <LabButton disabled={!lab.output && !lab.busy} onClick={lab.reset}>{lab.busy ? 'Cancel processing' : 'Clear result'}</LabButton>
               <p className="lab-hint">{lab.operation === 'rotate' ? 'Each click adds 90°. Clear the result to reset the angle.' : 'Each experiment starts from the original image.'}</p>
               {(pixelMode || lab.operation === 'crop') && <ControlHelp key={lab.operation} title={lab.operation === 'crop' ? 'How to position the crop' : 'How to select a pixel'}>
-                <p>{pixelMode && 'Click the original image or enter coordinates, then run the experiment. '}Coordinates start at (0, 0) in the top-left. X moves right; Y moves down.{lab.operation === 'crop' && ' The outlined crop must fit inside the image.'}</p>
+                <p>Coordinates start at (0, 0) in the top-left. X moves right; Y moves down.{lab.operation === 'crop' && ' The outlined crop must fit inside the image.'}</p>
               </ControlHelp>}
             </form>
         </>}>
@@ -63,7 +61,7 @@ export default function Lab1() {
               <p className="lab-result-summary">{summary}</p></>}
             <div className="lab-image-grid">
               <ImagePanel metadataEssential title="Original" description={pixelMode && lab.source && !lab.busy ? 'Click to select a pixel.' : undefined} frame={lab.source?.frame ?? null} onPick={pixelMode && !lab.busy ? lab.pick : undefined} selection={selection} empty={lab.busy ? 'Loading image…' : 'Choose a sample or upload an image.'} />
-              <ImagePanel metadataEssential title="Result" frame={lab.output?.result ?? null} empty={lab.busy ? 'Processing with OpenCV…' : 'Run an experiment to see its result.'} />
+              <ImagePanel metadataEssential title="Result" frame={lab.output?.result ?? null} empty={lab.busy ? 'Processing the image…' : 'Run an experiment to see its result.'} />
             </div>
             {lab.source && <details className="lab-metadata-help"><summary>About image shape, channels & values</summary>
               <p>Dimensions list width × height; array shape lists height, width, then channels for color images. OpenCV stores color channels in BGR order: blue, green, red. Grayscale has one channel. These images use uint8 whole-number values from 0 to 255.</p>

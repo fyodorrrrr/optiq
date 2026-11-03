@@ -5,7 +5,7 @@ import './LabUI.css'
 
 export default function LabPage({ labNumber, title, description, actions, inputNote, guideId, onOpenGuide, wide, processingLabel = 'Python/OpenCV processing', children }: {
   labNumber: number; title: string; description: string; actions: ReactNode
-  inputNote: string; guideId: string; onOpenGuide: () => void; wide?: boolean; processingLabel?: string; children: ReactNode
+  inputNote?: string; guideId: string; onOpenGuide: () => void; wide?: boolean; processingLabel?: string; children: ReactNode
 }) {
   const mainId = `lab-${labNumber}-main`
   const nextLab = labs.find(lab => lab.id === labNumber + 1)
@@ -20,7 +20,7 @@ export default function LabPage({ labNumber, title, description, actions, inputN
         <div><h1 id={`lab-${labNumber}-title`}>{title}</h1><p>{description}</p></div>
         <div className="lab-source-actions">{actions}</div>
       </section>
-      <p className="lab-input-note">{inputNote}</p>
+      {inputNote && <p className="lab-input-note">{inputNote}</p>}
       {children}
       <footer className="site-footer"><p>Lab {labNumber} of {labs.length} · {processingLabel}</p>
         {nextLab?.href ? <Link to={nextLab.href}>Next lab: {nextLab.title} →</Link>

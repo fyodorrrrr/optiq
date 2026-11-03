@@ -1,11 +1,11 @@
-import ControlHelp from '../../components/lab/ControlHelp'
+import SettingsHelpLink from '../../components/lab/SettingsHelpLink'
 import { revealField } from '../../components/lab/validation'
 import LabButton from '../../components/lab/LabButton'
 import { NumberField, SelectField } from '../../components/lab/Fields'
 import type { Section } from './content'
 import type useContrastExperiment from './useContrastExperiment'
 
-export default function ContrastControls({ lab, section, onRevealSettings }: { lab: ReturnType<typeof useContrastExperiment>; section: Section; onRevealSettings: () => void }) {
+export default function ContrastControls({ lab, section, onRevealSettings, onOpenHelp }: { lab: ReturnType<typeof useContrastExperiment>; section: Section; onRevealSettings: () => void; onOpenHelp: () => void }) {
   return <form onSubmit={event => { event.preventDefault(); void lab.run(field => revealField(field, onRevealSettings)) }}>
     <fieldset disabled={lab.busy || !lab.source}>
       <legend className="sr-only">Contrast settings</legend>
@@ -34,10 +34,6 @@ export default function ContrastControls({ lab, section, onRevealSettings }: { l
       <LabButton variant="primary" type="submit">{lab.busy ? 'Processing…' : 'Compare contrast'}</LabButton>
     </fieldset>
     <LabButton disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>
-      <ControlHelp key={section} title="How to adjust contrast">
-        <p>Choose settings, then run the comparison. All methods use the same original, and all histograms share one count scale.</p>
-        <p>CLAHE limits local contrast amplification; larger clip limits can reveal more noise. Tiles divide the image into regions for local enhancement.</p>
-        <p>For manual adjustment, a scale of 1 keeps the brightness scale. Larger values increase its spread before clipping. The offset adds brightness; negative values darken. Values are clipped to 0–255.</p>
-      </ControlHelp>
+      <SettingsHelpLink guideId="contrast-guide" onOpen={onOpenHelp} />
   </form>
 }

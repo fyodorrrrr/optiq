@@ -1,6 +1,5 @@
 import DownloadLink from '../../components/lab/DownloadLink'
-import PredictionPrompt from '../../components/lab/PredictionPrompt'
-import ControlHelp from '../../components/lab/ControlHelp'
+import SettingsHelpLink from '../../components/lab/SettingsHelpLink'
 import { useRef, useState } from 'react'
 import LabPage from '../../components/lab/LabPage'
 import LabWorkspace from '../../components/lab/LabWorkspace'
@@ -33,7 +32,6 @@ export default function Lab4() {
   }
   return <LabPage labNumber={4} title="Find what stays recognizable."
     description="Lab 4 — Features & matching. Compare SURF, SIFT, and ORB on the same image pair."
-    inputNote="PNG or JPEG · up to 5 MiB and one million pixels per image. Uploads are not retained."
     guideId="features-guide" onOpenGuide={() => { if (guide.current) guide.current.open = true }} wide
     actions={<><ImageUploadButton busy={lab.busy} label="Upload image A" onUpload={file => lab.upload('first', file)} />
       <ImageUploadButton busy={lab.busy} label="Upload image B" onUpload={file => lab.upload('second', file)} />
@@ -45,7 +43,7 @@ export default function Lab4() {
       tools={<ToolSidebar<Section> heading="Methods" value={section} onChange={choose} tools={(Object.keys(sections) as Section[]).map(id => ({ id, label: sections[id].title,
         icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[id].icon} /></svg>,
       }))} />}
-      controls={<><h2>{content.title === 'Compare' ? 'Compare features' : content.title}</h2><PredictionPrompt>{content.prompt}</PredictionPrompt>
+      controls={<><h2>{content.title === 'Compare' ? 'Compare features' : content.title}</h2>
         <form onSubmit={event => { event.preventDefault(); void lab.run(field => revealField(field, () => setSection('compare'))) }}>
           <fieldset disabled={lab.busy || !lab.sources.first || !lab.sources.second}><legend className="sr-only">Feature comparison settings</legend>
           {(section === 'compare' || section === 'surf') && <>
@@ -58,11 +56,7 @@ export default function Lab4() {
           <div className="feature-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || !lab.sources.first || !lab.sources.second}>{lab.busy ? 'Processing…' : 'Compare features'}</LabButton>
           </div></fieldset>
           <LabButton type="button" disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>
-          <ControlHelp key={section} title="How to adjust feature matching">
-            <p>Choose settings, then compare the same image pair across all available methods.</p>
-            <p>Higher SURF Hessian thresholds usually detect fewer keypoints. Upright mode disables SURF orientation invariance.</p>
-            <p>Higher match ratios accept more candidate matches; they do not prove accuracy. Maximum displayed matches limits drawn lines, not the number of accepted matches.</p>
-          </ControlHelp>
+          <SettingsHelpLink guideId="features-guide" onOpen={() => { if (guide.current) guide.current.open = true }} />
         </form></>}>
       {surf && !surf.available && <LabError title="SURF is unavailable on this server." message={surf.reason ?? 'A SURF-enabled OpenCV build is required. This laboratory is partially available.'} />}
       <div className="lab-image-grid"><ImagePanel title="Image A" frame={lab.sources.first?.frame ?? null} description={lab.sources.first?.name} />
@@ -96,7 +90,11 @@ export default function Lab4() {
         <details className="lab-preprocessing"><summary>Run settings & measurements</summary><pre>{JSON.stringify({ engine: lab.result.engine, parameters: lab.result.parameters, algorithms: lab.result.algorithms.map(({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms }) => ({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms })) }, null, 2)}</pre></details>
       </>}
     </LabWorkspace>
-    <LabGuide id="features-guide" ref={guide}><div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p></article>
+    <LabGuide id="features-guide" ref={guide} settingsHelp={<>
+            <p>Choose settings, then compare the same image pair across all available methods.</p>
+            <p>Higher SURF Hessian thresholds usually detect fewer keypoints. Upright mode disables SURF orientation invariance.</p>
+            <p>Higher match ratios accept more candidate matches; they do not prove accuracy. Maximum displayed matches limits drawn lines, not the number of accepted matches.</p>
+           </>}><div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p></article>
       <article><h2>Try thinking about this</h2><p>{content.reflection}</p></article></div>
       <details className="lab-guide-code"><summary>See the Python operations</summary><pre><code>{pythonExample}</code></pre></details>
       <details className="lab-preprocessing"><summary>Input handling & reproducibility</summary><ul>

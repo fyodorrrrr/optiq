@@ -22,7 +22,7 @@ export default function ImagePanel({ title, frame, onPick, empty, selection, des
   }
 
   return <figure className={`lab-image-panel${compact ? ' is-compact' : ''}`}>
-    <figcaption>{title}{!compact && <span className="lab-preview-scale">Fit to panel</span>}</figcaption>
+    <figcaption>{title}</figcaption>
     <div className={`lab-image-stage ${onPick ? 'can-pick' : ''}`}>
       {frame ? <>
         <img src={frame.image} alt={imageAlt ?? `${title} image`} loading={compact ? 'lazy' : undefined} onClick={onPick ? pick : undefined} draggable={false} />

@@ -1,6 +1,5 @@
 import DownloadLink from '../../components/lab/DownloadLink'
 import ContrastRunDetails from './ContrastRunDetails'
-import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import { useRef, useState } from 'react'
 import LabPage from '../../components/lab/LabPage'
 import LabWorkspace from '../../components/lab/LabWorkspace'
@@ -36,7 +35,6 @@ export default function Lab3() {
 
   return <LabPage labNumber={3} title="Bring the details into view."
     description="Lab 3 — Histograms & contrast. Compare global equalization, CLAHE, and linear adjustment."
-    inputNote="PNG or JPEG · up to 5 MiB. Uploads are not retained."
     guideId="contrast-guide" onOpenGuide={() => { if (guide.current) guide.current.open = true }} wide
     actions={<SourceActions busy={lab.busy} onSample={lab.sample} onUpload={lab.upload} samples={[
       { value: 'low-contrast', label: 'Low contrast', description: 'Expand a narrow range of brightness values.' },
@@ -48,11 +46,11 @@ export default function Lab3() {
           id: key, label: sections[key].title,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[key].icon} /></svg>,
         }))} />}
-        controls={<><h2>{content.title === 'Compare' ? 'Compare contrast' : content.title}</h2><PredictionPrompt>{content.prompt}</PredictionPrompt><ContrastControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} /></>}>
+        controls={<><h2>{content.title === 'Compare' ? 'Compare contrast' : content.title}</h2><ContrastControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} onOpenHelp={() => { if (guide.current) guide.current.open = true }} /></>}>
         <div className="lab-image-grid" data-columns={3}>
           <ContrastPanel title="Original" view={lab.result?.original ?? null} original={lab.source?.frame} pending={lab.busy} maxCount={maxCount} channel={channel}
             description={lab.result ? `Working original · ${channel}` : 'Input preview · run to apply the selected mode'} />
-          <ContrastPanel title="Global equalization" view={lab.result?.equalized ?? null} pending={lab.busy} maxCount={maxCount} channel={channel} description="One brightness mapping for the whole image" />
+                    <ContrastPanel title="Global equalization" view={lab.result?.equalized ?? null} pending={lab.busy} maxCount={maxCount} channel={channel} description="One brightness mapping for the whole image" />
           <ContrastPanel title="CLAHE" view={lab.result?.clahe ?? null} pending={lab.busy} maxCount={maxCount} channel={channel} description="Local enhancement with a contrast limit" />
         </div>
         {lab.result && <details className="lab-metadata-help"><summary>How to read these histograms</summary>
@@ -61,7 +59,7 @@ export default function Lab3() {
         </details>}
         {lab.error && <LabError title="Could not compare the contrast." message={lab.error} />}
 
-        <section className="contrast-linear" aria-labelledby="linear-result-title">
+        {lab.result && <section className="contrast-linear" aria-labelledby="linear-result-title">
           <h3 id="linear-result-title">Linear adjustment</h3>
           <div className="lab-image-grid">
             <ImagePanel showMetadata={false} title="Linear result" frame={lab.result?.linear.frame ?? null} description={lab.result?.linear_transform.note ?? 'Scale and offset, or stretch the observed range to 0–255.'}
@@ -69,12 +67,12 @@ export default function Lab3() {
             {lab.result && <div><Histogram title="Linear histogram" counts={lab.result.linear.histogram} maxCount={maxCount} channel={channel} />
 </div>}
           </div>
-        </section>
+        </section>}
         <LabStatus>{lab.busy ? 'Working with the image service…'
           : lab.error ? 'Check the message above and try again.'
             : lab.resultIsPrevious ? 'Showing the previous run. Run the comparison to apply changed settings.'
               : lab.result ? 'Contrast comparison complete.'
-              : lab.source ? 'Ready. Run the comparison to see images and histograms.' : 'Choose a sample or upload an image to begin.'}</LabStatus>
+              : lab.source ? 'Run Compare contrast to see global equalization, CLAHE, linear adjustment, and their histograms.' : 'Choose a sample or upload an image to begin.'}</LabStatus>
         <div className="lab-result-utilities">
           {lab.result && <section aria-labelledby="contrast-download-title">
             <h3 id="contrast-download-title">Download results</h3>
@@ -93,7 +91,11 @@ export default function Lab3() {
           {lab.result && <ContrastRunDetails result={lab.result} />}
         </div>
       </LabWorkspace>
-      <LabGuide id="contrast-guide" ref={guide}>
+      <LabGuide id="contrast-guide" ref={guide} settingsHelp={<>
+        <p>Choose settings, then run the comparison. All methods use the same original, and all histograms share one count scale.</p>
+        <p>CLAHE limits local contrast amplification; larger clip limits can reveal more noise. Tiles divide the image into regions for local enhancement.</p>
+        <p>For manual adjustment, a scale of 1 keeps the brightness scale. Larger values increase its spread before clipping. The offset adds brightness; negative values darken. Values are clipped to 0–255.</p>
+       </>}>
         <div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p>
           </article>
           <article><h2>Try thinking about this</h2><p>{content.reflection}</p></article></div>

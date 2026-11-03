@@ -37,7 +37,6 @@
 .lab-image-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .lab-image-panel { min-width: 0; margin: 0; }
 .lab-image-panel > figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; justify-content: space-between; font-size: 14px; line-height: 1.5; min-height: 3em; font-weight: 600; margin-bottom: 12px; }
-.lab-preview-scale { font-size: 12px; font-weight: 400; color: var(--ink-soft); }
 .lab-image-stage { position: relative; height: auto; aspect-ratio: 4 / 3; max-height: 320px; background: var(--paper); border-radius: var(--radius-sm); display: flex; justify-content: center; align-items: center; padding: 12px; }
 .lab-image-stage img { width: 100%; height: 100%; object-fit: contain; }
 .lab-selection { position: absolute; top: 12px; left: 12px; width: calc(100% - 24px); height: calc(100% - 24px); pointer-events: none; overflow: visible; }
@@ -156,9 +155,6 @@
 
 /* Compact guidance keeps related settings together. */
 .lab-control-introduction > p { margin: 0; }
-.lab-prediction { margin-top: 16px; }
-.lab-prediction > span { display: block; font-size: 12px; font-weight: 600; color: var(--ink-soft); margin-bottom: 4px; }
-.lab-controls .lab-prediction > p { font-size: 13px; line-height: 1.6; margin: 0; }
 .lab-control-fields { display: grid; gap: 16px; }
 .lab-control-fields .lab-field, .lab-control-fields .lab-check, .lab-control-fields > .lab-metadata-help { margin: 0; }
 .lab-controls .lab-control-fields .lab-metadata-help p { margin: 8px 0 16px; }
@@ -253,3 +249,11 @@
   .lab-shell .lab-downloads { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .lab-shell .lab-downloads:has(> .lab-download-link:only-child) { grid-template-columns: minmax(0, 1fr); }
 }
+
+
+.lab-settings-help-link { display: inline-flex; align-items: center; min-height: 44px; margin-top: 12px; color: var(--accent); font-size: 13px; }
+.lab-guide-settings { max-width: 75ch; margin: 20px 0 28px; scroll-margin-top: 24px; }
+.lab-guide-settings h2 { font-size: 18px; margin: 0 0 12px; }
+.lab-guide-settings p { color: var(--ink-soft); font-size: 15px; line-height: 1.75; margin: 0 0 12px; }
+.lab-guide-settings:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+

@@ -1,11 +1,11 @@
-import ControlHelp from '../../components/lab/ControlHelp'
+import SettingsHelpLink from '../../components/lab/SettingsHelpLink'
 import type { Section } from './content'
 import type useEdgeExperiment from './useEdgeExperiment'
 import { revealField } from '../../components/lab/validation'
 import LabButton from '../../components/lab/LabButton'
 import { NumberField, SelectField } from '../../components/lab/Fields'
 
-export default function EdgeControls({ lab, section, onRevealSettings }: { lab: ReturnType<typeof useEdgeExperiment>; section: Section; onRevealSettings: () => void }) {
+export default function EdgeControls({ lab, section, onRevealSettings, onOpenHelp }: { lab: ReturnType<typeof useEdgeExperiment>; section: Section; onRevealSettings: () => void; onOpenHelp: () => void }) {
   return <form onSubmit={event => { event.preventDefault(); void lab.run(field => revealField(field, onRevealSettings)) }}>
     <fieldset disabled={lab.busy || !lab.source}>
       <legend className="sr-only">Edge detection settings</legend>
@@ -21,10 +21,6 @@ export default function EdgeControls({ lab, section, onRevealSettings }: { lab: 
       <LabButton variant="primary" type="submit">{lab.busy ? 'Processing…' : 'Run both detectors'}</LabButton>
     </fieldset>
     <LabButton disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>
-      <ControlHelp key={section} title="How to adjust edge detection">
-        <p>Choose settings, then run both detectors. They always use the same input and Gaussian blur.</p>
-        <p>Larger Gaussian kernels smooth more noise and fine detail. The Sobel kernel sets the neighborhood used to measure brightness changes.</p>
-        <p>Higher Canny thresholds generally retain fewer weak edges. The lower threshold must be smaller than the upper threshold.</p>
-      </ControlHelp>
+      <SettingsHelpLink guideId="edge-guide" onOpen={onOpenHelp} />
   </form>
 }
