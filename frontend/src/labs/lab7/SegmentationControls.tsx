@@ -1,0 +1,15 @@
+import { NumberField } from '../../components/lab/Fields'
+import LabButton from '../../components/lab/LabButton'
+import useSegmentation from './useSegmentation'
+export default function SegmentationControls({ lab }: { lab: ReturnType<typeof useSegmentation> }) {
+  const { draft, method, change } = lab
+  return <form onSubmit={event => { event.preventDefault(); void lab.run() }}>
+    {(method === 'threshold' || method === 'region') && <label className="segmentation-check"><input type="checkbox" checked={draft.invert} onChange={event => change('invert', event.target.checked)} />Dark objects are foreground</label>}
+    {method === 'threshold' && <><NumberField label="Adaptive block size" value={draft.adaptive_block} min={3} max={101} step={2} onChange={value => change('adaptive_block', value)} hint="Odd neighborhood size in pixels." /><NumberField label="Adaptive constant C" value={draft.adaptive_c} min={-30} max={30} step={1} onChange={value => change('adaptive_c', value)} /></>}
+    {method === 'region' && <><NumberField label="Seed x" value={draft.seed_x} min={0} max={(lab.source?.frame.width ?? 1) - 1} step={1} onChange={value => change('seed_x', value)} /><NumberField label="Seed y" value={draft.seed_y} min={0} max={(lab.source?.frame.height ?? 1) - 1} step={1} onChange={value => change('seed_y', value)} /><NumberField label="Intensity tolerance" value={draft.tolerance} min={0} max={255} step={1} onChange={value => change('tolerance', value)} /><NumberField label="Watershed marker fraction" value={draft.watershed_fraction} min={0.1} max={0.95} step="any" onChange={value => change('watershed_fraction', value)} hint="Fraction of maximum distance used to select marker peaks." /></>}
+    {method === 'edges' && <><NumberField label="Canny lower threshold" value={draft.canny_low} min={0} max={254} step={1} onChange={value => change('canny_low', value)} /><NumberField label="Canny upper threshold" value={draft.canny_high} min={1} max={255} step={1} onChange={value => change('canny_high', value)} /><NumberField label="Closing kernel size" value={draft.closing_size} min={1} max={15} step={2} onChange={value => change('closing_size', value)} /><NumberField label="Minimum region area" value={draft.min_area} min={1} max={1000000} step={1} onChange={value => change('min_area', value)} /></>}
+    {method !== 'threshold' && <NumberField label="Overlay opacity" value={draft.opacity} min={0} max={1} step="any" onChange={value => change('opacity', value)} />}
+    <div className="segmentation-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || !lab.source || (method === 'semantic' && !lab.status?.available)}>Run segmentation</LabButton><LabButton onClick={lab.reset}>Reset baseline</LabButton></div>
+    {method === 'semantic' && <><p>{lab.status?.message ?? 'Checking semantic model…'}</p><LabButton disabled={lab.busy} onClick={() => void lab.refresh()}>Check model setup</LabButton></>}
+  </form>
+}

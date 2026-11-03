@@ -42,7 +42,7 @@ export default function LabMap() {
           : <p className="planned-action">Module not implemented yet.</p>}</div>
       </div>
       </div>
-      <p className="preview-note">Labs 1–5 are available. Lab 6 has pretrained detection; custom training is pending. Lab 7 is planned; all implemented labs are freely accessible.</p>
+      <p className="preview-note">Labs 1–5 are available. Lab 6 has pretrained detection; custom training is pending. Lab 7 is available; all implemented labs are freely accessible.</p>
     </section>
   )
 }

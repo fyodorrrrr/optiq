@@ -8,6 +8,8 @@ from routers.lab5 import router as lab5_router
 
 from routers.lab6 import router as lab6_router
 
+from routers.lab7 import router as lab7_router
+
 app = FastAPI(title="Optiq API")
 app.include_router(lab1_router)
 app.include_router(lab2_router)
@@ -15,6 +17,7 @@ app.include_router(lab3_router)
 app.include_router(lab4_router)
 app.include_router(lab5_router)
 app.include_router(lab6_router)
+app.include_router(lab7_router)
 
 
 @app.get("/api/health")

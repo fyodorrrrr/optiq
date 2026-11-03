@@ -12,9 +12,9 @@ Read `docs/PRD.md` and `docs/ARCHITECTURE.md` when they exist. This guide govern
 
 ## Project Structure & Module Organization
 
-Optiq is a computer vision learning platform for Labs 1–7. The homepage and Labs 1–5 are implemented. Lab 6 has pretrained detection and a local training workflow; custom training is pending. Lab 7 is planned.
+Optiq is a computer vision learning platform for Labs 1–7. The homepage and Labs 1–5 are implemented. Lab 6 has pretrained detection and a local training workflow; custom training is pending. Lab 7 segmentation is implemented.
 
-- `frontend/src/`: React and TypeScript source; `App.tsx` defines routes. `components/lab/` holds shared lab UI and histogram rendering; `labs/lab1/`, `labs/lab2/`, `labs/lab3/`, `labs/lab4/`, `labs/lab5/`, and `labs/lab6/` own experiment state, settings, and content. `api/images.ts` holds common image transport for Labs 2–4/future modules.
+- `frontend/src/`: React and TypeScript source; `App.tsx` defines routes. `components/lab/` holds shared lab UI and histogram rendering; `labs/lab1/`, `labs/lab2/`, `labs/lab3/`, `labs/lab4/`, `labs/lab5/`, `labs/lab6/`, and `labs/lab7/` own experiment state, settings, and content. `api/images.ts` holds common image transport for Labs 2–4/future modules.
 - `frontend/src/assets/`: imported images and SVGs; `frontend/public/`: static public assets.
 - `frontend/vite.config.ts`: React, Tailwind, and development API proxy configuration.
 - `backend/main.py`: FastAPI application and `/api/health`; `routers/`, `schemas/`, and `services/` separate lab HTTP handling, validation, and processing. `backend/tests/` contains unittest API tests.
@@ -103,3 +103,5 @@ History uses short, imperative messages, such as `Set up React frontend and conn
 Never commit secrets, virtual environments, or generated dependencies. Update lockfiles with dependency changes. The `/api` proxy works only in development; production hosting must route requests to FastAPI separately. SURF requires additional OpenCV build configuration.
 
 Lab 6 uses a separate optional dependency lock: install `requirements-lab6-lock.txt` with `--no-deps` after the main lock, preserving the single SURF-enabled cv2 provider. See `docs/LAB6_SETUP.md`. Training runs through trusted local scripts; no web training or checkpoint-upload endpoint is provided.
+
+Lab 7 semantic segmentation reuses the optional PyTorch/torchvision dependencies; prepare its explicit checkpoint with `backend/scripts/prepare_segmentation.py`. See `docs/LAB7_SETUP.md`. No IoU is claimed without compatible ground-truth labels.

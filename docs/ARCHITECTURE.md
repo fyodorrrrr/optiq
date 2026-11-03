@@ -84,7 +84,7 @@ Keep brief prediction prompts near controls. Put deeper theory, Python examples,
 
 `backend/tests/test_lab1.py`, `test_lab2.py`, and `test_lab3.py` use standard-library unittest and FastAPI TestClient against real PNG/JPEG inputs and actual OpenCV outputs. Browser checks have exercised all tools and responsive behavior locally; no permanent frontend browser-test runner is configured.
 
-Labs 1–5 are implemented; production hosting and deployment resource limits have not been validated. Lab 6 custom data/training and Lab 7 remain pending; the approved local training workflow and pretrained Lab 6 inference are implemented. See `LAB_REQUIREMENTS.md` for their obligations.
+Labs 1–5 are implemented; production hosting and deployment resource limits have not been validated. Lab 6 custom data/training remains pending; the approved local training workflow and pretrained Lab 6 inference are implemented. See `LAB_REQUIREMENTS.md` for their obligations.
 
 ## Lab 4 feature comparison
 
@@ -196,3 +196,28 @@ so its opencv-python requirement does not overwrite the existing cv2 provider.
 The SURF build now includes highgui/videoio symbols required for import, while
 native GUI/FFmpeg capture remain disabled. See `LAB6_SETUP.md` for reproducible
 setup and known limits. The actual custom dataset/training remains pending.
+
+
+## Lab 7 segmentation
+
+`labs/lab7/` reuses the shared shell, prediction prompts, fields, sample/upload
+controls and image viewers. Its own state/transport controls four method families.
+The input viewer supports original-coordinate seed selection plus keyboard x/y
+fields. Previous outputs remain labeled with their generating settings; new
+sources clear outputs, and aborted responses cannot overwrite current state.
+
+`/api/labs/7/status`, `/sample`, `/load`, and `/experiment` use a typed settings
+schema and common bounded upload/threadpool helpers. `services/lab7.py` owns
+Otsu/adaptive masks, fixed-range4-connected flood growing, marker watershed, and
+edge-to-enclosed-region masks. Region filtering uses a label lookup rather than
+one full-image scan per component. Classical intermediate/result images remain
+explicitly distinct from learned classes.
+
+`lab7_semantic.py` lazily loads trusted official DeepLabV3 MobileNetV3 weights
+prepared through an explicit script, using the existing optional Torchvision
+runtime. A process-local lock bounds semantic concurrency. RGB normalization,
+longest-side520 working resize, nearest label restoration, class IDs, runtime
+versions and checkpoint hash are recorded. Outputs include aligned class map,
+overlay, legend and raw ID PNG. No trained-model persistence or new job system
+is added. No IoU is reported without compatible annotated ground truth. See
+`LAB7_SETUP.md` for the intentional resize adaptation and source details.
