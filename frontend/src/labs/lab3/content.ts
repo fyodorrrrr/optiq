@@ -19,22 +19,28 @@ export const sections = {
 
 export type Section = keyof typeof sections
 
-export const pythonExample = `if mode == "color":
+export const pythonExample = `# Select the brightness channel.
+if mode == "color":
     yuv = cv2.cvtColor(image, cv2.COLOR_BGR2YUV)
     channel = yuv[:, :, 0]
 else:
     channel = (image if image.ndim == 2 else
                cv2.cvtColor(image, cv2.COLOR_BGR2GRAY))
+
+# Compare global, local, and linear enhancement.
 equalized = cv2.equalizeHist(channel)
 clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
 adaptive = clahe.apply(channel)
 linear = np.clip(np.rint(channel.astype(np.float64) * alpha + beta),
                  0, 255).astype(np.uint8)
-# Example: reconstruct the equalized color output, then count its Y values.
+
+# Reconstruct the equalized color output.
 if mode == "color":
     yuv[:, :, 0] = equalized
     result = cv2.cvtColor(yuv, cv2.COLOR_YUV2BGR)
     measured = cv2.cvtColor(result, cv2.COLOR_BGR2YUV)[:, :, 0]
 else:
     result, measured = equalized, equalized
+
+# Count brightness values in the final displayed image.
 histogram = np.bincount(measured.ravel(), minlength=256)`

@@ -23,6 +23,12 @@ export default function Lab3() {
   const views = lab.result ? [lab.result.original, lab.result.equalized, lab.result.clahe, lab.result.linear] : []
   const maxCount = Math.max(0, ...views.flatMap(view => view.histogram))
   const channel = lab.result?.channel ?? (lab.draft.mode === 'color' ? 'Y brightness (YUV)' : 'Grayscale intensity')
+  const inputNotes = [...new Set(lab.source?.frame.notes ?? [])].filter(note =>
+    note !== 'EXIF orientation is not applied; coordinates follow the decoded pixel array.' &&
+    note !== 'Transparency was composited onto white before processing.')
+  const processingNotes = [...new Set(lab.result?.notes ?? [])].filter(note =>
+    note !== 'Histograms count one grayscale/Y brightness value per pixel of each final displayed image.' &&
+    note !== 'Color mode modifies Y in YUV and retains U/V before reconstruction. Gamut clipping/rounding can affect final brightness and color; histograms measure the reconstructed BGR image.')
   const csv = lab.result ? 'intensity,original,equalized,clahe,linear\n' + Array.from({ length: 256 }, (_, i) => [i, ...views.map(view => view.histogram[i])].join(',')).join('\n') : ''
 
   return <LabPage labNumber={3} title="Bring the details into view."
@@ -83,17 +89,26 @@ export default function Lab3() {
       </LabWorkspace>
       <LabGuide id="contrast-guide" ref={guide}>
         <div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p>
-          <details><summary>See the Python operations</summary><pre><code>{pythonExample}</code></pre></details></article>
+          </article>
           <article><h2>Try thinking about this</h2><p>{content.reflection}</p></article></div>
-        <details className="lab-preprocessing"><summary>Input handling & reproducibility</summary><ul>
-          <li>Color mode changes only Y in YUV before reconstructing BGR. Grayscale mode converts color inputs first. Histograms count brightness, not separate red/green/blue channels.</li>
-          <li>Histograms use 256 bins and the same count scale across all four views. Counts and measurements are calculated from the final displayed images, including reconstruction rounding and gamut clipping.</li>
-          <li>Manual adjustment uses clip(rint(alpha × intensity + beta), 0, 255). Negative offsets clip at black; they are not converted to absolute values. Full-range stretching leaves a constant channel unchanged.</li>
-          <li>The generated uneven-lighting sample has Gaussian noise with seed 42 and standard deviation 2.5.</li>
-          <li>Inputs are limited to 5 MiB, 4096px per side, and four million pixels. Transparency is composited onto white; EXIF orientation is not applied. Color inputs select color mode on load; reset restores the grayscale baseline.</li>
-          {lab.source?.frame.notes.map(note => <li key={note}>{note}</li>)}
-          {lab.result?.notes.map(note => <li key={note}>{note}</li>)}
-        </ul></details>
+        <details className="lab-guide-code"><summary>See the Python operations</summary><pre><code>{pythonExample}</code></pre></details>
+        <details className="lab-preprocessing"><summary>Input handling & reproducibility</summary>
+          <div className="lab-reference-grid">
+            <section aria-labelledby="contrast-processing-notes"><h3 id="contrast-processing-notes">Processing</h3><ul>
+              <li>Color mode adjusts Y brightness in YUV, retaining U/V before reconstructing BGR. Grayscale mode converts color inputs first.</li>
+              <li>Histograms count brightness, not separate RGB channels. All four charts use 256 bins and the same count scale.</li>
+              <li>Measurements use the final displayed images, including reconstruction rounding and gamut clipping.</li>
+              <li>Manual adjustment uses <code>clip(rint(alpha × intensity + beta), 0, 255)</code>. Negative offsets clip at black; they are not converted to absolute values. Stretching leaves a constant channel unchanged.</li>
+              {processingNotes.map(note => <li key={note}>{note}</li>)}
+            </ul></section>
+            <section aria-labelledby="contrast-input-notes"><h3 id="contrast-input-notes">Input & reproducibility</h3><ul>
+              <li>PNG/JPEG inputs: up to 5 MiB, 4096 pixels per side, and four million pixels total.</li>
+              <li>Transparency is composited onto white. EXIF orientation is not applied.</li>
+              <li>Color inputs select color mode on load. Reset restores the grayscale baseline.</li>
+              {inputNotes.map(note => <li key={note}>{note}</li>)}
+            </ul></section>
+          </div>
+        </details>
       </LabGuide>
   </LabPage>
 }

@@ -76,14 +76,17 @@ export default function Lab1() {
       </LabWorkspace>
       <LabGuide ref={guide} id="lab-explanation">
         <section className="lab-learning" aria-label="Understand the experiment">
-        <article><h2>{current.heading}</h2><p>{current.explanation}</p><details><summary>See the Python operation</summary><pre><code>{current.code}</code></pre><p>The backend validates inputs and formats the result around this core operation.</p></details></article>
+        <article><h2>{current.heading}</h2><p>{current.explanation}</p></article>
         <article><h2>Try thinking about this</h2><p>{current.reflection}</p></article>
       </section>
-      {lab.source && <details className="lab-preprocessing"><summary>Input handling and reproducibility</summary><ul>
+<details className="lab-guide-code"><summary>See the Python operation</summary><pre><code>{current.code}</code></pre></details>
+            {lab.source && <details className="lab-preprocessing"><summary>Input handling and reproducibility</summary><ul>
         {lab.source.frame.notes.map(note => <li key={note}>{note}</li>)}
         <li>PNG/JPEG inputs: up to 5 MiB, 4096 pixels per side, and 4 million pixels total.</li>
-        <li>No automatic resizing. Color inputs are BGR arrays; grayscale inputs retain one channel. Transparency, when present, is composited onto white.</li>
-        <li>Operations use the original image. Rotation advances in 90° steps and applies the accumulated angle to the original, avoiding repeated encoding. Result downloads are lossless PNGs; the displayed shape describes the OpenCV array, not the browser image buffer.</li>
+        <li>No automatic resizing. Color inputs are BGR arrays; grayscale inputs retain one channel.</li>
+        <li>Transparency, when present, is composited onto white.</li>
+        <li>Operations use the original image. Rotation advances in 90° steps and applies the accumulated angle to the original, avoiding repeated encoding.</li>
+        <li>Result downloads are lossless PNGs. The displayed shape describes the OpenCV array, not the browser image buffer.</li>
       </ul></details>}
       </LabGuide>
   </LabPage>

@@ -88,8 +88,9 @@ export default function Lab4() {
         <details className="lab-preprocessing"><summary>Run settings & measurements</summary><pre>{JSON.stringify({ engine: lab.result.engine, parameters: lab.result.parameters, algorithms: lab.result.algorithms.map(({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms }) => ({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms })) }, null, 2)}</pre></details>
       </>}
     </LabWorkspace>
-    <LabGuide id="features-guide" ref={guide}><div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p><details><summary>See the Python operations</summary><pre><code>{pythonExample}</code></pre></details></article>
+    <LabGuide id="features-guide" ref={guide}><div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p></article>
       <article><h2>Try thinking about this</h2><p>{content.reflection}</p></article></div>
+      <details className="lab-guide-code"><summary>See the Python operations</summary><pre><code>{pythonExample}</code></pre></details>
       <details className="lab-preprocessing"><summary>Input handling & reproducibility</summary><ul>
         <li>Both inputs are converted to grayscale. Transparency is composited onto white; EXIF orientation is not applied.</li>
         <li>Features are capped at the strongest responses before describing them. A higher ratio threshold accepts more candidates; the display limit only reduces drawn lines.</li>

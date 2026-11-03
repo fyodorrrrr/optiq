@@ -69,8 +69,9 @@ export default function Lab5() {
         <details className="lab-preprocessing"><summary>Run settings, provenance & timings</summary><pre>{JSON.stringify({ parameters: result.parameters, provenance: result.provenance, timings: result.timings }, null, 2)}</pre></details>
       </> : <p className="pca-empty">Run an experiment to see eigenfaces, the variance curve, recognition results, and misclassified faces. All four tools inspect the same completed run.</p>}
     </LabWorkspace>
-    <LabGuide id="pca-guide" ref={guide}><div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p><details><summary>See the Python operations</summary><pre><code>{pythonExample}</code></pre></details></article>
+    <LabGuide id="pca-guide" ref={guide}><div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p></article>
       <article><h2>What to compare</h2><p>Start with 150 components, then try a smaller count. Compare retained variance, classification metrics, and the actual failures. More components do not guarantee better recognition.</p></article></div>
+      <details className="lab-guide-code"><summary>See the Python operations</summary><pre><code>{pythonExample}</code></pre></details>
       <details className="lab-preprocessing"><summary>Reproducibility & limitations</summary><ul>
         <li>LFW uses min_faces_per_person=70 and resize=0.4. The source's unstratified 80/20 split uses random_state=42.</li>
         <li>Both PCA fits use training data only. The classifier sees training projections only. Test labels are used for evaluation, never fitting.</li>

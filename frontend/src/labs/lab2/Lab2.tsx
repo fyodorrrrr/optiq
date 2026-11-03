@@ -63,9 +63,10 @@ export default function Lab2() {
       </LabWorkspace>
       <LabGuide id="edge-guide" ref={guide}>
         <div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p>
-          <details><summary>See the Python operations</summary><pre><code>{pythonExample}</code></pre></details></article>
+          </article>
           <article><h2>Try thinking about this</h2><p>{content.reflection}</p></article></div>
-        <details className="lab-preprocessing"><summary>Input handling & reproducibility</summary><ul>
+        <details className="lab-guide-code"><summary>See the Python operations</summary><pre><code>{pythonExample}</code></pre></details>
+      <details className="lab-preprocessing"><summary>Input handling & reproducibility</summary><ul>
           <li>The activity's input.jpg was not supplied. The generated samples are explicit replacements; upload the assigned image when available.</li>
           <li>The noisy sample uses Gaussian noise with seed 42 and standard deviation 18.</li>
           <li>PNG/JPEG inputs are limited to 5 MiB, 4096px per side, and four million pixels. No automatic resizing; transparency is composited onto white and EXIF orientation is not applied.</li>

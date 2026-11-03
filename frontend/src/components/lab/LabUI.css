@@ -74,17 +74,17 @@
 .lab-result-actions { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 16px; font-size: 13px; }
 .lab-result-actions summary, .lab-learning summary, .lab-preprocessing summary { cursor: pointer; color: var(--accent); }
 .lab-result-actions pre, .lab-learning pre { background: var(--paper); border-radius: var(--radius-control); padding: 16px; margin-top: 14px; font-size: 12px; line-height: 1.7; max-width: 100%; overflow: auto; }
-.lab-learning { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin: 32px 0; scroll-margin-top: 24px; }
+.lab-learning { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr); gap: 32px; max-width: 1120px; margin: 20px 0 28px; scroll-margin-top: 24px; }
 .lab-learning article { min-width: 0; }
-.lab-learning h2 { font-size: 18px; margin-bottom: 12px; }
+.lab-learning h2 { font-size: 20px; line-height: 1.4; margin-bottom: 12px; }
 .lab-learning h3 { font-size: 14px; font-weight: 600; margin: 24px 0 8px; }
-.lab-learning p { font-size: 14px; color: var(--ink-soft); line-height: 1.8; max-width: 70ch; }
+.lab-learning p { font-size: 16px; color: var(--ink-soft); line-height: 1.75; max-width: 70ch; margin: 0; }
 .lab-learning details { margin-top: 18px; font-size: 14px; }
 .lab-preprocessing { font-size: 13px; line-height: 1.8; color: var(--ink-soft); margin-bottom: 28px; }
 .lab-preprocessing ul { list-style: disc; padding-left: 24px; margin-top: 12px; }
 .lab-page .site-footer { margin-top: 24px; }
 .lab-learning-disclosure { margin: 24px 0; border-top: 1px solid var(--line); padding-top: 20px; scroll-margin-top: 24px; }
-.lab-learning-disclosure > summary { cursor: pointer; font-size: 14px; color: var(--accent); }
+.lab-learning-disclosure > summary { cursor: pointer; font-size: 16px; font-weight: 600; color: var(--ink); }
 
 @media (max-width: 1359px) {
   .lab-introduction { flex-direction: column; align-items: start; }
@@ -169,3 +169,33 @@
 .lab-select-control:focus-within > svg { color: var(--accent); }
 .lab-select-control select:disabled { cursor: not-allowed; background: var(--paper); color: var(--ink-soft); }
 @media (forced-colors: active) { .lab-select-control > svg { color: ButtonText; } }
+
+/* Reading hierarchy for optional lab explanations and technical references. */
+.lab-learning article + article { border-inline-start: 1px solid var(--line); padding-inline-start: 24px; align-self: start; }
+.lab-learning article + article h2 { font-size: 16px; margin-bottom: 8px; }
+.lab-learning article + article p { font-size: 15px; }
+.lab-learning details > summary { padding-block: 10px; min-height: 44px; }
+.lab-learning pre { font-size: 14px; line-height: 1.7; background: var(--paper-deep); border: 1px solid var(--line-strong); }
+.lab-learning-disclosure .lab-preprocessing { font-size: 14px; line-height: 1.75; margin: 0 0 24px; }
+.lab-learning-disclosure .lab-preprocessing > ul, .lab-learning-disclosure .lab-preprocessing > p { max-width: 75ch; overflow-wrap: anywhere; }
+.lab-learning-disclosure .lab-preprocessing li + li { margin-top: 8px; }
+.lab-learning-disclosure summary:focus-visible { outline-offset: 2px; }
+.lab-learning-disclosure .lab-preprocessing pre { font-size: 14px; }
+@media (max-width: 900px) {
+  .lab-learning { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .lab-learning article + article { border-inline-start: 0; border-top: 1px solid var(--line); padding-inline-start: 0; padding-top: 20px; }
+}
+
+.lab-guide-code { margin: 0 0 24px; font-size: 14px; }
+.lab-guide-code > summary { cursor: pointer; color: var(--accent); min-height: 44px; padding-block: 10px; }
+.lab-guide-code pre { width: 100%; max-width: 110ch; overflow: auto; margin: 12px 0 0; padding: 16px; border: 1px solid var(--line-strong); border-radius: var(--radius-control); background: var(--paper-deep); font-size: 14px; line-height: 1.7; }
+
+.lab-learning-disclosure > .lab-guide-code,
+.lab-learning-disclosure > .lab-preprocessing { border-top: 1px solid var(--line); padding-top: 8px; }
+.lab-reference-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; margin-top: 12px; max-width: 1120px; }
+.lab-reference-grid > section { min-width: 0; }
+.lab-reference-grid h3 { color: var(--ink); font-size: 15px; font-weight: 600; margin: 0 0 12px; }
+.lab-reference-grid ul { margin: 0; max-width: 65ch; }
+.lab-reference-grid li { overflow-wrap: anywhere; }
+.lab-reference-grid code { font-size: .9em; }
+@media (max-width: 900px) { .lab-reference-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
