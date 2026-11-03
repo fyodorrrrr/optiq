@@ -18,14 +18,13 @@ export default function EdgeControls({ lab, section, onRevealSettings }: { lab: 
         <NumberField name="high_threshold" error={lab.invalidField === 'high_threshold' ? lab.error : undefined} label="Upper threshold" required min="1" max="2048" step="1" value={lab.draft.high_threshold} onChange={value => lab.change('high_threshold', value)} />
       </div>}
       {(section === 'compare' || section === 'canny') && <p className="lab-hint">Lower must be below upper.</p>}
+      <LabButton variant="primary" type="submit">{lab.busy ? 'Processing…' : 'Run both detectors'}</LabButton>
+    </fieldset>
+    <LabButton disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>
       <ControlHelp key={section} title="How to adjust edge detection">
         <p>Choose settings, then run both detectors. They always use the same input and Gaussian blur.</p>
         <p>Larger Gaussian kernels smooth more noise and fine detail. The Sobel kernel sets the neighborhood used to measure brightness changes.</p>
         <p>Higher Canny thresholds generally retain fewer weak edges. The lower threshold must be smaller than the upper threshold.</p>
       </ControlHelp>
-      <LabButton variant="primary" type="submit">{lab.busy ? 'Processing…' : 'Run both detectors'}</LabButton>
-    </fieldset>
-    <LabButton disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>
-    {lab.result && <a className="lab-view-result" href="#edge-results">View results ↓</a>}
   </form>
 }

@@ -1,3 +1,4 @@
+import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import { useRef, useState } from 'react'
 import { pythonExample, sections } from './content'
 import type { Section } from './content'
@@ -33,7 +34,7 @@ export default function Lab2() {
             icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[key].icon} /></svg>,
           }))} />}
         controls={<><h2>{content.title === 'Compare' ? 'Compare edges' : content.title}</h2>
-          <p>{content.prompt}</p><EdgeControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} /></>}>
+          <PredictionPrompt>{content.prompt}</PredictionPrompt><EdgeControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} /></>}>
           <div className="lab-image-grid" data-columns={3}>
             <EdgeFigure title="Original (grayscale)" frame={lab.source?.frame ?? null} description="Input before Gaussian smoothing" pending={lab.busy} />
             <EdgeFigure title="Sobel combined" frame={lab.result?.sobel ?? null} description="Brighter pixels show stronger changes · scaled for display" pending={lab.busy} />

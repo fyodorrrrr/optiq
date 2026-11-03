@@ -1,3 +1,4 @@
+import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import ControlHelp from '../../components/lab/ControlHelp'
 import { useRef, useState } from 'react'
 import LabPage from '../../components/lab/LabPage'
@@ -37,13 +38,13 @@ export default function Lab5() {
       tools={<ToolSidebar<Section> heading="Explore" value={section} onChange={setSection} tools={(Object.keys(sections) as Section[]).map(id => ({ id, label: sections[id].title,
         icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[id].icon} /></svg>,
       }))} />}
-      controls={<><h2>{content.title}</h2><p>{content.prompt}</p><form onSubmit={event => { event.preventDefault(); void lab.run() }}>
+      controls={<><h2>{content.title}</h2><PredictionPrompt>{content.prompt}</PredictionPrompt><form onSubmit={event => { event.preventDefault(); void lab.run() }}>
         <NumberField required label="PCA components" value={lab.components} min={12} max={lab.dataset?.max_components || 300} step={1} disabled={lab.busy} onChange={lab.setComponents} />
-        <ControlHelp title="How to choose PCA components"><p>The component count sets how many variation patterns represent each face. Fewer components retain less information. Start with 150, then compare retained variance, recognition, and failures at a smaller count.</p></ControlHelp>
-        <details className="lab-settings-disclosure"><summary>Baseline & execution</summary><p>Baseline: 150 · whitened PCA · balanced RBF SVM · fixed split, seed 42.</p>
-        <p className="lab-hint">Each run fits fresh models. Leaving the page or losing the connection stops waiting, but the server fit may continue. Wait for it to finish before retrying.</p></details>
         <div className="pca-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || !lab.dataset?.ready}>Run experiment</LabButton>
-          <LabButton disabled={lab.busy} onClick={() => lab.setComponents('150')}>Reset baseline</LabButton></div>
+          <LabButton variant="quiet" disabled={lab.busy} onClick={() => lab.setComponents('150')}>Reset baseline</LabButton></div>
+        <ControlHelp title="How to choose PCA components"><p>The component count sets how many variation patterns represent each face. Fewer components retain less information. Start with 150, then compare retained variance, recognition, and failures at a smaller count.</p>        <p>Baseline: 150 · whitened PCA · balanced RBF SVM · fixed split, seed 42.</p>
+        <p className="lab-hint">Each run fits fresh models. Leaving the page or losing the connection stops waiting, but the server fit may continue. Wait for it to finish before retrying.</p>
+</ControlHelp>
       </form></>}>
       <details className="pca-dataset lab-metadata-help" open={!result}><summary>Dataset details{lab.dataset?.ready ? ` · ${lab.dataset.samples.toLocaleString()} faces · ${lab.dataset.names.length} identities` : ''}</summary>
         <p>{lab.dataset?.message ?? 'Checking the LFW dataset…'}</p>

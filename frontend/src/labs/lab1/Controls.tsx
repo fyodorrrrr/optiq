@@ -29,9 +29,5 @@ export default function Controls({ operation, fields, frame, change }: {
     {operation === 'edit' && (frame.channels === 1
       ? numeric('intensity', 'New intensity', 0, 255)
       : <label className="lab-field">New pixel color (RGB)<input type="color" value={fields.color} onChange={event => change('color', event.target.value)} /></label>)}
-    {(operation === 'inspect' || operation === 'edit' || operation === 'crop') && <details key={operation} className="lab-metadata-help">
-      <summary>{operation === 'crop' ? 'How to position the crop' : 'How to select a pixel'}</summary>
-      <p>{operation !== 'crop' && 'Click the original image or enter coordinates, then run the experiment. '}Coordinates start at (0, 0) in the top-left. X moves right; Y moves down.{operation === 'crop' && ' The outlined crop must fit inside the image.'}</p>
-    </details>}
   </div>
 }

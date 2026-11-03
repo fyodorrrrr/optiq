@@ -1,6 +1,6 @@
 export const sections = {
   compare: { title: 'Compare', icon: 'M3 4h7v16H3ZM14 4h7v16h-7Z',
-    prompt: 'Which method reveals useful detail without exaggerating noise?', heading: 'Contrast changes what you can distinguish.',
+    prompt: 'Which method reveals detail without amplifying noise?', heading: 'Contrast changes what you can distinguish.',
     explanation: 'A histogram counts pixels at each brightness value. A narrow distribution often signals low contrast. Enhancement can make differences easier to see, but cannot recover information that was never captured. Compare every method on the same original rather than choosing the brightest-looking result.',
     reflection: 'Compare the image and histogram together. Which details became clearer, and did any smooth region become noisy? Where could this help—for example, examining a poorly lit inspection image?' },
   equalize: { title: 'Equalization', icon: 'M3 20h18M5 16v-4M10 16V5M15 16V8M20 16V3',

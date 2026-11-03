@@ -1,3 +1,4 @@
+import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import ControlHelp from '../../components/lab/ControlHelp'
 import { useRef, useState } from 'react'
 import LabPage from '../../components/lab/LabPage'
@@ -43,7 +44,7 @@ export default function Lab4() {
       tools={<ToolSidebar<Section> heading="Methods" value={section} onChange={choose} tools={(Object.keys(sections) as Section[]).map(id => ({ id, label: sections[id].title,
         icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[id].icon} /></svg>,
       }))} />}
-      controls={<><h2>{content.title === 'Compare' ? 'Compare features' : content.title}</h2><p>{content.prompt}</p>
+      controls={<><h2>{content.title === 'Compare' ? 'Compare features' : content.title}</h2><PredictionPrompt>{content.prompt}</PredictionPrompt>
         <form onSubmit={event => { event.preventDefault(); void lab.run(field => revealField(field, () => setSection('compare'))) }}>
           <fieldset disabled={lab.busy || !lab.sources.first || !lab.sources.second}><legend className="sr-only">Feature comparison settings</legend>
           {(section === 'compare' || section === 'surf') && <>
@@ -53,14 +54,14 @@ export default function Lab4() {
           <NumberField required name="ratio_threshold" error={lab.invalidField === 'ratio_threshold' ? lab.error : undefined} label="Match ratio threshold" value={lab.draft.ratio_threshold} min={0.01} max={0.99} step="any" onChange={value => lab.change('ratio_threshold', value)} />
           <NumberField required name="max_features" error={lab.invalidField === 'max_features' ? lab.error : undefined} label="Maximum features per image" value={lab.draft.max_features} min={1} max={1000} step={1} onChange={value => lab.change('max_features', value)} />
           <NumberField required name="max_matches" error={lab.invalidField === 'max_matches' ? lab.error : undefined} label="Maximum displayed matches" value={lab.draft.max_matches} min={1} max={100} step={1} onChange={value => lab.change('max_matches', value)} />
+          <div className="feature-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || !lab.sources.first || !lab.sources.second}>{lab.busy ? 'Processing…' : 'Compare features'}</LabButton>
+          </div></fieldset>
+          <LabButton type="button" disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>
           <ControlHelp key={section} title="How to adjust feature matching">
             <p>Choose settings, then compare the same image pair across all available methods.</p>
             <p>Higher SURF Hessian thresholds usually detect fewer keypoints. Upright mode disables SURF orientation invariance.</p>
             <p>Higher match ratios accept more candidate matches; they do not prove accuracy. Maximum displayed matches limits drawn lines, not the number of accepted matches.</p>
           </ControlHelp>
-          <div className="feature-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || !lab.sources.first || !lab.sources.second}>{lab.busy ? 'Processing…' : 'Compare features'}</LabButton>
-          </div></fieldset>
-          <LabButton type="button" disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>
         </form></>}>
       {surf && !surf.available && <LabError title="SURF is unavailable on this server." message={surf.reason ?? 'A SURF-enabled OpenCV build is required. This laboratory is partially available.'} />}
       <div className="lab-image-grid"><ImagePanel title="Image A" frame={lab.sources.first?.frame ?? null} description={lab.sources.first?.name} />

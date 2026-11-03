@@ -202,3 +202,19 @@
 
 .lab-controls .lab-control-help { margin: 16px 0; }
 .lab-controls .lab-control-help > p { font-size: 14px; line-height: 1.65; margin: 8px 0 12px; }
+
+/* Settings lead to one primary action; reference help follows it. */
+.lab-shell .lab-quiet { display: flex; align-items: center; justify-content: flex-start; width: fit-content; min-height: 44px; padding: 10px 4px; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--ink-soft); font-size: 14px; line-height: 1.5; text-align: start; }
+.lab-shell .lab-quiet:hover:not(:disabled) { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
+.lab-settings-group { margin: 16px 0; }
+.lab-settings-group > .lab-settings-disclosure { margin: 0; }
+.lab-settings-group > .lab-settings-disclosure + .lab-settings-disclosure { border-top: 1px solid var(--line); }
+.lab-settings-group > .lab-settings-disclosure > summary { color: var(--ink); font-weight: 500; min-height: 44px; }
+.lab-settings-group > .lab-settings-disclosure[open] { padding-bottom: 12px; }
+.lab-controls .lab-control-help { margin: 16px 0 0; padding-top: 8px; border-top: 1px solid var(--line); }
+.lab-controls .lab-control-help > summary { min-height: 44px; padding-block: 10px; color: var(--ink-soft); font-size: 13px; font-weight: 400; }
+.lab-controls .feature-actions, .lab-controls .pca-actions, .lab-controls .detection-actions { margin: 16px 0 0; gap: 0; }
+.lab-controls .feature-actions .lab-primary, .lab-controls .pca-actions .lab-primary, .lab-controls .detection-actions .lab-primary { margin-top: 0; }
+.lab-controls { align-self: start; }
+.lab-settings-group:empty { display: none; }
+.lab-controls summary:focus-visible { outline-offset: 2px; }

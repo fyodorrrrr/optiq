@@ -1,3 +1,4 @@
+import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import { useRef, useState } from 'react'
 import LabPage from '../../components/lab/LabPage'
 import LabWorkspace from '../../components/lab/LabWorkspace'
@@ -45,7 +46,7 @@ export default function Lab3() {
           id: key, label: sections[key].title,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[key].icon} /></svg>,
         }))} />}
-        controls={<><h2>{content.title === 'Compare' ? 'Compare contrast' : content.title}</h2><p>{content.prompt}</p><ContrastControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} /></>}>
+        controls={<><h2>{content.title === 'Compare' ? 'Compare contrast' : content.title}</h2><PredictionPrompt>{content.prompt}</PredictionPrompt><ContrastControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} /></>}>
         <div className="lab-image-grid" data-columns={3}>
           <ContrastPanel title="Original" view={lab.result?.original ?? null} original={lab.source?.frame} pending={lab.busy} maxCount={maxCount} channel={channel}
             description={lab.result ? `Working original · ${channel}` : 'Input preview · run to apply the selected mode'} />

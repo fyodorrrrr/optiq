@@ -1,3 +1,5 @@
+import ControlHelp from '../../components/lab/ControlHelp'
+import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import { useRef } from 'react'
 import type { Operation } from './api'
 import { experiments } from './content'
@@ -41,7 +43,7 @@ export default function Lab1() {
         controls={<>
 
             <div className="lab-control-introduction"><h2>{current.title}</h2><p>{current.description}</p></div>
-            <div className="lab-prediction"><span>Predict</span><p>{current.prediction}</p></div>
+            <PredictionPrompt>{current.prediction}</PredictionPrompt>
             {lab.operation === 'rotate' && <p className="lab-rotation-angle">Rotation: {lab.rotationTurns * 90}°{lab.rotationTurns === 0 ? ' · original orientation' : ' clockwise'}</p>}
             <form onSubmit={event => { event.preventDefault(); void lab.run() }}>
               <fieldset disabled={lab.busy || !lab.source}>
@@ -49,9 +51,11 @@ export default function Lab1() {
                 {lab.source && <Controls operation={lab.operation} fields={lab.fields} frame={lab.source.frame} change={lab.change} />}
                 <LabButton variant="primary" type="submit">{lab.busy ? 'Processing…' : current.action}</LabButton>
               </fieldset>
-              <LabButton disabled={!lab.output && !lab.busy} onClick={lab.reset}>{lab.busy ? 'Cancel processing' : 'Clear result'}</LabButton>
-              {lab.output && <a className="lab-view-result" href="#lab-results">View {lab.resultIsPrevious ? 'previous ' : ''}result ↓</a>}
+              <LabButton variant={lab.busy ? 'secondary' : 'quiet'} disabled={!lab.output && !lab.busy} onClick={lab.reset}>{lab.busy ? 'Cancel processing' : 'Clear result'}</LabButton>
               <p className="lab-hint">{lab.operation === 'rotate' ? 'Each click adds 90°. Clear the result to reset the angle.' : 'Each experiment starts from the original image.'}</p>
+              {(pixelMode || lab.operation === 'crop') && <ControlHelp key={lab.operation} title={lab.operation === 'crop' ? 'How to position the crop' : 'How to select a pixel'}>
+                <p>{pixelMode && 'Click the original image or enter coordinates, then run the experiment. '}Coordinates start at (0, 0) in the top-left. X moves right; Y moves down.{lab.operation === 'crop' && ' The outlined crop must fit inside the image.'}</p>
+              </ControlHelp>}
             </form>
         </>}>
             {lab.output && <><p className="lab-result-notice">{lab.resultIsPrevious || lab.busy ? `Previous result · ${experiments[lab.output.operation].title}. Run to apply the current settings.` : `${experiments[lab.output.operation].title} result`}</p>

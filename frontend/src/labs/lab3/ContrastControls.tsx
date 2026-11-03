@@ -13,6 +13,7 @@ export default function ContrastControls({ lab, section, onRevealSettings }: { l
         { value: 'grayscale', label: 'Grayscale intensity' },
         { value: 'color', label: 'Color · adjust Y brightness', disabled: lab.source?.frame.channels !== 3 },
       ]} />
+      <div className="lab-settings-group">
       {(section === 'compare' || section === 'clahe') && <details className="lab-settings-disclosure" open={section === 'clahe' || ['clip_limit', 'tiles_x', 'tiles_y'].includes(lab.invalidField)}><summary>CLAHE settings</summary>
         <NumberField name="clip_limit" error={lab.invalidField === 'clip_limit' ? lab.error : undefined} label="CLAHE clip limit" min="0.1" max="40" step="0.1" required value={lab.draft.clip_limit} onChange={value => lab.change('clip_limit', value)} />
         <div className="lab-field-row">
@@ -29,14 +30,14 @@ export default function ContrastControls({ lab, section, onRevealSettings }: { l
           <NumberField name="beta" error={lab.invalidField === 'beta' ? lab.error : undefined} label="Brightness offset (β)" min="-255" max="255" step="1" required value={lab.draft.beta} onChange={value => lab.change('beta', value)} />
         </>}
       </details>}
+      </div>
+      <LabButton variant="primary" type="submit">{lab.busy ? 'Processing…' : 'Compare contrast'}</LabButton>
+    </fieldset>
+    <LabButton disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>
       <ControlHelp key={section} title="How to adjust contrast">
         <p>Choose settings, then run the comparison. All methods use the same original, and all histograms share one count scale.</p>
         <p>CLAHE limits local contrast amplification; larger clip limits can reveal more noise. Tiles divide the image into regions for local enhancement.</p>
         <p>For manual adjustment, a scale of 1 keeps the brightness scale. Larger values increase its spread before clipping. The offset adds brightness; negative values darken. Values are clipped to 0–255.</p>
       </ControlHelp>
-      <LabButton variant="primary" type="submit">{lab.busy ? 'Processing…' : 'Compare contrast'}</LabButton>
-    </fieldset>
-    <LabButton disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>
-    {lab.result && <a className="lab-view-result" href="#contrast-results">View results ↓</a>}
   </form>
 }

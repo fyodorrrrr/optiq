@@ -1,3 +1,4 @@
+import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import ControlHelp from '../../components/lab/ControlHelp'
 import { useRef, useState } from 'react'
 import LabPage from '../../components/lab/LabPage'
@@ -35,13 +36,13 @@ export default function Lab6() {
       tools={<ToolSidebar<Section> value={section} onChange={setSection} tools={(Object.keys(sections) as Section[]).map(id => ({ id, label: sections[id].title,
         icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[id].icon} /></svg>,
       }))} />}
-      controls={<><h2>{content.title}</h2><p>{content.prompt}</p>
+      controls={<><h2>{content.title}</h2><PredictionPrompt>{content.prompt}</PredictionPrompt>
         {section === 'detect' && <form onSubmit={event => { event.preventDefault(); void lab.run() }}><SelectField label="Detection model" value={lab.model} onChange={value => lab.changeModel(value as Model)} options={(lab.status?.models ?? [{ id: 'pretrained', title: 'YOLO11n · pretrained COCO', available: false }]).map(model => ({ value: model.id, label: `${model.id === 'pretrained' ? 'YOLO11n · COCO' : 'Custom model'}${model.available ? '' : ' · unavailable'}`, disabled: !model.available }))} />
           <NumberField label="Confidence threshold" value={lab.confidence} min={0.01} max={1} step="any" onChange={lab.changeConfidence} disabled={cameraRunning} />
-          <ControlHelp title="How to choose a confidence threshold"><p>Higher thresholds retain fewer detections. Lower thresholds can reveal more candidates, including incorrect detections. Confidence scores do not guarantee correctness.</p></ControlHelp>
           <div className="detection-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || cameraRunning || !lab.source || !available}>Detect objects</LabButton></div></form>}
-        <LabButton disabled={lab.busy || cameraRunning} onClick={() => void lab.refresh()}>Refresh status</LabButton>
-        <p>Custom training: {lab.status?.training.status ?? 'checking'}. Training starts only from your local command.</p></>}>
+        <LabButton variant="quiet" disabled={lab.busy || cameraRunning} onClick={() => void lab.refresh()}>Refresh status</LabButton>
+        <p>Custom training: {lab.status?.training.status ?? 'checking'}. Training starts only from your local command.</p>          <ControlHelp title="How to choose a confidence threshold"><p>Higher thresholds retain fewer detections. Lower thresholds can reveal more candidates, including incorrect detections. Confidence scores do not guarantee correctness.</p></ControlHelp>
+</>}>
       {lab.error && <LabError title="Could not process the image." message={lab.error} />}
       {section === 'detect' && <>
         {!available && <p className="detection-notice" role="status">{lab.status?.models.find(item => item.id === lab.model)?.message ?? 'Checking detector setup…'}</p>}
