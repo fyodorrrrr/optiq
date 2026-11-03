@@ -1,3 +1,4 @@
+import DownloadLink from '../../components/lab/DownloadLink'
 import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import { useRef, useState } from 'react'
 import { pythonExample, sections } from './content'
@@ -51,7 +52,7 @@ export default function Lab2() {
               : lab.source ? 'Ready. Run both detectors to compare their edge maps.' : 'Choose a sample or upload an image to begin.'}</LabStatus>
           {lab.result && <>
 
-            <div className="edge-downloads"><a href={lab.result.sobel.image} download="optiq-lab2-sobel.png">Download Sobel</a><a href={lab.result.canny.image} download="optiq-lab2-canny.png">Download Canny</a></div>
+            <div className="edge-downloads lab-downloads"><DownloadLink href={lab.result.sobel.image} download="optiq-lab2-sobel.png">Sobel PNG</DownloadLink><DownloadLink href={lab.result.canny.image} download="optiq-lab2-canny.png">Canny PNG</DownloadLink></div>
             <details className="edge-intermediates"><summary>Preprocessing & directional gradients</summary>
               <div className="lab-image-grid" data-columns={3}>
                 <EdgeFigure title="Gaussian blur" frame={lab.result.blurred} description={`${lab.result.parameters.blur_kernel} × ${lab.result.parameters.blur_kernel} · shared input to both detectors`} />

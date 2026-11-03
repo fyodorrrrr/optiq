@@ -1,3 +1,4 @@
+import DownloadLink from '../../components/lab/DownloadLink'
 import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import ControlHelp from '../../components/lab/ControlHelp'
 import { useRef, useState } from 'react'
@@ -54,7 +55,7 @@ export default function Lab6() {
         <LabStatus>{lab.busy ? 'Processing…' : lab.result ? `${stale ? 'Previous result. ' : ''}Last frame: ${lab.result.elapsed_ms.toFixed(0)} ms server processing · ${lab.roundtrip?.toFixed(0)} ms request round trip. These are timings, not an accuracy measure.` : 'Predict which objects will be found, then try detection.'}</LabStatus>
         {lab.result && <>
           {lab.result.detections.length === 0 ? <p>No objects met this threshold. Try a lower confidence or an image containing the model’s supported classes.</p> : <details><summary>Detection details ({lab.result.detections.length})</summary><div className="detection-table" tabIndex={0} role="region" aria-label="Detected objects"><table><caption>Boxes in original input pixels · x1, y1, x2, y2</caption><thead><tr><th>Object</th><th>Confidence</th><th>Box coordinates</th></tr></thead><tbody>{lab.result.detections.map((item, index) => <tr key={index}><th scope="row">{item.label}</th><td>{(item.confidence * 100).toFixed(1)}%</td><td>{item.xyxy.map(value => value.toFixed(1)).join(', ')}</td></tr>)}</tbody></table></div></details>}
-          <div className="detection-actions"><a href={lab.result.output.image} download="optiq-lab6-detections.png">Download detection image</a><a href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify({ ...lab.result, output: undefined }, null, 2))}`} download="optiq-lab6-detections.json">Download detection data</a></div>
+          <div className="detection-actions lab-downloads"><DownloadLink href={lab.result.output.image} download="optiq-lab6-detections.png">Detection PNG</DownloadLink><DownloadLink href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify({ ...lab.result, output: undefined }, null, 2))}`} download="optiq-lab6-detections.json">Detection JSON</DownloadLink></div>
           <details className="lab-preprocessing"><summary>Inference settings & provenance</summary><pre>{JSON.stringify({ parameters: lab.result.parameters, provenance: lab.result.provenance, stages_ms: lab.result.stages_ms }, null, 2)}</pre></details>
         </>}
       </>}

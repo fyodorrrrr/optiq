@@ -1,3 +1,4 @@
+import DownloadLink from '../../components/lab/DownloadLink'
 import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import ControlHelp from '../../components/lab/ControlHelp'
 import { useRef, useState } from 'react'
@@ -87,9 +88,9 @@ export default function Lab4() {
             <details className="lab-metadata-help"><summary>Descriptor details</summary><p>{selected.descriptor_dimensions} {selected.descriptor_dtype === 'uint8' ? 'bytes (256 bits)' : 'floating-point values'} per descriptor · {selected.norm} distance.</p></details>
             <div className="lab-image-grid"><ImagePanel title={`${algorithm.toUpperCase()} · keypoints A`} frame={selected.keypoints_first_image} /><ImagePanel title={`${algorithm.toUpperCase()} · keypoints B`} frame={selected.keypoints_second_image} /></div>
             <ImagePanel title={`${algorithm.toUpperCase()} · matches`} frame={selected.matches_image} description={`Showing ${selected.displayed_matches} of ${selected.good_matches} ratio-test matches, ordered by distance. These are candidate correspondences, not verified accuracy.`} />
-            <div className="feature-downloads">{selected.keypoints_first_image && <a href={selected.keypoints_first_image.image} download={`optiq-${algorithm}-keypoints-a.png`}>Download keypoints A</a>}
-              {selected.keypoints_second_image && <a href={selected.keypoints_second_image.image} download={`optiq-${algorithm}-keypoints-b.png`}>Download keypoints B</a>}
-              {selected.matches_image && <a href={selected.matches_image.image} download={`optiq-${algorithm}-matches.png`}>Download matches</a>}</div>
+            <div className="feature-downloads lab-downloads">{selected.keypoints_first_image && <DownloadLink href={selected.keypoints_first_image.image} download={`optiq-${algorithm}-keypoints-a.png`}>Keypoints A PNG</DownloadLink>}
+              {selected.keypoints_second_image && <DownloadLink href={selected.keypoints_second_image.image} download={`optiq-${algorithm}-keypoints-b.png`}>Keypoints B PNG</DownloadLink>}
+              {selected.matches_image && <DownloadLink href={selected.matches_image.image} download={`optiq-${algorithm}-matches.png`}>Matches PNG</DownloadLink>}</div>
           </>}
         </section>
         <details className="lab-preprocessing"><summary>Run settings & measurements</summary><pre>{JSON.stringify({ engine: lab.result.engine, parameters: lab.result.parameters, algorithms: lab.result.algorithms.map(({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms }) => ({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms })) }, null, 2)}</pre></details>

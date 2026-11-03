@@ -1,3 +1,5 @@
+import DownloadLink from '../../components/lab/DownloadLink'
+import ContrastRunDetails from './ContrastRunDetails'
 import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import { useRef, useState } from 'react'
 import LabPage from '../../components/lab/LabPage'
@@ -70,23 +72,26 @@ export default function Lab3() {
         </section>
         <LabStatus>{lab.busy ? 'Working with the image service…'
           : lab.error ? 'Check the message above and try again.'
-            : lab.resultIsPrevious ? 'Settings changed. Previous results are shown; run the comparison to update them.'
+            : lab.resultIsPrevious ? 'Showing the previous run. Run the comparison to apply changed settings.'
               : lab.result ? 'Contrast comparison complete.'
               : lab.source ? 'Ready. Run the comparison to see images and histograms.' : 'Choose a sample or upload an image to begin.'}</LabStatus>
-        {lab.source && <details className="lab-metadata-help"><summary>Image details</summary>
-          <p>{lab.result ? 'Properties shared by all four displayed images.' : 'Uploaded input properties; the selected mode is applied when you run the comparison.'}</p>
-          <ImageMetadata frame={lab.result?.original.frame ?? lab.source.frame} />
-        </details>}
-        {lab.result && <>
-          <div className="contrast-downloads">
-            <a href={lab.result.equalized.frame.image} download="optiq-lab3-equalized.png">Download equalized</a>
-            <a href={lab.result.clahe.frame.image} download="optiq-lab3-clahe.png">Download CLAHE</a>
-            <a href={lab.result.linear.frame.image} download="optiq-lab3-linear.png">Download linear</a>
-            <a href={`data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`} download="optiq-lab3-histograms.csv">Download histograms CSV</a>
-          </div>
-          <details className="lab-preprocessing contrast-run"><summary>Run settings & measurements</summary><pre>{JSON.stringify({ engine: lab.result.engine, parameters: lab.result.parameters, linear_transform: lab.result.linear_transform, channel: lab.result.channel,
-            statistics: { original: lab.result.original.statistics, equalized: lab.result.equalized.statistics, clahe: lab.result.clahe.statistics, linear: lab.result.linear.statistics } }, null, 2)}</pre></details>
-        </>}
+        <div className="lab-result-utilities">
+          {lab.result && <section aria-labelledby="contrast-download-title">
+            <h3 id="contrast-download-title">Download results</h3>
+            {(lab.resultIsPrevious || lab.busy) && <p className="lab-measurements-note">Downloads and measurements belong to the displayed previous run.</p>}
+            <div className="contrast-downloads lab-downloads">
+              <DownloadLink href={lab.result.equalized.frame.image} download="optiq-lab3-equalized.png">Equalized PNG</DownloadLink>
+              <DownloadLink href={lab.result.clahe.frame.image} download="optiq-lab3-clahe.png">CLAHE PNG</DownloadLink>
+              <DownloadLink href={lab.result.linear.frame.image} download="optiq-lab3-linear.png">Linear PNG</DownloadLink>
+              <DownloadLink href={`data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`} download="optiq-lab3-histograms.csv">Histograms CSV</DownloadLink>
+            </div>
+          </section>}
+          {lab.source && <details className="lab-result-disclosure lab-metadata-help"><summary>{lab.result ? 'Shared image properties' : 'Input image properties'}</summary>
+            {!lab.result && <p>The selected processing mode is applied when you run the comparison.</p>}
+            <ImageMetadata wide frame={lab.result?.original.frame ?? lab.source.frame} />
+          </details>}
+          {lab.result && <ContrastRunDetails result={lab.result} />}
+        </div>
       </LabWorkspace>
       <LabGuide id="contrast-guide" ref={guide}>
         <div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p>

@@ -1,3 +1,4 @@
+import DownloadLink from '../../components/lab/DownloadLink'
 import type { Status } from './api'
 export default function TrainingView({ status }: { status: Status | null }) {
   const training = status?.training
@@ -16,6 +17,6 @@ export default function TrainingView({ status }: { status: Status | null }) {
         <text x="45" y="235">Epoch 1</text><text x="605" y="235" textAnchor="end">Epoch {history.length}</text></svg></div><p>Green: box loss · brown: classification loss · blue: distribution focal loss. These share a linear scale. Loss is an optimization measure, not accuracy.</p></>}
       <details className="lab-preprocessing"><summary>Recorded metrics & provenance</summary><pre>{JSON.stringify(training, null, 2)}</pre></details>
     </>}
-    {training && training.status !== 'pending' && <a href="/api/labs/6/artifacts/log" download>Download local training log</a>}
+    {training && training.status !== 'pending' && <DownloadLink href="/api/labs/6/artifacts/log" download>Local training log</DownloadLink>}
   </section>
 }

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
+import { labs } from '../../data/labs'
 import './LabUI.css'
 
 export default function LabPage({ labNumber, title, description, actions, inputNote, guideId, onOpenGuide, wide, processingLabel = 'Python/OpenCV processing', children }: {
@@ -7,6 +8,7 @@ export default function LabPage({ labNumber, title, description, actions, inputN
   inputNote: string; guideId: string; onOpenGuide: () => void; wide?: boolean; processingLabel?: string; children: ReactNode
 }) {
   const mainId = `lab-${labNumber}-main`
+  const nextLab = labs.find(lab => lab.id === labNumber + 1)
   return <div className={`lab-page lab-shell${wide ? ' lab-shell-wide' : ''}`}>
     <a className="skip-link" href={`#${mainId}`}>Skip to workspace</a>
     <header className="site-header"><Link className="brand" to="/" aria-label="Optiq home">optiq<span>.</span></Link>
@@ -20,7 +22,11 @@ export default function LabPage({ labNumber, title, description, actions, inputN
       </section>
       <p className="lab-input-note">{inputNote}</p>
       {children}
-      <footer className="site-footer"><p>Lab {labNumber} of 7 · {processingLabel}</p><Link to="/#labs">Explore the labs →</Link></footer>
+      <footer className="site-footer"><p>Lab {labNumber} of {labs.length} · {processingLabel}</p>
+        {nextLab?.href ? <Link to={nextLab.href}>Next lab: {nextLab.title} →</Link>
+          : nextLab ? <span>Next lab: {nextLab.title} · Coming soon</span>
+            : <Link to="/#labs">Back to all labs →</Link>}
+      </footer>
     </main>
   </div>
 }

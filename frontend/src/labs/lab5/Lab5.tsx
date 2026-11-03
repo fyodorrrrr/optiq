@@ -1,3 +1,4 @@
+import DownloadLink from '../../components/lab/DownloadLink'
 import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import ControlHelp from '../../components/lab/ControlHelp'
 import { useRef, useState } from 'react'
@@ -68,7 +69,7 @@ export default function Lab5() {
           <div className="pca-table" tabIndex={0} role="region" aria-label="Classification report"><table><caption>Classification report · precision, recall and F1 range from 0 to 1</caption><thead><tr><th scope="col">Identity / average</th><th scope="col">Precision</th><th scope="col">Recall</th><th scope="col">F1</th><th scope="col">Support</th></tr></thead><tbody>{result.report.map(row => <tr key={row.name}><th scope="row">{row.name}</th><td>{row.precision.toFixed(3)}</td><td>{row.recall.toFixed(3)}</td><td>{row.f1.toFixed(3)}</td><td>{row.support}</td></tr>)}</tbody></table></div>
           <h3>First 12 test predictions</h3><PredictionGallery items={result.predictions} /></section>}
         {section === 'failures' && <section><h2>Learn from the misses</h2><p>{result.misclassified_count} of {result.test_count} test faces were misclassified. {result.failures.length > 0 ? `Showing the first ${result.failures.length} in test-split order.` : 'There are no misclassifications in this run.'}</p><PredictionGallery items={result.failures} /></section>}
-        <div className="pca-actions"><a href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify({ ...result, eigenfaces: undefined, tail_eigenfaces: undefined, predictions: undefined, failures: undefined }, null, 2))}`} download="optiq-lab5-measurements.json">Download measurements & predictions</a></div>
+        <div className="pca-actions lab-downloads"><DownloadLink href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify({ ...result, eigenfaces: undefined, tail_eigenfaces: undefined, predictions: undefined, failures: undefined }, null, 2))}`} download="optiq-lab5-measurements.json">Measurements & predictions JSON</DownloadLink></div>
         <details className="lab-preprocessing"><summary>Run settings, provenance & timings</summary><pre>{JSON.stringify({ parameters: result.parameters, provenance: result.provenance, timings: result.timings }, null, 2)}</pre></details>
       </> : <p className="pca-empty">Run an experiment to see eigenfaces, the variance curve, recognition results, and misclassified faces. All four tools inspect the same completed run.</p>}
     </LabWorkspace>

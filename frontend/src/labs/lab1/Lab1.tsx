@@ -1,3 +1,4 @@
+import DownloadLink from '../../components/lab/DownloadLink'
 import ControlHelp from '../../components/lab/ControlHelp'
 import PredictionPrompt from '../../components/lab/PredictionPrompt'
 import { useRef } from 'react'
@@ -75,7 +76,7 @@ export default function Lab1() {
                 : lab.output ? lab.resultIsPrevious ? 'Settings changed. The previous result is still shown; run the experiment to update it.'
                   : `${experiments[lab.output.operation].title} complete. The original is unchanged.`
                   : lab.source ? 'Ready. Choose settings and run the experiment.' : 'Choose a sample or upload an image to retry.'}</LabStatus>
-            {lab.output && <div className="lab-result-actions"><a href={lab.output.result.image} download={`optiq-lab1-${lab.output.operation}.png`}>Download result PNG</a>
+            {lab.output && <div className="lab-result-actions"><DownloadLink href={lab.output.result.image} download={`optiq-lab1-${lab.output.operation}.png`}>Result PNG</DownloadLink>
               <details><summary>Run parameters</summary><pre>{JSON.stringify({ parameters: lab.output.parameters, engine: lab.output.engine, original_dtype: lab.source?.frame.dtype, result_dtype: lab.output.result.dtype }, null, 2)}</pre></details></div>}
       </LabWorkspace>
       <LabGuide ref={guide} id="lab-explanation">

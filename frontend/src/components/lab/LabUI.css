@@ -218,3 +218,38 @@
 .lab-controls { align-self: start; }
 .lab-settings-group:empty { display: none; }
 .lab-controls summary:focus-visible { outline-offset: 2px; }
+
+/* Secondary result actions and readable recorded measurements. */
+.lab-result-utilities { display: grid; gap: 16px; margin-top: 24px; }
+.lab-result-utilities h3 { font-size: 14px; font-weight: 600; margin: 0 0 8px; }
+.lab-result-utilities > .lab-result-disclosure { margin: 0; padding-top: 8px; border-top: 1px solid var(--line); }
+.lab-result-disclosure > summary { cursor: pointer; color: var(--accent); font-size: 14px; font-weight: 500; min-height: 44px; padding-block: 10px; }
+.lab-metadata-wide { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 900px; gap: 16px 24px; }
+.lab-metadata-range { display: block; color: var(--ink-soft); font-size: 12px; margin-top: 4px; }
+.lab-run-settings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; max-width: 720px; margin: 16px 0 24px; font-size: 14px; }
+.lab-run-settings dt { color: var(--ink-soft); margin-bottom: 4px; }
+.lab-run-settings dd { margin: 0; color: var(--ink); overflow-wrap: anywhere; }
+.lab-measurements-scroll { overflow-x: auto; max-width: 100%; }
+.lab-measurements-scroll:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.lab-measurements-table { width: 100%; max-width: 900px; border-collapse: collapse; font-size: 14px; color: var(--ink); text-align: left; }
+.lab-measurements-table caption { text-align: left; color: var(--ink-soft); margin-bottom: 12px; }
+.lab-measurements-table th, .lab-measurements-table td { padding: 12px; border-bottom: 1px solid var(--line); }
+.lab-measurements-table th { font-weight: 500; }
+.lab-measurements-table td { font-variant-numeric: tabular-nums; }
+.lab-measurements-note { color: var(--ink-soft); font-size: 13px; line-height: 1.6; max-width: 75ch; margin: 8px 0; }
+@media (max-width: 640px) { .lab-metadata-wide { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } .lab-measurements-table th, .lab-measurements-table td { padding: 10px 8px; } }
+.lab-result-utilities { grid-template-columns: minmax(0, 1fr); min-width: 0; }
+.lab-result-disclosure { min-width: 0; }
+
+/* Downloads remain native links, styled as secondary actions. */
+.lab-shell .lab-download-link { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; max-width: 100%; padding: 10px 12px; border: 1px solid var(--control-border); border-radius: var(--radius-control); background: var(--paper-deep); color: var(--ink); font-size: 14px; font-weight: 500; line-height: 1.5; text-decoration: none; text-align: center; }
+.lab-download-link > svg { width: 18px; height: 18px; flex: 0 0 18px; }
+.lab-download-link > span { min-width: 0; overflow-wrap: anywhere; }
+.lab-shell .lab-download-link:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-deep); }
+.lab-shell .lab-download-link:active { background: var(--surface-muted); }
+.lab-shell .lab-download-link:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.lab-shell .lab-downloads { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 640px) {
+  .lab-shell .lab-downloads { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lab-shell .lab-downloads:has(> .lab-download-link:only-child) { grid-template-columns: minmax(0, 1fr); }
+}

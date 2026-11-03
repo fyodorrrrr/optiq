@@ -1,3 +1,4 @@
+import DownloadLink from '../../components/lab/DownloadLink'
 import { useRef } from 'react'
 import LabPage from '../../components/lab/LabPage'
 import LabWorkspace from '../../components/lab/LabWorkspace'
@@ -40,9 +41,9 @@ export default function Lab7() {
         <div className="lab-image-grid">{result.views.map(view => <ImagePanel key={view.title} title={view.title} frame={view.frame} description={view.description} showMetadata={false} />)}</div>
         {result.legend.length > 0 && <section aria-labelledby="segmentation-legend-title"><h3 id="segmentation-legend-title">Predicted classes</h3><ul className="segmentation-legend">{result.legend.map(item => <li key={item.id}><span aria-hidden="true" style={{ background: item.color }} />{item.name === '__background__' ? 'Background' : item.name} · ID {item.id} · {item.pixels.toLocaleString()} pixels</li>)}</ul></section>}
         <p>IoU is unavailable because no compatible ground-truth mask was provided. Masks, pixel counts, and region colors are not accuracy scores.</p>
-        <div className="segmentation-actions">{result.views.map((view, index) => <a key={view.title} href={view.frame.image} download={`optiq-lab7-${result.parameters.method}-${index + 1}.png`}>Download {view.title.toLowerCase()}</a>)}
-          {result.labels_png && <a href={result.labels_png} download={`optiq-lab7-${result.parameters.method}-labels.png`}>Download raw label IDs</a>}
-          <a href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify({ ...result, views: undefined, labels_png: undefined }, null, 2))}`} download="optiq-lab7-measurements.json">Download measurements</a></div>
+        <div className="segmentation-actions lab-downloads">{result.views.map((view, index) => <DownloadLink key={view.title} href={view.frame.image} download={`optiq-lab7-${result.parameters.method}-${index + 1}.png`}>{view.title} PNG</DownloadLink>)}
+          {result.labels_png && <DownloadLink href={result.labels_png} download={`optiq-lab7-${result.parameters.method}-labels.png`}>Raw label IDs PNG</DownloadLink>}
+          <DownloadLink href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify({ ...result, views: undefined, labels_png: undefined }, null, 2))}`} download="optiq-lab7-measurements.json">Measurements JSON</DownloadLink></div>
         <details className="lab-preprocessing"><summary>Run settings, measurements & provenance</summary><pre>{JSON.stringify({ parameters: result.parameters, measurements: result.measurements, provenance: result.provenance, notes: result.notes }, null, 2)}</pre></details>
       </section>}
     </LabWorkspace>
