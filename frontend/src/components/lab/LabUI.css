@@ -199,3 +199,6 @@
 .lab-reference-grid li { overflow-wrap: anywhere; }
 .lab-reference-grid code { font-size: .9em; }
 @media (max-width: 900px) { .lab-reference-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
+
+.lab-controls .lab-control-help { margin: 16px 0; }
+.lab-controls .lab-control-help > p { font-size: 14px; line-height: 1.65; margin: 8px 0 12px; }

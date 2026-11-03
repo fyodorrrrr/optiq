@@ -1,3 +1,4 @@
+import ControlHelp from '../../components/lab/ControlHelp'
 import { useRef, useState } from 'react'
 import LabPage from '../../components/lab/LabPage'
 import LabWorkspace from '../../components/lab/LabWorkspace'
@@ -37,7 +38,8 @@ export default function Lab5() {
         icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[id].icon} /></svg>,
       }))} />}
       controls={<><h2>{content.title}</h2><p>{content.prompt}</p><form onSubmit={event => { event.preventDefault(); void lab.run() }}>
-        <NumberField hint="How many variation patterns each face is represented by. Fewer components retain less information." required label="PCA components" value={lab.components} min={12} max={lab.dataset?.max_components || 300} step={1} disabled={lab.busy} onChange={lab.setComponents} />
+        <NumberField required label="PCA components" value={lab.components} min={12} max={lab.dataset?.max_components || 300} step={1} disabled={lab.busy} onChange={lab.setComponents} />
+        <ControlHelp title="How to choose PCA components"><p>The component count sets how many variation patterns represent each face. Fewer components retain less information. Start with 150, then compare retained variance, recognition, and failures at a smaller count.</p></ControlHelp>
         <details className="lab-settings-disclosure"><summary>Baseline & execution</summary><p>Baseline: 150 · whitened PCA · balanced RBF SVM · fixed split, seed 42.</p>
         <p className="lab-hint">Each run fits fresh models. Leaving the page or losing the connection stops waiting, but the server fit may continue. Wait for it to finish before retrying.</p></details>
         <div className="pca-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || !lab.dataset?.ready}>Run experiment</LabButton>

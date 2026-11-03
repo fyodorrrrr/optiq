@@ -1,3 +1,4 @@
+import ControlHelp from '../../components/lab/ControlHelp'
 import { useRef, useState } from 'react'
 import LabPage from '../../components/lab/LabPage'
 import LabWorkspace from '../../components/lab/LabWorkspace'
@@ -36,7 +37,8 @@ export default function Lab6() {
       }))} />}
       controls={<><h2>{content.title}</h2><p>{content.prompt}</p>
         {section === 'detect' && <form onSubmit={event => { event.preventDefault(); void lab.run() }}><SelectField label="Detection model" value={lab.model} onChange={value => lab.changeModel(value as Model)} options={(lab.status?.models ?? [{ id: 'pretrained', title: 'YOLO11n · pretrained COCO', available: false }]).map(model => ({ value: model.id, label: `${model.id === 'pretrained' ? 'YOLO11n · COCO' : 'Custom model'}${model.available ? '' : ' · unavailable'}`, disabled: !model.available }))} />
-          <NumberField label="Confidence threshold" value={lab.confidence} min={0.01} max={1} step="any" onChange={lab.changeConfidence} disabled={cameraRunning} hint="Higher thresholds retain fewer detections. Scores do not guarantee correctness." />
+          <NumberField label="Confidence threshold" value={lab.confidence} min={0.01} max={1} step="any" onChange={lab.changeConfidence} disabled={cameraRunning} />
+          <ControlHelp title="How to choose a confidence threshold"><p>Higher thresholds retain fewer detections. Lower thresholds can reveal more candidates, including incorrect detections. Confidence scores do not guarantee correctness.</p></ControlHelp>
           <div className="detection-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || cameraRunning || !lab.source || !available}>Detect objects</LabButton></div></form>}
         <LabButton disabled={lab.busy || cameraRunning} onClick={() => void lab.refresh()}>Refresh status</LabButton>
         <p>Custom training: {lab.status?.training.status ?? 'checking'}. Training starts only from your local command.</p></>}>

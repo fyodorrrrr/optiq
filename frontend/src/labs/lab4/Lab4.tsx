@@ -1,3 +1,4 @@
+import ControlHelp from '../../components/lab/ControlHelp'
 import { useRef, useState } from 'react'
 import LabPage from '../../components/lab/LabPage'
 import LabWorkspace from '../../components/lab/LabWorkspace'
@@ -46,12 +47,17 @@ export default function Lab4() {
         <form onSubmit={event => { event.preventDefault(); void lab.run(field => revealField(field, () => setSection('compare'))) }}>
           <fieldset disabled={lab.busy || !lab.sources.first || !lab.sources.second}><legend className="sr-only">Feature comparison settings</legend>
           {(section === 'compare' || section === 'surf') && <>
-            <NumberField required name="hessian_threshold" error={lab.invalidField === 'hessian_threshold' ? lab.error : undefined} hint="Higher thresholds usually detect fewer keypoints." label="SURF Hessian threshold" value={lab.draft.hessian_threshold} min={1} max={100000} step="any" onChange={value => lab.change('hessian_threshold', value)} />
+            <NumberField required name="hessian_threshold" error={lab.invalidField === 'hessian_threshold' ? lab.error : undefined} label="SURF Hessian threshold" value={lab.draft.hessian_threshold} min={1} max={100000} step="any" onChange={value => lab.change('hessian_threshold', value)} />
             <label className="feature-checkbox"><input type="checkbox" checked={lab.draft.upright} onChange={event => lab.change('upright', event.target.checked)} />Upright SURF (U-SURF)</label>
           </>}
-          <NumberField required name="ratio_threshold" error={lab.invalidField === 'ratio_threshold' ? lab.error : undefined} hint="Higher ratios accept more candidate matches; they do not prove accuracy." label="Match ratio threshold" value={lab.draft.ratio_threshold} min={0.01} max={0.99} step="any" onChange={value => lab.change('ratio_threshold', value)} />
+          <NumberField required name="ratio_threshold" error={lab.invalidField === 'ratio_threshold' ? lab.error : undefined} label="Match ratio threshold" value={lab.draft.ratio_threshold} min={0.01} max={0.99} step="any" onChange={value => lab.change('ratio_threshold', value)} />
           <NumberField required name="max_features" error={lab.invalidField === 'max_features' ? lab.error : undefined} label="Maximum features per image" value={lab.draft.max_features} min={1} max={1000} step={1} onChange={value => lab.change('max_features', value)} />
-          <NumberField required name="max_matches" error={lab.invalidField === 'max_matches' ? lab.error : undefined} hint="Limits drawn lines, not the number of accepted matches." label="Maximum displayed matches" value={lab.draft.max_matches} min={1} max={100} step={1} onChange={value => lab.change('max_matches', value)} />
+          <NumberField required name="max_matches" error={lab.invalidField === 'max_matches' ? lab.error : undefined} label="Maximum displayed matches" value={lab.draft.max_matches} min={1} max={100} step={1} onChange={value => lab.change('max_matches', value)} />
+          <ControlHelp key={section} title="How to adjust feature matching">
+            <p>Choose settings, then compare the same image pair across all available methods.</p>
+            <p>Higher SURF Hessian thresholds usually detect fewer keypoints. Upright mode disables SURF orientation invariance.</p>
+            <p>Higher match ratios accept more candidate matches; they do not prove accuracy. Maximum displayed matches limits drawn lines, not the number of accepted matches.</p>
+          </ControlHelp>
           <div className="feature-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || !lab.sources.first || !lab.sources.second}>{lab.busy ? 'Processing…' : 'Compare features'}</LabButton>
           </div></fieldset>
           <LabButton type="button" disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>
