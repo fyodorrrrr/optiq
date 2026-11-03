@@ -40,8 +40,8 @@ export default function Lab1() {
         }))} />}
         controls={<>
 
-            <h2>{current.title}</h2><p>{current.description}</p>
-            <h3>Before you try</h3><p>{current.prediction}</p>
+            <div className="lab-control-introduction"><h2>{current.title}</h2><p>{current.description}</p></div>
+            <div className="lab-prediction"><span>Predict</span><p>{current.prediction}</p></div>
             {lab.operation === 'rotate' && <p className="lab-rotation-angle">Rotation: {lab.rotationTurns * 90}°{lab.rotationTurns === 0 ? ' · original orientation' : ' clockwise'}</p>}
             <form onSubmit={event => { event.preventDefault(); void lab.run() }}>
               <fieldset disabled={lab.busy || !lab.source}>
@@ -57,7 +57,7 @@ export default function Lab1() {
             {lab.output && <><p className="lab-result-notice">{lab.resultIsPrevious || lab.busy ? `Previous result · ${experiments[lab.output.operation].title}. Run to apply the current settings.` : `${experiments[lab.output.operation].title} result`}</p>
               <p className="lab-result-summary">{summary}</p></>}
             <div className="lab-image-grid">
-              <ImagePanel metadataEssential title="Original" frame={lab.source?.frame ?? null} onPick={pixelMode && !lab.busy ? lab.pick : undefined} selection={selection} empty={lab.busy ? 'Loading image…' : 'Choose a sample or upload an image.'} />
+              <ImagePanel metadataEssential title="Original" description={pixelMode && lab.source && !lab.busy ? 'Click to select a pixel.' : undefined} frame={lab.source?.frame ?? null} onPick={pixelMode && !lab.busy ? lab.pick : undefined} selection={selection} empty={lab.busy ? 'Loading image…' : 'Choose a sample or upload an image.'} />
               <ImagePanel metadataEssential title="Result" frame={lab.output?.result ?? null} empty={lab.busy ? 'Processing with OpenCV…' : 'Run an experiment to see its result.'} />
             </div>
             {lab.source && <details className="lab-metadata-help"><summary>About image shape, channels & values</summary>

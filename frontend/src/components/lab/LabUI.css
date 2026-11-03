@@ -153,3 +153,19 @@
 .lab-return-settings { display: none; color: var(--accent); font-size: 14px; }
 @media (max-width: 1359px) { .lab-return-settings { display: inline-flex; } }
 @media (max-width: 640px) { .lab-page .site-header { min-height: 73px; } .lab-tools button { flex-basis: auto; } }
+
+/* Compact guidance keeps related settings together. */
+.lab-control-introduction > p { margin: 0; }
+.lab-prediction { margin-top: 16px; }
+.lab-prediction > span { display: block; font-size: 12px; font-weight: 600; color: var(--ink-soft); margin-bottom: 4px; }
+.lab-controls .lab-prediction > p { font-size: 13px; line-height: 1.6; margin: 0; }
+.lab-control-fields { display: grid; gap: 16px; }
+.lab-control-fields .lab-field, .lab-control-fields .lab-check, .lab-control-fields > .lab-metadata-help { margin: 0; }
+.lab-controls .lab-control-fields .lab-metadata-help p { margin: 8px 0 16px; }
+.lab-select-control { position: relative; display: block; min-width: 0; }
+.lab-field .lab-select-control select { appearance: none; min-height: 46px; line-height: 1.5; padding: 10px 44px 10px 12px; cursor: pointer; text-overflow: ellipsis; }
+.lab-select-control > svg { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--ink-soft); pointer-events: none; }
+.lab-select-control select:hover:not(:disabled) { border-color: var(--accent); }
+.lab-select-control:focus-within > svg { color: var(--accent); }
+.lab-select-control select:disabled { cursor: not-allowed; background: var(--paper); color: var(--ink-soft); }
+@media (forced-colors: active) { .lab-select-control > svg { color: ButtonText; } }

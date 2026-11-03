@@ -19,9 +19,12 @@ export function SelectField({ label, value, options, onChange, hint }: {
 }) {
   const id = useId()
   return <div className="lab-field"><label htmlFor={id}>{label}</label>
-    <select id={id} aria-describedby={hint ? `${id}-hint` : undefined} value={value} onChange={event => onChange(event.target.value)}>
-      {options.map(option => <option key={option.value} value={option.value} disabled={option.disabled}>{option.label}</option>)}
-    </select>
+    <span className="lab-select-control">
+      <select id={id} aria-describedby={hint ? `${id}-hint` : undefined} value={value} onChange={event => onChange(event.target.value)}>
+        {options.map(option => <option key={option.value} value={option.value} disabled={option.disabled}>{option.label}</option>)}
+      </select>
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 8 5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+    </span>
     {hint && <span className="lab-field-hint" id={`${id}-hint`}>{hint}</span>}
   </div>
 }

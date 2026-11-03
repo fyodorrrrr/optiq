@@ -26,8 +26,8 @@ export const experiments: Record<Operation, {
     code: 'gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)\n# Already grayscale? Keep a copy of the original.',
   },
   crop: {
-    title: 'Crop', action: 'Apply crop', description: 'Keep a rectangular region of interest, without rescaling its pixels.',
-    prediction: 'Does cropping make objects smaller, or just change the image boundaries?', heading: 'Choose the region that matters.',
+    title: 'Crop', action: 'Apply crop', description: 'Keep part of the image without resizing its pixels.',
+    prediction: 'Will cropping shrink objects or change the boundaries?', heading: 'Choose the region that matters.',
     explanation: 'Cropping selects rows and columns from the original array. Left and top are zero-based coordinates; width and height specify the region size. NumPy excludes the final row/column boundary. Object recognition often uses regions of interest to focus processing.',
     reflection: 'Compare the cropped region with the original. How does cropping differ from shrinking the entire image?',
     code: 'result = image[y:y + height, x:x + width].copy()',

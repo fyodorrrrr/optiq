@@ -11,26 +11,27 @@ export default function Controls({ operation, fields, frame, change }: {
       value={fields[key]} onChange={value => change(key, value)} />
   }
 
-  return <>
+  return <div className="lab-control-fields">
     {(operation === 'inspect' || operation === 'edit' || operation === 'crop') && <div className="lab-field-row">
       {numeric('x', operation === 'crop' ? 'Left (x)' : 'X coordinate', 0, frame.width - 1)}
       {numeric('y', operation === 'crop' ? 'Top (y)' : 'Y coordinate', 0, frame.height - 1)}
     </div>}
-    {(operation === 'inspect' || operation === 'edit' || operation === 'crop') && <p className="lab-hint">Coordinates start at (0, 0) in the top-left. X moves right; Y moves down.</p>}
     {(operation === 'crop' || operation === 'resize') && <div className="lab-field-row">
       {numeric('width', 'Width (px)', 1, operation === 'crop' ? frame.width - Number(fields.x) : 4096)}
       {numeric('height', 'Height (px)', 1, operation === 'crop' ? frame.height - Number(fields.y) : 4096)}
     </div>}
-    {operation === 'crop' && <p className="lab-hint">The rectangle on the original previews your crop. It must fit inside the image.</p>}
     {operation === 'resize' && <>
       <label className="lab-check"><input type="checkbox" checked={fields.keepRatio} onChange={event => change('keepRatio', event.target.checked)} />Keep aspect ratio (avoid stretching)</label>
-      <SelectField label="Interpolation" value={fields.interpolation} onChange={value => change('interpolation', value)} options={[
-        { value: 'linear', label: 'Linear · blend neighbors' }, { value: 'nearest', label: 'Nearest · keep hard edges' }, { value: 'area', label: 'Area · useful for shrinking' },
+      <SelectField hint={fields.interpolation === 'nearest' ? 'Copies nearby pixels, keeping hard edges.' : fields.interpolation === 'area' ? 'Averages pixel areas; useful for shrinking.' : 'Blends neighboring pixels for smoother transitions.'} label="Interpolation" value={fields.interpolation} onChange={value => change('interpolation', value)} options={[
+        { value: 'linear', label: 'Linear' }, { value: 'nearest', label: 'Nearest neighbor' }, { value: 'area', label: 'Area' },
       ]} />
     </>}
     {operation === 'edit' && (frame.channels === 1
       ? numeric('intensity', 'New intensity', 0, 255)
       : <label className="lab-field">New pixel color (RGB)<input type="color" value={fields.color} onChange={event => change('color', event.target.value)} /></label>)}
-    {(operation === 'inspect' || operation === 'edit') && <p className="lab-hint">Click the original image to choose a pixel, or enter coordinates above. Then run the experiment.</p>}
-  </>
+    {(operation === 'inspect' || operation === 'edit' || operation === 'crop') && <details key={operation} className="lab-metadata-help">
+      <summary>{operation === 'crop' ? 'How to position the crop' : 'How to select a pixel'}</summary>
+      <p>{operation !== 'crop' && 'Click the original image or enter coordinates, then run the experiment. '}Coordinates start at (0, 0) in the top-left. X moves right; Y moves down.{operation === 'crop' && ' The outlined crop must fit inside the image.'}</p>
+    </details>}
+  </div>
 }

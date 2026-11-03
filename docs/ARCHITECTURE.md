@@ -2,7 +2,7 @@
 
 ## Current Boundaries
 
-React/TypeScript renders the homepage and Labs 1–5 at `/labs/1`, `/labs/2`, `/labs/3`, `/labs/4`, and `/labs/5`; React Router handles navigation. FastAPI provides `/api/health` and per-lab endpoints. Vite proxies `/api` to port 8000 in development. Production hosting is undecided and must support API forwarding and SPA route fallback.
+React/TypeScript renders the homepage and Labs 1–5 at `/labs/1`, `/labs/2`, `/labs/3`, `/labs/4`, and `/labs/5`; React Router handles navigation. Lab 6 is at `/labs/6` with pretrained detection and pending custom training. FastAPI provides `/api/health` and per-lab endpoints. Vite proxies `/api` to port 8000 in development. Production hosting is undecided and must support API forwarding and SPA route fallback.
 
 ## Lab 1 Request Flow
 
@@ -84,7 +84,7 @@ Keep brief prediction prompts near controls. Put deeper theory, Python examples,
 
 `backend/tests/test_lab1.py`, `test_lab2.py`, and `test_lab3.py` use standard-library unittest and FastAPI TestClient against real PNG/JPEG inputs and actual OpenCV outputs. Browser checks have exercised all tools and responsive behavior locally; no permanent frontend browser-test runner is configured.
 
-Labs 1–5 are implemented; production hosting and deployment resource limits have not been validated. Labs 6–7, YOLO datasets, training, and inference infrastructure remain separate pending work. See `LAB_REQUIREMENTS.md` for their obligations.
+Labs 1–5 are implemented; production hosting and deployment resource limits have not been validated. Lab 6 custom data/training and Lab 7 remain pending; the approved local training workflow and pretrained Lab 6 inference are implemented. See `LAB_REQUIREMENTS.md` for their obligations.
 
 ## Lab 4 feature comparison
 
@@ -165,3 +165,34 @@ Lab 5 uses compact galleries (two columns on phones), meaningful image
 descriptions, a responsive variance plot with HTML axis labels, an expandable
 dataset summary after a run, and local classification-metric definitions. These
 changes do not alter computation, activity requirements, or returned measurements.
+
+
+## Lab 6 inference and offline training
+
+`/labs/6` uses the shared lab shell, controls, feedback, uploads and image viewers.
+Dedicated state and camera lifecycle live in `labs/lab6/`; the camera sends
+sequential bounded JPEG frames and releases tracks on stop, hidden document,
+unmount or permission failure. Image and camera requests share the same typed
+inference endpoint; no server camera capture or stream queue is introduced.
+
+`GET /api/labs/6/status` exposes model readiness and validated local dataset/run
+artifacts. `/sample`, `/load`, and `/experiment` reuse common image transport.
+Processing lazily loads a trusted local YOLO11n/custom model, uses CPU and bounded
+inference settings, and returns annotated images, boxes, confidence, timings and
+weight hashes. A process-local lock prevents simultaneous use of the predictor;
+separate workers have separate models/locks. No uploads or results are persisted.
+
+The approved training model is an explicit local CLI outside FastAPI requests.
+Setup prepares official weights/sample. Dataset validation records classes,
+split counts, exact duplicate checks, and content hashes. Training retains the
+actual run outputs/logs, parameters, seed and dataset/weight provenance, validates
+on the named split, then publishes custom weights and completed metadata. The UI
+never enables custom inference solely from a pending/failed/incomplete artifact.
+An allowlisted log route serves only the local training log. No web training,
+checkpoint upload, or arbitrary server-path request is supported.
+
+Ultralytics has an optional pinned dependency closure installed with --no-deps
+so its opencv-python requirement does not overwrite the existing cv2 provider.
+The SURF build now includes highgui/videoio symbols required for import, while
+native GUI/FFmpeg capture remain disabled. See `LAB6_SETUP.md` for reproducible
+setup and known limits. The actual custom dataset/training remains pending.

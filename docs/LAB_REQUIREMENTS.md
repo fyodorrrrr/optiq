@@ -4,7 +4,7 @@
 
 Map the seven supplied CSST106 laboratory documents to functional modules in one web application for students and developers. Users should understand techniques, experiment with parameters, compare results, and connect outputs to implementations. Every module is directly accessible without completing learning prompts. Assignment review uses this same experience; no separate instructor role or workflow is planned.
 
-This document records source requirements and proposed web adaptations. Labs 1–5 are implemented in React and Python/OpenCV; Labs 6–7 remain unimplemented. The final section records implementation evidence.
+This document records source requirements and proposed web adaptations. Labs 1–5 are implemented in React and Python/OpenCV; Lab 6 has pretrained inference and the approved local training workflow, with custom training pending. Lab 7 remains unimplemented. The final section records implementation evidence.
 
 Printed, handwritten, and PDF report submission requirements are excluded at the developer's request. Their conceptual questions and analysis tasks remain useful learning content. Standalone scripts alone do not satisfy the Web UI requirement.
 
@@ -169,7 +169,7 @@ For completion, verify source requirements, representative outputs, meaningful n
 
 **Dependencies/open items:** body provisionally targets YOLOv11 despite the filename. Verify supported weight names and API against primary documentation before coding; do not copy `YOLOv11n.pt` unverified. Select runtime/device and safe media limits. Source says test-set validation but provides train/val paths only: document actual evaluation split and obtain a test split if required.
 
-**Scope decision needed:** custom training is required by the lab, while general-purpose training infrastructure is outside the initial product scope. Proposed resolution: train through a reproducible local/offline workflow and integrate real artifacts plus custom inference into the UI. This is a proposal, not an approved waiver or final architecture. The training requirement remains open until its delivery is agreed.
+**Approved scope decision (2026-11-03):** custom training is required by the lab, while general-purpose training infrastructure is outside the initial product scope. Proposed resolution: train through a reproducible local/offline workflow and integrate real artifacts plus custom inference into the UI. The user approved local training and Web UI artifact review; no custom dataset has been supplied. The training requirement remains incomplete until an actual custom dataset is trained and evaluated.
 
 ## Lab 7 — Segmentation Techniques
 
@@ -211,7 +211,8 @@ For completion, verify source requirements, representative outputs, meaningful n
 | Lab 1 | Implemented and locally verified | `backend/tests/test_lab1.py`: exact pixel values, BGR/RGB order, grayscale shape, single-pixel edits, crop, resize, rotation, upload handling, and validation. Browser checks exercised actual API requests, samples/uploads, zoom, all six tools, navigation, error/retry, stale request cancellation, and responsive layouts. |
 | Lab 2 | Implemented and locally verified | `backend/tests/test_lab2.py`: baseline preprocessing/Canny equality, directional Sobel response, scaled magnitude, zero-edge uniform input, color/tiny input, deterministic noise, parameter effects, and invalid files/settings. Browser checks exercised real comparison requests, all settings sections, uploads, downloads links, intermediate views, reset, errors/retry, cancellation, keyboard operation, and layouts from 320px to 1440px. |
 | Lab 3 | Implemented and locally verified | `backend/tests/test_lab3.py`: histogram counts, exact equalization/CLAHE output, linear clipping/stretching, constant/color inputs, final brightness-channel measurements, deterministic samples, and validation. Browser checks covered real methods/parameters, four histogram charts with common scales, color/grayscale switching, PNG/CSV downloads, uploads, reset, errors/retry, cancellation, and 320–1440px layouts. |
-| Labs 6–7 | Not implemented | Their source requirements and open decisions remain above. |
+| Lab 6 | Partial | Pretrained inference and local training workflow implemented; actual custom dataset/training pending. |
+| Lab 7 | Not implemented | Its source requirements and open decisions remain above. |
 
 Lab 1 code: `frontend/src/labs/lab1/`, `backend/routers/lab1.py`, `backend/schemas/lab1.py`, and `backend/services/`. Local verification is not evidence of production deployment or measured learning effectiveness. No source-required Lab 1 operation is intentionally deferred. Optional enhancements such as drag-to-crop, progress storage, and scored practice are not completion criteria.
 
@@ -242,3 +243,20 @@ extracted from predicted-versus-actual labels, with an explicit no-failure state
 Tests cover training-only inputs, split isolation, metrics, variance, reproducibility,
 parameter/rank limits, missing data, lock recovery, and no misclassifications.
 Actual local baseline and dataset preparation are documented in `LAB5_SETUP.md`.
+
+
+### Lab 6 implementation evidence
+
+`/labs/6` runs actual YOLO11n pretrained detection, returns original-coordinate
+boxes/classes/confidence and measured timings, handles image inputs and sequential
+browser camera frames, and exposes dataset/training review tools. Camera denial,
+stop/navigation cleanup, confidence controls, errors, and responsive layouts
+were exercised with a synthetic browser camera. Actual inference found a bus
+and people in the official sample and no detections on a blank image.
+
+`prepare_yolo.py` explicitly prepares weights/sample. `train_yolo.py` validates
+normalized labels and split separation, trains locally, retains logs and weights,
+evaluates the named val/test split, and publishes checksummed artifacts for custom
+inference. An isolated one-epoch synthetic smoke test verified the pipeline;
+it is not the user's custom lab training. No user dataset has been supplied;
+custom training and baseline100-epoch evaluation remain pending. See `LAB6_SETUP.md`.

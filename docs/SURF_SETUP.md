@@ -35,8 +35,9 @@ The custom 5.0.0.93 build was verified on macOS ARM64 with Python 3.12 using all
 platforms still require verification. Calibration and geometry modules are
 included because this OpenCV version's feature bindings depend on them.
 
-This is a focused image-processing build: camera/video capture and FFmpeg are
-excluded. Revisit the module list if a later lab requires video input.
+The build includes highgui/videoio symbols for Ultralytics compatibility, but
+native GUI windows and FFmpeg/AVFoundation integrations are disabled. Lab 6
+captures camera frames in the browser. Revisit codecs for future video uploads.
 Reinstalling `requirements-lock.txt` may restore the standard wheel; repeat the
 SURF setup afterward. The package version alone does not identify its capabilities.
 Do not replace the lockfile with a machine-specific wheel path.

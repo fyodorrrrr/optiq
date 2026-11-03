@@ -2,7 +2,7 @@
 
 Interactive computer vision learning and experimentation platform for Labs 1–7.
 Includes a homepage with a full-screen introduction, a selectable seven-lab map,
-and working Python/OpenCV workspaces for Labs 1–5. Labs 6–7 are planned.
+and working Python/OpenCV workspaces for Labs 1–5. Lab 6 has pretrained detection and local training support; custom training remains pending. Lab 7 is planned.
 
 ## Requirements
 
@@ -173,3 +173,5 @@ Lab 5 at `/labs/5` runs training-only PCA, eigenface visualization, explained
 variance analysis, and held-out RBF SVM recognition on LFW. Prepare the dataset
 once with `backend/.venv/bin/python backend/scripts/prepare_lfw.py` from the repo
 root. See [Lab 5 setup](docs/LAB5_SETUP.md) for defaults, provenance, and limits.
+
+Lab 6 at `/labs/6` provides YOLO11n image/webcam detection and a local dataset/training/evaluation workflow. See [Lab 6 setup](docs/LAB6_SETUP.md) for the optional dependencies, model preparation, and training commands. Custom training is not complete until a real annotated dataset is provided and trained.

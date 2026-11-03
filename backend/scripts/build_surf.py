@@ -22,7 +22,7 @@ def main():
     destination.mkdir(parents=True, exist_ok=True)
     flags = " ".join([
         "-DOPENCV_ENABLE_NONFREE=ON",
-        "-DBUILD_LIST=core,imgproc,imgcodecs,features2d,flann,calib3d,calib,3d,stereo,photo,xfeatures2d,python3,dnn,video,ml,objdetect",
+        "-DBUILD_LIST=core,imgproc,imgcodecs,features2d,flann,calib3d,calib,3d,stereo,photo,xfeatures2d,python3,dnn,video,videoio,highgui,ml,objdetect",
         "-DBUILD_TESTS=OFF", "-DBUILD_PERF_TESTS=OFF", "-DBUILD_EXAMPLES=OFF",
         "-DWITH_IPP=OFF", "-DWITH_OPENCL=OFF", "-DWITH_FFMPEG=OFF",
         "-DWITH_AVFOUNDATION=OFF", "-DWITH_OBSENSOR=OFF",
