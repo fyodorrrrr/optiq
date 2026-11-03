@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { FieldError, numberSetting } from '../../components/lab/validation'
 import { frameFile } from '../../api/images'
 import type { ImageFrame } from '../../api/images'
 import { compareFeatures, getCapabilities, getPair, loadImage } from './api'
@@ -16,6 +17,7 @@ export default function useFeatureExperiment() {
   const [result, setResult] = useState<FeatureComparison | null>(null)
   const [busy, setBusy] = useState(true)
   const [error, setError] = useState('')
+  const [invalidField, setInvalidField] = useState('')
   const active = useRef<AbortController | null>(null)
 
   const acceptPair = useCallback((pair: SamplePair, label: string) => {
@@ -36,21 +38,21 @@ export default function useFeatureExperiment() {
     return () => active.current?.abort()
   }, [acceptPair])
 
-  function clear() {
+  function clear(clearResult = true) {
     active.current?.abort()
-    setBusy(false); setError(''); setResult(null)
+    setBusy(false); setError(''); setInvalidField(''); if (clearResult) setResult(null)
   }
 
-  function begin() {
+  function begin(clearResult = false) {
     active.current?.abort()
     const controller = new AbortController()
     active.current = controller
-    setBusy(true); setError(''); setResult(null)
+    setBusy(true); setError(''); setInvalidField(''); if (clearResult) setResult(null)
     return controller
   }
 
   async function sample(kind: Sample) {
-    const controller = begin()
+    const controller = begin(true)
     try {
       const [caps, pair] = await Promise.all([getCapabilities(controller.signal), getPair(kind, controller.signal)])
       if (!controller.signal.aborted) { setCapabilities(caps); acceptPair(pair, kind === 'rotated' ? 'Rotated sample' : 'Scaled sample') }
@@ -60,9 +62,8 @@ export default function useFeatureExperiment() {
   }
 
   async function upload(side: 'first' | 'second', file: File) {
-    clear()
     if (!['image/png', 'image/jpeg'].includes(file.type) || file.size > 5 * 1024 * 1024) { setError('Choose a PNG or JPEG no larger than 5 MiB.'); return }
-    const controller = begin()
+    const controller = begin(true)
     try {
       const frame = await loadImage(file, controller.signal)
       if (!controller.signal.aborted) {
@@ -74,26 +75,32 @@ export default function useFeatureExperiment() {
     } finally { if (!controller.signal.aborted) setBusy(false) }
   }
 
-  function change(key: keyof Draft, value: string | boolean) { clear(); setDraft(previous => ({ ...previous, [key]: value })) }
-  function resetBaseline() { clear(); setDraft(baseline) }
+  function change(key: keyof Draft, value: string | boolean) { clear(false); setDraft(previous => ({ ...previous, [key]: value })) }
+  function resetBaseline() { clear(false); setDraft(baseline) }
 
-  async function run() {
+  async function run(onInvalid?: (field: string) => void) {
     if (!sources.first || !sources.second || busy) return
     const controller = begin()
     try {
-      function number(key: 'hessian_threshold' | 'ratio_threshold' | 'max_features' | 'max_matches') {
-        const value = Number(draft[key])
-        if (draft[key].trim() === '' || !Number.isFinite(value)) throw new Error('Enter finite numbers for feature settings.')
-        return value
+      const settings: FeatureSettings = {
+        hessian_threshold: numberSetting(draft.hessian_threshold, 'hessian_threshold', 'SURF Hessian threshold', 1, 100000, false),
+        upright: draft.upright,
+        ratio_threshold: numberSetting(draft.ratio_threshold, 'ratio_threshold', 'Match ratio threshold', 0.01, 0.99, false),
+        max_features: numberSetting(draft.max_features, 'max_features', 'Maximum features', 1, 1000),
+        max_matches: numberSetting(draft.max_matches, 'max_matches', 'Maximum displayed matches', 1, 100),
       }
-      const settings: FeatureSettings = { hessian_threshold: number('hessian_threshold'), upright: draft.upright,
-        ratio_threshold: number('ratio_threshold'), max_features: number('max_features'), max_matches: number('max_matches') }
       const response = await compareFeatures(sources.first.file, sources.second.file, settings, controller.signal)
       if (!controller.signal.aborted) setResult(response)
     } catch (error) {
-      if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not compare the features.')
+      if (!controller.signal.aborted) {
+        setError(error instanceof Error ? error.message : 'Could not compare the features.')
+        if (error instanceof FieldError) { setInvalidField(error.field); onInvalid?.(error.field) }
+      }
     } finally { if (!controller.signal.aborted) setBusy(false) }
   }
 
-  return { sources, sampleNotes, capabilities, draft, result, busy, error, sample, upload, change, resetBaseline, clear, run }
+  const resultIsPrevious = result !== null && (Object.keys(baseline) as (keyof Draft)[]).some(key =>
+    typeof draft[key] === 'boolean' ? draft[key] !== result.parameters[key] : String(draft[key]).trim() === '' || Number(draft[key]) !== result.parameters[key])
+
+  return { invalidField, resultIsPrevious, sources, sampleNotes, capabilities, draft, result, busy, error, sample, upload, change, resetBaseline, clear, run }
 }

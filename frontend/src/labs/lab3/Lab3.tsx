@@ -35,11 +35,11 @@ export default function Lab3() {
       { value: 'color', label: 'Color study', description: 'Adjust brightness while retaining color information.' },
     ]} />}>
       <LabWorkspace label="Histogram and contrast workspace" resultsId="contrast-results" busy={lab.busy}
-        tools={<ToolSidebar<Section> value={section} onChange={setSection} label="Choose contrast settings" tools={(Object.keys(sections) as Section[]).map(key => ({
+        tools={<ToolSidebar<Section> heading="Settings" value={section} onChange={setSection} label="Choose contrast settings" tools={(Object.keys(sections) as Section[]).map(key => ({
           id: key, label: sections[key].title,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[key].icon} /></svg>,
         }))} />}
-        controls={<><h2>{content.title === 'Compare' ? 'Compare contrast' : content.title}</h2><p>{content.prompt}</p><ContrastControls lab={lab} section={section} /></>}>
+        controls={<><h2>{content.title === 'Compare' ? 'Compare contrast' : content.title}</h2><p>{content.prompt}</p><ContrastControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} /></>}>
         <div className="lab-image-grid" data-columns={3}>
           <ContrastPanel title="Original" view={lab.result?.original ?? null} original={lab.source?.frame} pending={lab.busy} maxCount={maxCount} channel={channel}
             description={lab.result ? `Working original · ${channel}` : 'Input preview · run to apply the selected mode'} />
@@ -51,10 +51,7 @@ export default function Lab3() {
           <p>{lab.result.channel === 'Grayscale intensity' ? 'These histograms measure grayscale intensity.' : 'These histograms measure Y brightness from each final color image, not separate red, green, and blue channels.'} A wider brightness distribution can indicate greater contrast; also compare detail visibility and noise in the images.</p>
         </details>}
         {lab.error && <LabError title="Could not compare the contrast." message={lab.error} />}
-        <LabStatus>{lab.busy ? 'Working with the image service…'
-          : lab.error ? 'Check the message above and try again.'
-            : lab.result ? 'Contrast comparison complete.'
-              : lab.source ? 'Ready. Run the comparison to see images and histograms.' : 'Choose a sample or upload an image to begin.'}</LabStatus>
+
         <section className="contrast-linear" aria-labelledby="linear-result-title">
           <h3 id="linear-result-title">Linear adjustment</h3>
           <div className="lab-image-grid">
@@ -64,6 +61,11 @@ export default function Lab3() {
 </div>}
           </div>
         </section>
+        <LabStatus>{lab.busy ? 'Working with the image service…'
+          : lab.error ? 'Check the message above and try again.'
+            : lab.resultIsPrevious ? 'Settings changed. Previous results are shown; run the comparison to update them.'
+              : lab.result ? 'Contrast comparison complete.'
+              : lab.source ? 'Ready. Run the comparison to see images and histograms.' : 'Choose a sample or upload an image to begin.'}</LabStatus>
         {lab.source && <details className="lab-metadata-help"><summary>Image details</summary>
           <p>{lab.result ? 'Properties shared by all four displayed images.' : 'Uploaded input properties; the selected mode is applied when you run the comparison.'}</p>
           <ImageMetadata frame={lab.result?.original.frame ?? lab.source.frame} />

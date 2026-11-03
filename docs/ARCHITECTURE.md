@@ -38,7 +38,7 @@ Every view includes its actual frame, 256-bin histogram, range, mean, standard d
 
 CLAHE defaults to clip limit 2 and 8×8 tiles; validated limits are `(0, 40]` and 1–16 tiles per axis. Manual linear adjustment is `clip(rint(alpha * channel + beta), 0, 255)` with scale 0–10 and integer offset −255 to 255. Full-range stretching computes scale/offset from observed extrema; a constant channel remains unchanged. Effective coefficients and notes are returned for reproducibility.
 
-Color inputs select color mode when loaded; grayscale inputs disable the unavailable color option. Reset restores grayscale/2/8×8/manual-1.2/0 defaults. Changed inputs/settings cancel pending work and clear obsolete results. Generated samples include low contrast, color, and uneven lighting with noise seed 42. Downloads use actual PNG results and the returned histogram counts as CSV.
+Color inputs select color mode when loaded; grayscale inputs disable the unavailable color option. Reset restores grayscale/2/8×8/manual-1.2/0 defaults. New inputs clear results. Settings changes and failed reruns retain completed output and measurements, with previous-result feedback when draft settings differ. Generated samples include low contrast, color, and uneven lighting with noise seed 42. Downloads use actual PNG results and the returned histogram counts as CSV.
 
 ## API
 
@@ -135,3 +135,33 @@ and timings. `labs/lab5/` owns state, JSON API transport, content, variance SVG,
 and galleries; shell/controls/viewers remain shared. The API client allows up to
 120 seconds and preserves previous completed results with their settings when
 drafts change or a rerun fails. See `LAB5_SETUP.md` for setup and limitations.
+
+## Experiment recovery conventions
+
+Labs 2–4 validate the full draft before sending processing settings. Field-specific
+errors reveal the comparison controls, focus the invalid numeric field, and
+associate the message using aria-invalid/aria-describedby. Server validation
+remains authoritative. Hidden manual linear values are ignored during stretching.
+Labs 3–4 retain completed results through edits, baseline reset, and failed
+reruns; new source requests clear them. Lab 4 disables settings/reset during
+processing to avoid silent cancellation. Lab 1 reports explicit cancellation.
+Lab 5 distinguishes dataset/network failures from its two-minute client timeout,
+explains that a server fit may continue after disconnection, preserves prior
+results, and retains the server's concurrent-fit message.
+
+## Responsive lab presentation and guidance
+
+The shared workspace moves its tool navigation above settings/results below
+1360px, preserving comparison width instead of a narrow tablet sidebar. Image
+figures use proportional stages and equal heading space; results include a
+return-to-settings link on stacked layouts. Shared fields support concise hints,
+linked errors, and 16px input text. Lab-specific navigation headings distinguish
+experiments, settings, methods, and result exploration.
+
+Lab 3 groups CLAHE/linear settings in expandable controls, automatically opening
+the relevant group on selection or validation failure. All methods and four
+histograms remain available, with completion feedback after the full result set.
+Lab 5 uses compact galleries (two columns on phones), meaningful image
+descriptions, a responsive variance plot with HTML axis labels, an expandable
+dataset summary after a run, and local classification-metric definitions. These
+changes do not alter computation, activity requirements, or returned measurements.

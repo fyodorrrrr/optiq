@@ -4,11 +4,12 @@
 .pca-facts dt { font-size: 13px; color: var(--ink-soft); margin-bottom: 8px; }
 .pca-facts dd { margin: 0; font-size: 20px; }
 .pca-gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 24px 0 40px; }
-.pca-gallery .lab-image-stage { height: 160px; }
+.pca-gallery .lab-image-stage { height: 144px; aspect-ratio: auto; }
+.pca-gallery .lab-image-panel > figcaption { min-height: 0; margin-bottom: 8px; }
+.pca-gallery .lab-image-description { overflow-wrap: anywhere; }
 .pca-gallery .lab-image-stage img { image-rendering: auto; }
 .pca-variance { margin: 24px 0; }
 .pca-variance svg { width: 100%; height: auto; color: var(--ink-soft); }
-.pca-variance text { font: 12px sans-serif; fill: currentColor; }
 .pca-variance p, .pca-empty, .pca-dataset p { color: var(--ink-soft); line-height: 1.7; }
 .pca-table { overflow-x: auto; max-height: 480px; margin: 24px 0; border: 1px solid var(--line); border-radius: var(--radius-panel); }
 .pca-table table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
@@ -16,9 +17,21 @@
 .pca-table th { font-weight: 500; }
 .pca-table caption { text-align: left; padding: 16px; color: var(--ink-soft); }
 @media (max-width: 700px) { .pca-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } .pca-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 400px) { .pca-gallery { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 400px) { .pca-gallery { gap: 12px; } .pca-gallery .lab-image-stage { height: 120px; padding: 8px; } }
 
 .pca-chart-scroll { overflow-x: auto; margin-top: 16px; }
-.pca-chart-scroll svg { display: block; min-width: 560px; }
+.pca-chart-scroll svg { display: block; width: 100%; height: 220px; }
 #pca-results > section > h2 { margin-top: 28px; margin-bottom: 12px; }
 .pca-facts dd, .pca-table td { font-variant-numeric: tabular-nums; }
+
+.pca-dataset > summary { font-weight: 600; }
+.pca-variance-plot { position: relative; margin-left: 44px; }
+.pca-variance-y { position: absolute; inset: 0 auto 0 -44px; width: 36px; font-size: 12px; color: var(--ink-soft); }
+.pca-variance-y span { position: absolute; right: 0; transform: translateY(-50%); }
+.pca-variance-x { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-soft); margin-top: 8px; }
+.pca-variance .pca-axis-title { text-align: center; font-size: 13px; margin-top: 8px; }
+.pca-actions a { display: inline-flex; align-items: center; min-height: 44px; overflow-wrap: anywhere; }
+.pca-dataset summary { min-height: 44px; }
+
+.lab-controls .pca-actions { display: grid; grid-template-columns: minmax(0, 1fr); }
+.lab-controls .pca-actions .lab-button { min-height: 44px; width: 100%; }

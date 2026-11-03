@@ -7,6 +7,7 @@ import SamplePicker from '../../components/lab/SamplePicker'
 import ImagePanel from '../../components/lab/ImagePanel'
 import LabGuide from '../../components/lab/LabGuide'
 import LabButton from '../../components/lab/LabButton'
+import { revealField } from '../../components/lab/validation'
 import { NumberField } from '../../components/lab/Fields'
 import { LabError, LabStatus } from '../../components/lab/LabFeedback'
 import useFeatureExperiment from './useFeatureExperiment'
@@ -38,27 +39,30 @@ export default function Lab4() {
         { value: 'scaled', label: 'Scaled pair', description: 'The same target reduced to 65%.' },
       ]} /></>}>
     <LabWorkspace label="Feature matching workspace" resultsId="features-results" busy={lab.busy}
-      tools={<ToolSidebar<Section> value={section} onChange={choose} tools={(Object.keys(sections) as Section[]).map(id => ({ id, label: sections[id].title,
+      tools={<ToolSidebar<Section> heading="Methods" value={section} onChange={choose} tools={(Object.keys(sections) as Section[]).map(id => ({ id, label: sections[id].title,
         icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[id].icon} /></svg>,
       }))} />}
       controls={<><h2>{content.title === 'Compare' ? 'Compare features' : content.title}</h2><p>{content.prompt}</p>
-        <form onSubmit={event => { event.preventDefault(); void lab.run() }}>
+        <form onSubmit={event => { event.preventDefault(); void lab.run(field => revealField(field, () => setSection('compare'))) }}>
+          <fieldset disabled={lab.busy || !lab.sources.first || !lab.sources.second}><legend className="sr-only">Feature comparison settings</legend>
           {(section === 'compare' || section === 'surf') && <>
-            <NumberField label="SURF Hessian threshold" value={lab.draft.hessian_threshold} min={1} max={100000} step="any" onChange={value => lab.change('hessian_threshold', value)} />
+            <NumberField required name="hessian_threshold" error={lab.invalidField === 'hessian_threshold' ? lab.error : undefined} hint="Higher thresholds usually detect fewer keypoints." label="SURF Hessian threshold" value={lab.draft.hessian_threshold} min={1} max={100000} step="any" onChange={value => lab.change('hessian_threshold', value)} />
             <label className="feature-checkbox"><input type="checkbox" checked={lab.draft.upright} onChange={event => lab.change('upright', event.target.checked)} />Upright SURF (U-SURF)</label>
           </>}
-          <NumberField label="Match ratio threshold" value={lab.draft.ratio_threshold} min={0.01} max={0.99} step="any" onChange={value => lab.change('ratio_threshold', value)} />
-          <NumberField label="Maximum features per image" value={lab.draft.max_features} min={1} max={1000} step={1} onChange={value => lab.change('max_features', value)} />
-          <NumberField label="Maximum displayed matches" value={lab.draft.max_matches} min={1} max={100} step={1} onChange={value => lab.change('max_matches', value)} />
-          <div className="feature-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || !lab.sources.first || !lab.sources.second}>Compare features</LabButton>
-            <LabButton type="button" onClick={lab.resetBaseline}>Reset baseline</LabButton></div>
+          <NumberField required name="ratio_threshold" error={lab.invalidField === 'ratio_threshold' ? lab.error : undefined} hint="Higher ratios accept more candidate matches; they do not prove accuracy." label="Match ratio threshold" value={lab.draft.ratio_threshold} min={0.01} max={0.99} step="any" onChange={value => lab.change('ratio_threshold', value)} />
+          <NumberField required name="max_features" error={lab.invalidField === 'max_features' ? lab.error : undefined} label="Maximum features per image" value={lab.draft.max_features} min={1} max={1000} step={1} onChange={value => lab.change('max_features', value)} />
+          <NumberField required name="max_matches" error={lab.invalidField === 'max_matches' ? lab.error : undefined} hint="Limits drawn lines, not the number of accepted matches." label="Maximum displayed matches" value={lab.draft.max_matches} min={1} max={100} step={1} onChange={value => lab.change('max_matches', value)} />
+          <div className="feature-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || !lab.sources.first || !lab.sources.second}>{lab.busy ? 'Processing…' : 'Compare features'}</LabButton>
+          </div></fieldset>
+          <LabButton type="button" disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>
         </form></>}>
       {surf && !surf.available && <LabError title="SURF is unavailable on this server." message={surf.reason ?? 'A SURF-enabled OpenCV build is required. This laboratory is partially available.'} />}
       <div className="lab-image-grid"><ImagePanel title="Image A" frame={lab.sources.first?.frame ?? null} description={lab.sources.first?.name} />
         <ImagePanel title="Image B" frame={lab.sources.second?.frame ?? null} description={lab.sources.second?.name} /></div>
       {lab.error && <LabError title="Could not compare the features." message={lab.error} />}
       <LabStatus>{lab.busy ? 'Working with the image service…' : lab.error ? 'Check the message above and try again.'
-        : lab.result ? `${lab.result.algorithms.filter(item => item.status === 'ok').length} of 3 algorithms ran. Select a method below to inspect it.`
+        : lab.resultIsPrevious ? 'Settings changed. Previous results are shown; run the comparison to update them.'
+          : lab.result ? `${lab.result.algorithms.filter(item => item.status === 'ok').length} of 3 algorithms ran. Select a method below to inspect it.`
           : 'Predict what will match, then run the comparison.'}</LabStatus>
       {lab.result && <>
         <div className="feature-table" tabIndex={0} role="region" aria-label="Feature comparison measurements">

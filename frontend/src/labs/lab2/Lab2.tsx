@@ -28,12 +28,12 @@ export default function Lab2() {
       { value: 'noisy', label: 'Noisy sample', description: 'Investigate noise, smoothing, and thresholds.' },
     ]} />}>
       <LabWorkspace label="Edge detection workspace" resultsId="edge-results" busy={lab.busy}
-        tools={<ToolSidebar<Section> value={section} onChange={setSection} label="Choose edge settings"
+        tools={<ToolSidebar<Section> heading="Settings" value={section} onChange={setSection} label="Choose edge settings"
           tools={(Object.keys(sections) as Section[]).map(key => ({ id: key, label: sections[key].title,
             icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[key].icon} /></svg>,
           }))} />}
         controls={<><h2>{content.title === 'Compare' ? 'Compare edges' : content.title}</h2>
-          <p>{content.prompt}</p><EdgeControls lab={lab} section={section} /></>}>
+          <p>{content.prompt}</p><EdgeControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} /></>}>
           <div className="lab-image-grid" data-columns={3}>
             <EdgeFigure title="Original (grayscale)" frame={lab.source?.frame ?? null} description="Input before Gaussian smoothing" pending={lab.busy} />
             <EdgeFigure title="Sobel combined" frame={lab.result?.sobel ?? null} description="Brighter pixels show stronger changes · scaled for display" pending={lab.busy} />

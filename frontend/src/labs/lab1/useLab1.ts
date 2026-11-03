@@ -19,6 +19,7 @@ export default function useLab1() {
   const [rotationTurns, setRotationTurns] = useState(0)
   const [busy, setBusy] = useState(true)
   const [error, setError] = useState('')
+  const [notice, setNotice] = useState('')
   const active = useRef<AbortController | null>(null)
 
   const begin = useCallback((clearOutput = false) => {
@@ -27,6 +28,7 @@ export default function useLab1() {
     active.current = controller
     setBusy(true)
     setError('')
+    setNotice('')
     if (clearOutput) {
       setOutput(null)
       setResultIsPrevious(false)
@@ -84,10 +86,12 @@ export default function useLab1() {
   }
 
   function reset() {
+    const wasBusy = busy
     active.current?.abort()
     setBusy(false)
     setOutput(null)
     setError('')
+    setNotice(wasBusy ? 'Processing cancelled. Choose settings and run again when ready.' : '')
     setResultIsPrevious(false)
     setRotationTurns(0)
   }
@@ -96,6 +100,7 @@ export default function useLab1() {
     active.current?.abort()
     setBusy(false)
     setError('')
+    setNotice('')
     setResultIsPrevious(true)
   }
 
@@ -157,5 +162,5 @@ export default function useLab1() {
     }
   }
 
-  return { source, operation, fields, output, rotationTurns, resultIsPrevious, busy, error, loadSample, upload, select, change, pick, run, reset }
+  return { notice, source, operation, fields, output, rotationTurns, resultIsPrevious, busy, error, loadSample, upload, select, change, pick, run, reset }
 }

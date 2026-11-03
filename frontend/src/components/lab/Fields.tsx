@@ -1,24 +1,27 @@
 import { useId } from 'react'
 import type { InputHTMLAttributes } from 'react'
 
-export function NumberField({ label, onChange, ...props }:
+export function NumberField({ label, onChange, error, hint, ...props }:
   Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'type'> & {
-    label: string; onChange: (value: string) => void
+    label: string; onChange: (value: string) => void; error?: string; hint?: string
   }) {
   const id = useId()
   return <div className="lab-field"><label htmlFor={id}>{label}</label>
-    <input {...props} id={id} type="number" onChange={event => onChange(event.target.value)} />
+    <input {...props} id={id} type="number" aria-invalid={error ? true : undefined} aria-describedby={[props['aria-describedby'], hint ? `${id}-hint` : '', error ? `${id}-error` : ''].filter(Boolean).join(' ') || undefined} onChange={event => onChange(event.target.value)} />
+    {hint && <span className="lab-field-hint" id={`${id}-hint`}>{hint}</span>}
+    {error && <span className="lab-field-error" id={`${id}-error`}>{error}</span>}
   </div>
 }
 
-export function SelectField({ label, value, options, onChange }: {
-  label: string; value: string; options: { value: string | number; label: string; disabled?: boolean }[]
+export function SelectField({ label, value, options, onChange, hint }: {
+  label: string; value: string; hint?: string; options: { value: string | number; label: string; disabled?: boolean }[]
   onChange: (value: string) => void
 }) {
   const id = useId()
   return <div className="lab-field"><label htmlFor={id}>{label}</label>
-    <select id={id} value={value} onChange={event => onChange(event.target.value)}>
+    <select id={id} aria-describedby={hint ? `${id}-hint` : undefined} value={value} onChange={event => onChange(event.target.value)}>
       {options.map(option => <option key={option.value} value={option.value} disabled={option.disabled}>{option.label}</option>)}
     </select>
+    {hint && <span className="lab-field-hint" id={`${id}-hint`}>{hint}</span>}
   </div>
 }

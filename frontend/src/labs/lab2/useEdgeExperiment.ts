@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { FieldError, numberSetting } from '../../components/lab/validation'
 import { frameFile } from '../../api/images'
 import type { ImageFrame } from '../../api/images'
 import { compareEdges, getSample, loadImage } from './api'
@@ -13,6 +14,7 @@ export default function useEdgeExperiment() {
   const [result, setResult] = useState<EdgeResult | null>(null)
   const [busy, setBusy] = useState(true)
   const [error, setError] = useState('')
+  const [invalidField, setInvalidField] = useState('')
   const active = useRef<AbortController | null>(null)
 
   const accept = useCallback((frame: ImageFrame, file: File, name: string) => {
@@ -39,6 +41,7 @@ export default function useEdgeExperiment() {
     active.current = controller
     setBusy(true)
     setError('')
+    setInvalidField('')
     if (clearResult) setResult(null)
     return controller
   }
@@ -47,6 +50,7 @@ export default function useEdgeExperiment() {
     active.current?.abort()
     setBusy(false)
     setError('')
+    setInvalidField('')
     if (clearResult) setResult(null)
   }
 
@@ -63,7 +67,6 @@ export default function useEdgeExperiment() {
   }
 
   async function upload(file: File) {
-    resetResult()
     if (!['image/png', 'image/jpeg'].includes(file.type) || file.size > 5 * 1024 * 1024) {
       setError('Choose a PNG or JPEG no larger than 5 MiB.')
       return
@@ -89,20 +92,24 @@ export default function useEdgeExperiment() {
     setDraft(baseline)
   }
 
-  async function run() {
-    if (!source) return
+  async function run(onInvalid?: (field: string) => void) {
+    if (!source || busy) return
     const controller = begin()
     try {
-      const entries = Object.entries(draft).map(([key, value]) => {
-        if (value.trim() === '' || !Number.isInteger(Number(value))) throw new Error('Use whole numbers for thresholds and kernel sizes.')
-        return [key, Number(value)]
-      })
-      const settings = Object.fromEntries(entries) as unknown as EdgeSettings
-      if (settings.low_threshold >= settings.high_threshold) throw new Error('The lower Canny threshold must be smaller than the upper threshold.')
+      const settings: EdgeSettings = {
+        blur_kernel: numberSetting(draft.blur_kernel, 'blur_kernel', 'Gaussian kernel', 1, 9),
+        sobel_kernel: numberSetting(draft.sobel_kernel, 'sobel_kernel', 'Sobel kernel', 3, 7),
+        low_threshold: numberSetting(draft.low_threshold, 'low_threshold', 'Lower threshold', 0, 2047),
+        high_threshold: numberSetting(draft.high_threshold, 'high_threshold', 'Upper threshold', 1, 2048),
+      }
+      if (settings.low_threshold >= settings.high_threshold) throw new FieldError('low_threshold', 'Lower threshold must be smaller than upper threshold.')
       const response = await compareEdges(source.file, settings, controller.signal)
       if (!controller.signal.aborted) setResult(response)
     } catch (error) {
-      if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not compare the edges.')
+      if (!controller.signal.aborted) {
+        setError(error instanceof Error ? error.message : 'Could not compare the edges.')
+        if (error instanceof FieldError) { setInvalidField(error.field); onInvalid?.(error.field) }
+      }
     } finally {
       if (!controller.signal.aborted) setBusy(false)
     }
@@ -111,5 +118,5 @@ export default function useEdgeExperiment() {
   const resultIsPrevious = result !== null && (Object.keys(baseline) as (keyof Draft)[]).some(key =>
     draft[key].trim() === '' || Number(draft[key]) !== result.parameters[key])
 
-  return { source, draft, result, resultIsPrevious, busy, error, sample, upload, change, resetBaseline, resetResult, run }
+  return { invalidField, source, draft, result, resultIsPrevious, busy, error, sample, upload, change, resetBaseline, resetResult, run }
 }

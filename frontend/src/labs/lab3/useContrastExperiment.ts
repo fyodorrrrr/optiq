@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { FieldError, numberSetting } from '../../components/lab/validation'
 import { frameFile } from '../../api/images'
 import type { ImageFrame } from '../../api/images'
 import { compareContrast, getSample, loadImage } from './api'
@@ -13,6 +14,7 @@ export default function useContrastExperiment() {
   const [result, setResult] = useState<ContrastResult | null>(null)
   const [busy, setBusy] = useState(true)
   const [error, setError] = useState('')
+  const [invalidField, setInvalidField] = useState('')
   const active = useRef<AbortController | null>(null)
 
   const accept = useCallback((frame: ImageFrame, file: File, name: string) => {
@@ -34,25 +36,27 @@ export default function useContrastExperiment() {
     return () => active.current?.abort()
   }, [accept])
 
-  function clear() {
+  function clear(clearResult = true) {
     active.current?.abort()
     setBusy(false)
     setError('')
-    setResult(null)
+    setInvalidField('')
+    if (clearResult) setResult(null)
   }
 
-  function begin() {
+  function begin(clearResult = false) {
     active.current?.abort()
     const controller = new AbortController()
     active.current = controller
     setBusy(true)
     setError('')
-    setResult(null)
+    setInvalidField('')
+    if (clearResult) setResult(null)
     return controller
   }
 
   async function sample(kind: Sample) {
-    const controller = begin()
+    const controller = begin(true)
     try {
       const frame = await getSample(kind, controller.signal)
       const label = { 'low-contrast': 'Low contrast', uneven: 'Uneven lighting · seed 42', color: 'Color study' }[kind]
@@ -65,12 +69,11 @@ export default function useContrastExperiment() {
   }
 
   async function upload(file: File) {
-    clear()
     if (!['image/png', 'image/jpeg'].includes(file.type) || file.size > 5 * 1024 * 1024) {
       setError('Choose a PNG or JPEG no larger than 5 MiB.')
       return
     }
-    const controller = begin()
+    const controller = begin(true)
     try {
       const frame = await loadImage(file, controller.signal)
       if (!controller.signal.aborted) accept(frame, file, file.name)
@@ -82,38 +85,43 @@ export default function useContrastExperiment() {
   }
 
   function change(key: keyof Draft, value: string) {
-    clear()
+    clear(false)
     setDraft(previous => ({ ...previous, [key]: value }))
   }
 
   function resetBaseline() {
-    clear()
+    clear(false)
     setDraft(baseline)
   }
 
-  async function run() {
+  async function run(onInvalid?: (field: string) => void) {
     if (!source || busy) return
     const controller = begin()
     try {
-      function number(key: 'clip_limit' | 'tiles_x' | 'tiles_y' | 'alpha' | 'beta') {
-        const value = Number(draft[key])
-        if (draft[key].trim() === '' || !Number.isFinite(value)) throw new Error('Enter finite numbers for all contrast settings.')
-        if (['tiles_x', 'tiles_y', 'beta'].includes(key) && !Number.isInteger(value)) throw new Error('Tile counts and brightness offset must be whole numbers.')
-        return value
-      }
       const settings: ContrastSettings = {
         mode: draft.mode === 'color' ? 'color' : 'grayscale',
         linear_method: draft.linear_method === 'stretch' ? 'stretch' : 'adjust',
-        clip_limit: number('clip_limit'), tiles_x: number('tiles_x'), tiles_y: number('tiles_y'), alpha: number('alpha'), beta: number('beta'),
+        clip_limit: numberSetting(draft.clip_limit, 'clip_limit', 'CLAHE clip limit', 0.1, 40, false),
+        tiles_x: numberSetting(draft.tiles_x, 'tiles_x', 'Tiles across', 1, 16),
+        tiles_y: numberSetting(draft.tiles_y, 'tiles_y', 'Tiles down', 1, 16),
+        alpha: draft.linear_method === 'stretch' ? 1.2 : numberSetting(draft.alpha, 'alpha', 'Contrast scale', 0, 10, false),
+        beta: draft.linear_method === 'stretch' ? 0 : numberSetting(draft.beta, 'beta', 'Brightness offset', -255, 255),
       }
       const response = await compareContrast(source.file, settings, controller.signal)
       if (!controller.signal.aborted) setResult(response)
     } catch (error) {
-      if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not adjust the image contrast.')
+      if (!controller.signal.aborted) {
+        setError(error instanceof Error ? error.message : 'Could not adjust the image contrast.')
+        if (error instanceof FieldError) { setInvalidField(error.field); onInvalid?.(error.field) }
+      }
     } finally {
       if (!controller.signal.aborted) setBusy(false)
     }
   }
 
-  return { source, draft, result, busy, error, sample, upload, change, resetBaseline, clear, run }
+  const resultIsPrevious = result !== null && (Object.keys(baseline) as (keyof Draft)[]).some(key =>
+    result.parameters.linear_method === 'stretch' && draft.linear_method === 'stretch' && ['alpha', 'beta'].includes(key) ? false
+      : ['mode', 'linear_method'].includes(key) ? draft[key] !== result.parameters[key] : draft[key].trim() === '' || Number(draft[key]) !== result.parameters[key])
+
+  return { invalidField, resultIsPrevious, source, draft, result, busy, error, sample, upload, change, resetBaseline, clear, run }
 }

@@ -67,6 +67,7 @@ export default function Lab1() {
             {lab.error && <LabError message={lab.error} />}
             <LabStatus>{lab.busy ? 'Working with the image service…'
               : lab.error ? 'The request failed. Check the message above and try again.'
+                : lab.notice ? lab.notice
                 : lab.output ? lab.resultIsPrevious ? 'Settings changed. The previous result is still shown; run the experiment to update it.'
                   : `${experiments[lab.output.operation].title} complete. The original is unchanged.`
                   : lab.source ? 'Ready. Choose settings and run the experiment.' : 'Choose a sample or upload an image to retry.'}</LabStatus>

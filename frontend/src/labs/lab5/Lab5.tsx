@@ -15,10 +15,10 @@ import type { Eigenface, Prediction } from './api'
 import './Lab5.css'
 
 function EigenGallery({ items }: { items: Eigenface[] }) {
-  return <div className="pca-gallery">{items.map(item => <ImagePanel key={item.component} title={`Component ${item.component}`} frame={item.frame} showMetadata={false} description={`${(item.variance * 100).toFixed(2)}% of training variance`} />)}</div>
+  return <div className="pca-gallery">{items.map(item => <ImagePanel compact imageAlt={`Eigenface component ${item.component}; signed variation pattern, not a photograph.`} key={item.component} title={`Component ${item.component}`} frame={item.frame} showMetadata={false} description={`${(item.variance * 100).toFixed(2)}% of training variance`} />)}</div>
 }
 function PredictionGallery({ items }: { items: Prediction[] }) {
-  return <div className="pca-gallery">{items.map(item => <ImagePanel key={item.index} title={`Test face #${item.index}`} frame={item.frame} showMetadata={false} description={`Actual: ${item.actual}. Predicted: ${item.predicted}.`} />)}</div>
+  return <div className="pca-gallery">{items.map(item => <ImagePanel compact imageAlt={`Test face ${item.index}. Actual identity: ${item.actual}. Predicted identity: ${item.predicted}.`} key={item.index} title={`Test face #${item.index}`} frame={item.frame} showMetadata={false} description={`Actual: ${item.actual}. Predicted: ${item.predicted}.`} />)}</div>
 }
 export default function Lab5() {
   const lab = usePcaExperiment()
@@ -33,22 +33,23 @@ export default function Lab5() {
     guideId="pca-guide" onOpenGuide={() => { if (guide.current) guide.current.open = true }} wide
     actions={<LabButton disabled={lab.busy} onClick={() => void lab.refresh()}>Check dataset</LabButton>}>
     <LabWorkspace label="PCA and eigenfaces workspace" resultsId="pca-results" busy={lab.busy}
-      tools={<ToolSidebar<Section> value={section} onChange={setSection} tools={(Object.keys(sections) as Section[]).map(id => ({ id, label: sections[id].title,
+      tools={<ToolSidebar<Section> heading="Explore" value={section} onChange={setSection} tools={(Object.keys(sections) as Section[]).map(id => ({ id, label: sections[id].title,
         icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[id].icon} /></svg>,
       }))} />}
       controls={<><h2>{content.title}</h2><p>{content.prompt}</p><form onSubmit={event => { event.preventDefault(); void lab.run() }}>
-        <NumberField label="PCA components" value={lab.components} min={12} max={lab.dataset?.max_components || 300} step={1} disabled={lab.busy} onChange={lab.setComponents} />
-        <p>Baseline: 150 · whitened PCA · balanced RBF SVM · fixed split, seed 42.</p>
+        <NumberField hint="How many variation patterns each face is represented by. Fewer components retain less information." required label="PCA components" value={lab.components} min={12} max={lab.dataset?.max_components || 300} step={1} disabled={lab.busy} onChange={lab.setComponents} />
+        <details className="lab-settings-disclosure"><summary>Baseline & execution</summary><p>Baseline: 150 · whitened PCA · balanced RBF SVM · fixed split, seed 42.</p>
+        <p className="lab-hint">Each run fits fresh models. Leaving the page or losing the connection stops waiting, but the server fit may continue. Wait for it to finish before retrying.</p></details>
         <div className="pca-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || !lab.dataset?.ready}>Run experiment</LabButton>
           <LabButton disabled={lab.busy} onClick={() => lab.setComponents('150')}>Reset baseline</LabButton></div>
       </form></>}>
-      <section className="pca-dataset" aria-labelledby="pca-dataset-title"><h2 id="pca-dataset-title">Your dataset</h2>
+      <details className="pca-dataset lab-metadata-help" open={!result}><summary>Dataset details{lab.dataset?.ready ? ` · ${lab.dataset.samples.toLocaleString()} faces · ${lab.dataset.names.length} identities` : ''}</summary>
         <p>{lab.dataset?.message ?? 'Checking the LFW dataset…'}</p>
         {lab.dataset?.ready && <><dl className="pca-facts"><div><dt>Faces</dt><dd>{lab.dataset.samples.toLocaleString()}</dd></div><div><dt>Image size</dt><dd>{lab.dataset.width} × {lab.dataset.height}</dd></div><div><dt>Pixel features</dt><dd>{lab.dataset.features.toLocaleString()}</dd></div><div><dt>Identities</dt><dd>{lab.dataset.names.length}</dd></div></dl>
           <details><summary>Included identities</summary><p>{lab.dataset.names.join(' · ')}</p></details></>}
-      </section>
+      </details>
       {lab.error && <LabError title="Could not run the experiment." message={lab.error} />}
-      <LabStatus>{lab.busy ? 'Preparing the dataset or fitting PCA and SVM… This may take a moment.'
+      <LabStatus>{lab.busy ? 'Checking the dataset or fitting PCA and SVM… Keep this page open. Previous results remain available.'
         : lab.error ? 'Check the message above and retry.' : result ? `${stale ? 'Previous result · ' : ''}${result.parameters.components} components · ${result.train_count} training faces / ${result.test_count} held-out faces.`
           : lab.dataset?.ready ? 'Ready. Predict what will change, then run the experiment.' : 'The dataset must be prepared on this server before experiments can run.'}</LabStatus>
       {result ? <>
@@ -58,6 +59,9 @@ export default function Lab5() {
           <VarianceChart values={result.cumulative_variance} threshold={result.components_90} selected={result.parameters.components} />
           <details><summary>Exact cumulative variance values</summary><div className="pca-table"><table><thead><tr><th>Components</th><th>Cumulative variance</th></tr></thead><tbody>{result.cumulative_variance.map((value, index) => <tr key={index}><td>{index + 1}</td><td>{(value * 100).toFixed(4)}%</td></tr>)}</tbody></table></div></details></section>}
         {section === 'recognition' && <section><h2>Recognition on held-out faces</h2><p><strong>{(result.accuracy * 100).toFixed(1)}% accuracy</strong> on {result.test_count} test faces. These fixed-split results apply to the included identities.</p>
+          <details className="lab-metadata-help"><summary>What do the recognition metrics mean?</summary>
+            <p>Precision: how often predictions for an identity are correct. Recall: how many faces of that identity are recovered. F1 balances precision and recall. Support is the number of test faces for that identity. Accuracy is the fraction of all test predictions that are correct.</p>
+          </details>
           <div className="pca-table" tabIndex={0} role="region" aria-label="Classification report"><table><caption>Classification report · precision, recall and F1 range from 0 to 1</caption><thead><tr><th scope="col">Identity / average</th><th scope="col">Precision</th><th scope="col">Recall</th><th scope="col">F1</th><th scope="col">Support</th></tr></thead><tbody>{result.report.map(row => <tr key={row.name}><th scope="row">{row.name}</th><td>{row.precision.toFixed(3)}</td><td>{row.recall.toFixed(3)}</td><td>{row.f1.toFixed(3)}</td><td>{row.support}</td></tr>)}</tbody></table></div>
           <h3>First 12 test predictions</h3><PredictionGallery items={result.predictions} /></section>}
         {section === 'failures' && <section><h2>Learn from the misses</h2><p>{result.misclassified_count} of {result.test_count} test faces were misclassified. {result.failures.length > 0 ? `Showing the first ${result.failures.length} in test-split order.` : 'There are no misclassifications in this run.'}</p><PredictionGallery items={result.failures} /></section>}

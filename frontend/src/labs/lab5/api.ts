@@ -15,15 +15,20 @@ export interface Result {
 }
 async function request<T>(path: string, signal: AbortSignal, components?: number): Promise<T> {
   let response: Response
+  const timeout = AbortSignal.timeout(120000)
   try {
     response = await fetch(`/api/labs/5/${path}`, { method: components === undefined ? 'GET' : 'POST',
       headers: components === undefined ? undefined : { 'Content-Type': 'application/json' },
       body: components === undefined ? undefined : JSON.stringify({ components }),
-      signal: AbortSignal.any([signal, AbortSignal.timeout(120000)]),
+      signal: AbortSignal.any([signal, timeout]),
     })
   } catch (error) {
     if (signal.aborted) throw error
-    throw new Error('The experiment service is unavailable or took too long. Wait a moment, then retry.', { cause: error })
+    const message = components === undefined
+      ? timeout.aborted ? 'The dataset check took too long. Check the dataset again in a moment.' : 'Could not reach the dataset service. Check your connection and try again.'
+      : timeout.aborted ? 'Stopped waiting after two minutes. The server may still be fitting PCA and SVM; wait before retrying. Your previous result is preserved.'
+        : 'Connection to the experiment service was lost. The server may still be fitting PCA and SVM; wait before retrying. Your previous result is preserved.'
+    throw new Error(message, { cause: error })
   }
   if (!response.ok) {
     const data = await response.json().catch(() => null)

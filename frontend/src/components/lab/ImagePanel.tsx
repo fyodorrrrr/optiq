@@ -2,8 +2,8 @@ import type { MouseEvent } from 'react'
 import type { ImageFrame as Frame } from '../../api/images'
 import ImageMetadata from './ImageMetadata'
 
-export default function ImagePanel({ title, frame, onPick, empty, selection, description, showMetadata = true, metadataEssential = false }: {
-  title: string; frame: Frame | null; showMetadata?: boolean; metadataEssential?: boolean; description?: string; onPick?: (x: number, y: number) => void; empty?: string
+export default function ImagePanel({ title, frame, onPick, empty, selection, description, showMetadata = true, metadataEssential = false, compact = false, imageAlt }: {
+  compact?: boolean; imageAlt?: string; title: string; frame: Frame | null; showMetadata?: boolean; metadataEssential?: boolean; description?: string; onPick?: (x: number, y: number) => void; empty?: string
   selection?: { x: number; y: number; width?: number; height?: number }
 }) {
   const validSelection = frame && selection && Number.isInteger(selection.x) && Number.isInteger(selection.y)
@@ -21,11 +21,11 @@ export default function ImagePanel({ title, frame, onPick, empty, selection, des
     onPick(Math.floor(x), Math.floor(y))
   }
 
-  return <figure className="lab-image-panel">
-    <figcaption>{title}<span className="lab-preview-scale">Fit to panel</span></figcaption>
+  return <figure className={`lab-image-panel${compact ? ' is-compact' : ''}`}>
+    <figcaption>{title}{!compact && <span className="lab-preview-scale">Fit to panel</span>}</figcaption>
     <div className={`lab-image-stage ${onPick ? 'can-pick' : ''}`}>
       {frame ? <>
-        <img src={frame.image} alt={`${title} image`} onClick={onPick ? pick : undefined} draggable={false} />
+        <img src={frame.image} alt={imageAlt ?? `${title} image`} loading={compact ? 'lazy' : undefined} onClick={onPick ? pick : undefined} draggable={false} />
         {selection && validSelection && <svg
           className="lab-selection" viewBox={`0 0 ${frame.width} ${frame.height}`} aria-hidden="true">
           {selection.width !== undefined && selection.height !== undefined
