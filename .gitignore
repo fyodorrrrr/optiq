@@ -224,3 +224,6 @@ activities/
 
 # Local browser mockups
 .superpowers/
+
+# JavaScript dependencies (root development runner and frontend)
+node_modules/

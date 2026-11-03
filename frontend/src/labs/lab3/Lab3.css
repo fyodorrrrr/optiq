@@ -1,0 +1,8 @@
+/* Histogram rendering is shared; only contrast-specific result layout is local. */
+.contrast-view { min-width: 0; }
+.contrast-statistics { font-size: 12px; color: var(--ink-soft); line-height: 1.6; margin-top: 8px; font-variant-numeric: tabular-nums; }
+.contrast-linear { border-top: 1px solid var(--line); padding-top: 24px; margin-top: 24px; }
+.contrast-linear > h3 { font-size: 16px; font-weight: 600; margin: 0 0 18px; }
+.contrast-linear .lab-histogram { margin-top: 0; }
+.contrast-downloads { display: flex; gap: 14px 18px; flex-wrap: wrap; font-size: 13px; line-height: 1.6; margin-top: 24px; }
+.contrast-run { margin: 20px 0 0; }

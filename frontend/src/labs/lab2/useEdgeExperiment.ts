@@ -33,25 +33,25 @@ export default function useEdgeExperiment() {
     return () => active.current?.abort()
   }, [accept])
 
-  function begin() {
+  function begin(clearResult = false) {
     active.current?.abort()
     const controller = new AbortController()
     active.current = controller
     setBusy(true)
     setError('')
-    setResult(null)
+    if (clearResult) setResult(null)
     return controller
   }
 
-  function resetResult() {
+  function resetResult(clearResult = true) {
     active.current?.abort()
     setBusy(false)
     setError('')
-    setResult(null)
+    if (clearResult) setResult(null)
   }
 
   async function sample(kind: Sample) {
-    const controller = begin()
+    const controller = begin(true)
     try {
       const frame = await getSample(kind, controller.signal)
       if (!controller.signal.aborted) accept(frame, frameFile(frame, `optiq-${kind}.png`), `${kind === 'noisy' ? 'Noisy shapes · seed 42' : 'Shapes'} · generated sample`)
@@ -68,7 +68,7 @@ export default function useEdgeExperiment() {
       setError('Choose a PNG or JPEG no larger than 5 MiB.')
       return
     }
-    const controller = begin()
+    const controller = begin(true)
     try {
       const frame = await loadImage(file, controller.signal)
       if (!controller.signal.aborted) accept(frame, file, file.name)
@@ -80,12 +80,12 @@ export default function useEdgeExperiment() {
   }
 
   function change(key: keyof Draft, value: string) {
-    resetResult()
+    resetResult(false)
     setDraft(previous => ({ ...previous, [key]: value }))
   }
 
   function resetBaseline() {
-    resetResult()
+    resetResult(false)
     setDraft(baseline)
   }
 
@@ -108,5 +108,8 @@ export default function useEdgeExperiment() {
     }
   }
 
-  return { source, draft, result, busy, error, sample, upload, change, resetBaseline, resetResult, run }
+  const resultIsPrevious = result !== null && (Object.keys(baseline) as (keyof Draft)[]).some(key =>
+    draft[key].trim() === '' || Number(draft[key]) !== result.parameters[key])
+
+  return { source, draft, result, resultIsPrevious, busy, error, sample, upload, change, resetBaseline, resetResult, run }
 }

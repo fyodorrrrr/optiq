@@ -1,0 +1,12 @@
+{
+  "name": "optiq",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently --kill-others --names frontend,backend --prefix-colors cyan,green \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "npm --prefix frontend run dev --",
+    "dev:backend": "cd backend && .venv/bin/fastapi dev main.py --host 127.0.0.1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.5"
+  }
+}

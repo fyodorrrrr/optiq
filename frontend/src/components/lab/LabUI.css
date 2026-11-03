@@ -54,7 +54,6 @@
 .lab-metadata-help p { color: var(--ink-soft); margin: 8px 0 0; }
 .lab-metadata dt { color: var(--ink-soft); margin-bottom: 3px; }
 .lab-metadata dd { margin: 0; overflow-wrap: anywhere; }
-.lab-source-name { color: var(--ink-soft); font-size: 12px; line-height: 1.6; margin-top: 20px; overflow-wrap: anywhere; }
 .lab-controls { grid-area: controls; background: var(--paper); border-left: 1px solid var(--line); padding: 24px; }
 .lab-controls h2 { font-size: 19px; margin: 0 0 10px; }
 .lab-controls h3 { font-size: 14px; margin: 22px 0 8px; font-weight: 600; }

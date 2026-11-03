@@ -9,6 +9,7 @@ import LabWorkspace from '../../components/lab/LabWorkspace'
 import ToolSidebar from '../../components/lab/ToolSidebar'
 import SourceActions from '../../components/lab/SourceActions'
 import LabGuide from '../../components/lab/LabGuide'
+import ImageMetadata from '../../components/lab/ImageMetadata'
 import { LabError, LabStatus } from '../../components/lab/LabFeedback'
 import './Lab2.css'
 
@@ -35,16 +36,20 @@ export default function Lab2() {
           <p>{content.prompt}</p><EdgeControls lab={lab} section={section} /></>}>
           <div className="lab-image-grid" data-columns={3}>
             <EdgeFigure title="Original (grayscale)" frame={lab.source?.frame ?? null} description="Input before Gaussian smoothing" pending={lab.busy} />
-            <EdgeFigure title="Sobel combined" frame={lab.result?.sobel ?? null} description="Gradient magnitude · display-scaled" pending={lab.busy} />
-            <EdgeFigure title="Canny edges" frame={lab.result?.canny ?? null} description="Binary edge map · values 0 or 255" pending={lab.busy} />
+            <EdgeFigure title="Sobel combined" frame={lab.result?.sobel ?? null} description="Brighter pixels show stronger changes · scaled for display" pending={lab.busy} />
+            <EdgeFigure title="Canny edges" frame={lab.result?.canny ?? null} description="White pixels are detected edges · values 0 or 255" pending={lab.busy} />
           </div>
-          {lab.source && <p className="lab-source-name">Source: {lab.source.name}</p>}
+          {lab.source && <details className="lab-metadata-help"><summary>Image details</summary>
+            <ImageMetadata frame={lab.source.frame} />
+          </details>}
           {lab.error && <LabError message={lab.error} title="Could not compare the edges." />}
           <LabStatus>{lab.busy ? 'Working with the image service…'
-            : lab.result ? `${lab.result.engine} · Both detectors complete.`
+            : lab.error ? 'The request failed. Check the message above and try again.'
+              : lab.resultIsPrevious ? 'Settings changed. Previous results are still shown; run both detectors to update them.'
+                : lab.result ? 'Both detectors complete.'
               : lab.source ? 'Ready. Run both detectors to compare their edge maps.' : 'Choose a sample or upload an image to begin.'}</LabStatus>
           {lab.result && <>
-            <p className="edge-scaling">Sobel is scaled to 0–255 for display; raw magnitude max: {Number(lab.result.statistics.sobel_max.toFixed(2))}. Canny edge pixels: {lab.result.statistics.canny_edge_pixels.toLocaleString()} ({lab.result.statistics.canny_edge_percent}%).</p>
+
             <div className="edge-downloads"><a href={lab.result.sobel.image} download="optiq-lab2-sobel.png">Download Sobel</a><a href={lab.result.canny.image} download="optiq-lab2-canny.png">Download Canny</a></div>
             <details className="edge-intermediates"><summary>Preprocessing & directional gradients</summary>
               <div className="lab-image-grid" data-columns={3}>
@@ -53,7 +58,7 @@ export default function Lab2() {
                 <EdgeFigure title="Sobel y" frame={lab.result.sobel_y} description="Absolute y derivative · separately scaled" />
               </div>
             </details>
-            <details className="edge-run"><summary>Run settings & raw ranges</summary><pre>{JSON.stringify({ parameters: lab.result.parameters, statistics: lab.result.statistics, display_scaling: lab.result.display_scaling, canny_aperture: 3, canny_L2gradient: false }, null, 2)}</pre></details>
+            <details className="edge-run"><summary>Run settings & measurements</summary>            <p className="edge-scaling">Sobel is scaled to 0–255 for display; raw magnitude max: {Number(lab.result.statistics.sobel_max.toFixed(2))}. Canny edge pixels: {lab.result.statistics.canny_edge_pixels.toLocaleString()} ({lab.result.statistics.canny_edge_percent}%).</p><p>Edge-pixel percentage measures output density, not accuracy.</p><pre>{JSON.stringify({ engine: lab.result.engine, parameters: lab.result.parameters, statistics: lab.result.statistics, display_scaling: lab.result.display_scaling, canny_aperture: 3, canny_L2gradient: false }, null, 2)}</pre></details>
           </>}
       </LabWorkspace>
       <LabGuide id="edge-guide" ref={guide}>

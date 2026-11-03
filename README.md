@@ -2,12 +2,39 @@
 
 Interactive computer vision learning and experimentation platform for Labs 1–7.
 Includes a homepage with a full-screen introduction, a selectable seven-lab map,
-and working Python/OpenCV workspaces for Labs 1–2. Labs 3–7 are planned.
+and working Python/OpenCV workspaces for Labs 1–5. Labs 6–7 are planned.
 
 ## Requirements
 
 - Node.js 22.12+ (or another version supported by Vite) and npm
 - Python 3.12
+
+## Run Both Servers
+
+After completing the backend and frontend dependency setup below, install the
+root development runner once from the repository root:
+
+```bash
+npm ci
+```
+
+Then start both servers in one terminal:
+
+```bash
+npm run dev
+```
+
+Frontend logs are labeled `[frontend]` and backend logs `[backend]`. Open
+http://127.0.0.1:5173. Press **Ctrl+C** to stop both; if either process exits,
+the runner stops the other too. Stop any separately running copies first so
+ports 5173 and 8000 are available.
+
+The backend command uses its existing `.venv` directly, so activation is not
+required for the root shortcut. Root npm dependencies only coordinate processes;
+frontend dependencies and Python dependencies remain in their own folders.
+
+To start just one service from the repository root, use `npm run dev:frontend`
+or `npm run dev:backend`. The individual commands below also remain available.
 
 ## Backend
 
@@ -67,6 +94,17 @@ raw ranges and exact settings are included with each run. Download either edge
 map as PNG. The shapes and seeded noisy samples are generated replacements for
 the activity's missing `input.jpg`.
 
+Lab 3 at `/labs/3` compares global histogram equalization, CLAHE, and linear
+contrast adjustment/stretching, with 256-bin brightness histograms on one shared
+count scale. Grayscale mode processes intensity; color mode modifies Y in YUV
+before reconstructing BGR. Histograms measure the final displayed images.
+Manual linear adjustment uses `clip(rint(alpha * intensity + beta), 0, 255)`;
+full-range stretching maps the observed range to 0–255 and leaves a constant
+channel unchanged. Use the low-contrast, uneven-lighting, or color sample; the
+uneven-lighting sample uses noise seed 42. PNG results and histogram CSV are
+downloadable. The shared shell, inputs, viewers, and histogram component live in
+`frontend/src/components/lab/`; Lab 3 state and processing stay in its own module.
+
 For the API check, expand **Development connection check** in the footer and
 click **Check backend connection**.
 With the backend running, the status reads **Optiq backend is connected**.
@@ -96,6 +134,9 @@ operations, grayscale/alpha/JPEG handling, and invalid inputs/resource limits.
 Lab 2 tests additionally cover exact baseline preprocessing/Canny output,
 directional derivatives, scaled magnitude, uniform images, seeded noise,
 parameter effects, and invalid kernels/thresholds.
+Lab 3 tests cover exact histogram counts, global equalization, CLAHE, negative
+offset clipping, full-range stretching, constant images, final color-output
+histograms, deterministic samples, and parameter validation.
 
 The original activity documents in `activities/` are currently excluded from Git.
 
@@ -120,3 +161,15 @@ Lab-specific content, settings, result handling, and hooks stay under
 styles remain local. Backend algorithms also remain per lab. Common transport
 lives in `frontend/src/api/images.ts`; common backend upload helpers and image
 contracts live in `routers/image_io.py` and `schemas/images.py`.
+
+Lab 4 at `/labs/4` compares real SURF, SIFT, and ORB using two image inputs,
+rich keypoint views, ratio-test matches, descriptor details, and measured timings.
+Try rotated/scaled samples, adjust SURF's Hessian threshold, and explore upright
+SURF. Each input is limited to one million pixels; the match canvas to two million.
+SURF requires a custom OpenCV build: see [SURF setup](docs/SURF_SETUP.md).
+Standard wheels leave SURF explicitly unavailable while SIFT and ORB remain usable.
+
+Lab 5 at `/labs/5` runs training-only PCA, eigenface visualization, explained
+variance analysis, and held-out RBF SVM recognition on LFW. Prepare the dataset
+once with `backend/.venv/bin/python backend/scripts/prepare_lfw.py` from the repo
+root. See [Lab 5 setup](docs/LAB5_SETUP.md) for defaults, provenance, and limits.

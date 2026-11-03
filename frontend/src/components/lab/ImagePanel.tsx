@@ -1,8 +1,9 @@
 import type { MouseEvent } from 'react'
 import type { ImageFrame as Frame } from '../../api/images'
+import ImageMetadata from './ImageMetadata'
 
-export default function ImagePanel({ title, frame, onPick, empty, selection, description }: {
-  title: string; frame: Frame | null; description?: string; onPick?: (x: number, y: number) => void; empty?: string
+export default function ImagePanel({ title, frame, onPick, empty, selection, description, showMetadata = true, metadataEssential = false }: {
+  title: string; frame: Frame | null; showMetadata?: boolean; metadataEssential?: boolean; description?: string; onPick?: (x: number, y: number) => void; empty?: string
   selection?: { x: number; y: number; width?: number; height?: number }
 }) {
   const validSelection = frame && selection && Number.isInteger(selection.x) && Number.isInteger(selection.y)
@@ -38,14 +39,8 @@ export default function ImagePanel({ title, frame, onPick, empty, selection, des
     {frame && selection && <p className="lab-selection-label">{validSelection
       ? <>{selection.width === undefined ? 'Selected pixel' : 'Crop origin'}: ({selection.x}, {selection.y}){selection.width !== undefined && ` · ${selection.width} × ${selection.height} px`}</>
       : 'Enter valid coordinates and dimensions to preview the selection.'}</p>}
-    {frame && <dl className="lab-metadata">
-      <div><dt>Dimensions</dt><dd>{frame.width} × {frame.height} px</dd></div>
-      <div><dt>Array shape</dt><dd>({frame.shape.join(', ')})</dd></div>
-      <div><dt>Channels</dt><dd>{frame.channels} · {frame.color_space}</dd></div>
-      <div><dt>Data type</dt><dd>{frame.dtype} · 0–255</dd></div>
-    </dl>}
-    {frame && <details className="lab-metadata-help"><summary>What do these values mean?</summary>
-      <p>Dimensions list width × height. Array shape lists height, width, then channels for color images. BGR means blue, green, red; grayscale has one channel. uint8 stores whole-number values from 0 to 255.</p>
-    </details>}
+    {frame && showMetadata && (metadataEssential
+      ? <ImageMetadata frame={frame} essential />
+      : <details className="lab-metadata-help"><summary>Image details</summary><ImageMetadata frame={frame} /></details>)}
   </figure>
 }

@@ -1,0 +1,97 @@
+import { useRef, useState } from 'react'
+import LabPage from '../../components/lab/LabPage'
+import LabWorkspace from '../../components/lab/LabWorkspace'
+import ToolSidebar from '../../components/lab/ToolSidebar'
+import ImageUploadButton from '../../components/lab/ImageUploadButton'
+import SamplePicker from '../../components/lab/SamplePicker'
+import ImagePanel from '../../components/lab/ImagePanel'
+import LabGuide from '../../components/lab/LabGuide'
+import LabButton from '../../components/lab/LabButton'
+import { NumberField } from '../../components/lab/Fields'
+import { LabError, LabStatus } from '../../components/lab/LabFeedback'
+import useFeatureExperiment from './useFeatureExperiment'
+import { sections, pythonExample } from './content'
+import type { Section } from './content'
+import type { Algorithm } from './api'
+import './Lab4.css'
+
+export default function Lab4() {
+  const lab = useFeatureExperiment()
+  const [section, setSection] = useState<Section>('compare')
+  const [algorithm, setAlgorithm] = useState<Algorithm>('surf')
+  const guide = useRef<HTMLDetailsElement>(null)
+  const content = sections[section]
+  const selected = lab.result?.algorithms.find(item => item.algorithm === algorithm)
+  const surf = lab.capabilities?.algorithms.find(item => item.id === 'surf')
+  function choose(value: Section) {
+    setSection(value)
+    if (value !== 'compare') setAlgorithm(value)
+  }
+  return <LabPage labNumber={4} title="Find what stays recognizable."
+    description="Lab 4 — Features & matching. Compare SURF, SIFT, and ORB on the same image pair."
+    inputNote="PNG or JPEG · up to 5 MiB and one million pixels per image. Uploads are not retained."
+    guideId="features-guide" onOpenGuide={() => { if (guide.current) guide.current.open = true }} wide
+    actions={<><ImageUploadButton busy={lab.busy} label="Upload image A" onUpload={file => lab.upload('first', file)} />
+      <ImageUploadButton busy={lab.busy} label="Upload image B" onUpload={file => lab.upload('second', file)} />
+      <SamplePicker disabled={lab.busy} onSelect={lab.sample} options={[
+        { value: 'rotated', label: 'Rotated pair', description: 'The same target rotated 25° and scaled to 90%.' },
+        { value: 'scaled', label: 'Scaled pair', description: 'The same target reduced to 65%.' },
+      ]} /></>}>
+    <LabWorkspace label="Feature matching workspace" resultsId="features-results" busy={lab.busy}
+      tools={<ToolSidebar<Section> value={section} onChange={choose} tools={(Object.keys(sections) as Section[]).map(id => ({ id, label: sections[id].title,
+        icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[id].icon} /></svg>,
+      }))} />}
+      controls={<><h2>{content.title === 'Compare' ? 'Compare features' : content.title}</h2><p>{content.prompt}</p>
+        <form onSubmit={event => { event.preventDefault(); void lab.run() }}>
+          {(section === 'compare' || section === 'surf') && <>
+            <NumberField label="SURF Hessian threshold" value={lab.draft.hessian_threshold} min={1} max={100000} step="any" onChange={value => lab.change('hessian_threshold', value)} />
+            <label className="feature-checkbox"><input type="checkbox" checked={lab.draft.upright} onChange={event => lab.change('upright', event.target.checked)} />Upright SURF (U-SURF)</label>
+          </>}
+          <NumberField label="Match ratio threshold" value={lab.draft.ratio_threshold} min={0.01} max={0.99} step="any" onChange={value => lab.change('ratio_threshold', value)} />
+          <NumberField label="Maximum features per image" value={lab.draft.max_features} min={1} max={1000} step={1} onChange={value => lab.change('max_features', value)} />
+          <NumberField label="Maximum displayed matches" value={lab.draft.max_matches} min={1} max={100} step={1} onChange={value => lab.change('max_matches', value)} />
+          <div className="feature-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || !lab.sources.first || !lab.sources.second}>Compare features</LabButton>
+            <LabButton type="button" onClick={lab.resetBaseline}>Reset baseline</LabButton></div>
+        </form></>}>
+      {surf && !surf.available && <LabError title="SURF is unavailable on this server." message={surf.reason ?? 'A SURF-enabled OpenCV build is required. This laboratory is partially available.'} />}
+      <div className="lab-image-grid"><ImagePanel title="Image A" frame={lab.sources.first?.frame ?? null} description={lab.sources.first?.name} />
+        <ImagePanel title="Image B" frame={lab.sources.second?.frame ?? null} description={lab.sources.second?.name} /></div>
+      {lab.error && <LabError title="Could not compare the features." message={lab.error} />}
+      <LabStatus>{lab.busy ? 'Working with the image service…' : lab.error ? 'Check the message above and try again.'
+        : lab.result ? `${lab.result.algorithms.filter(item => item.status === 'ok').length} of 3 algorithms ran. Select a method below to inspect it.`
+          : 'Predict what will match, then run the comparison.'}</LabStatus>
+      {lab.result && <>
+        <div className="feature-table" tabIndex={0} role="region" aria-label="Feature comparison measurements">
+          <table><caption>Same inputs · same feature budget · timings from this run</caption><thead><tr><th scope="col">Method</th><th scope="col">Keypoints A / B</th><th scope="col">Accepted matches</th><th scope="col">Detect + describe, A + B</th><th scope="col">Matching</th></tr></thead>
+            <tbody>{lab.result.algorithms.map(item => <tr key={item.algorithm} data-selected={algorithm === item.algorithm}>
+              <th scope="row"><button type="button" aria-pressed={algorithm === item.algorithm} onClick={() => { setAlgorithm(item.algorithm); setSection(item.algorithm) }}>{item.algorithm.toUpperCase()}</button></th>
+              <td>{item.status === 'ok' ? `${item.keypoints_first} / ${item.keypoints_second}` : item.status}</td><td>{item.good_matches ?? '—'}</td>
+              <td>{item.first_ms !== null && item.second_ms !== null ? `${(item.first_ms + item.second_ms).toFixed(2)} ms` : '—'}</td><td>{item.match_ms !== null ? `${item.match_ms.toFixed(2)} ms` : '—'}</td>
+            </tr>)}</tbody></table>
+        </div>
+        <section className="feature-inspection" aria-labelledby="feature-method"><h2 id="feature-method">Inspect {algorithm.toUpperCase()}</h2>
+          {selected?.message && <p role="status">{selected.message}</p>}
+          {selected?.status === 'ok' && <>
+            <p>Circles show keypoint size; spokes show orientation.</p>
+            <details className="lab-metadata-help"><summary>Descriptor details</summary><p>{selected.descriptor_dimensions} {selected.descriptor_dtype === 'uint8' ? 'bytes (256 bits)' : 'floating-point values'} per descriptor · {selected.norm} distance.</p></details>
+            <div className="lab-image-grid"><ImagePanel title={`${algorithm.toUpperCase()} · keypoints A`} frame={selected.keypoints_first_image} /><ImagePanel title={`${algorithm.toUpperCase()} · keypoints B`} frame={selected.keypoints_second_image} /></div>
+            <ImagePanel title={`${algorithm.toUpperCase()} · matches`} frame={selected.matches_image} description={`Showing ${selected.displayed_matches} of ${selected.good_matches} ratio-test matches, ordered by distance. These are candidate correspondences, not verified accuracy.`} />
+            <div className="feature-downloads">{selected.keypoints_first_image && <a href={selected.keypoints_first_image.image} download={`optiq-${algorithm}-keypoints-a.png`}>Download keypoints A</a>}
+              {selected.keypoints_second_image && <a href={selected.keypoints_second_image.image} download={`optiq-${algorithm}-keypoints-b.png`}>Download keypoints B</a>}
+              {selected.matches_image && <a href={selected.matches_image.image} download={`optiq-${algorithm}-matches.png`}>Download matches</a>}</div>
+          </>}
+        </section>
+        <details className="lab-preprocessing"><summary>Run settings & measurements</summary><pre>{JSON.stringify({ engine: lab.result.engine, parameters: lab.result.parameters, algorithms: lab.result.algorithms.map(({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms }) => ({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms })) }, null, 2)}</pre></details>
+      </>}
+    </LabWorkspace>
+    <LabGuide id="features-guide" ref={guide}><div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p><details><summary>See the Python operations</summary><pre><code>{pythonExample}</code></pre></details></article>
+      <article><h2>Try thinking about this</h2><p>{content.reflection}</p></article></div>
+      <details className="lab-preprocessing"><summary>Input handling & reproducibility</summary><ul>
+        <li>Both inputs are converted to grayscale. Transparency is composited onto white; EXIF orientation is not applied.</li>
+        <li>Features are capped at the strongest responses before describing them. A higher ratio threshold accepts more candidates; the display limit only reduces drawn lines.</li>
+        <li>Upright mode changes only SURF. Timings include detection and description separately from matching; rerun to observe variation. They exclude upload and image rendering.</li>
+        {lab.sampleNotes.map(note => <li key={note}>{note}</li>)}{lab.result?.notes.map((note, index) => <li key={index}>{note}</li>)}
+      </ul></details>
+    </LabGuide>
+  </LabPage>
+}

@@ -12,13 +12,13 @@ export function NumberField({ label, onChange, ...props }:
 }
 
 export function SelectField({ label, value, options, onChange }: {
-  label: string; value: string; options: { value: string | number; label: string }[]
+  label: string; value: string; options: { value: string | number; label: string; disabled?: boolean }[]
   onChange: (value: string) => void
 }) {
   const id = useId()
   return <div className="lab-field"><label htmlFor={id}>{label}</label>
     <select id={id} value={value} onChange={event => onChange(event.target.value)}>
-      {options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+      {options.map(option => <option key={option.value} value={option.value} disabled={option.disabled}>{option.label}</option>)}
     </select>
   </div>
 }

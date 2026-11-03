@@ -4,7 +4,7 @@
 
 Map the seven supplied CSST106 laboratory documents to functional modules in one web application for students and developers. Users should understand techniques, experiment with parameters, compare results, and connect outputs to implementations. Every module is directly accessible without completing learning prompts. Assignment review uses this same experience; no separate instructor role or workflow is planned.
 
-This document records source requirements and proposed web adaptations. Labs 1–2 are implemented in React and Python/OpenCV; Labs 3–7 remain unimplemented. The final section records implementation evidence.
+This document records source requirements and proposed web adaptations. Labs 1–5 are implemented in React and Python/OpenCV; Labs 6–7 remain unimplemented. The final section records implementation evidence.
 
 Printed, handwritten, and PDF report submission requirements are excluded at the developer's request. Their conceptual questions and analysis tasks remain useful learning content. Standalone scripts alone do not satisfy the Web UI requirement.
 
@@ -26,7 +26,7 @@ All paths below are relative to `activities/`, which is currently excluded from 
 | Lab 1: Image Manipulation | `CSST106_Lab_Experiment_01_Images.docx` | None identified |
 | Lab 2: Edge Detection | `CSST106_Lab_Experiment_02_Edge_Detection..docx` | Body calls this Exercise/Activity 3 |
 | Lab 3: Histograms and Contrast | `CSST106_Lab_Experiment_03_Histogram.docx` | Also numbered Exercise 3 |
-| Lab 4: Feature Detection | `CSST106_Lab_Experiment_04_SURF_Feature_Detection.docx` | Runtime availability and algorithm notes need technical verification |
+| Lab 4: Feature Detection | `CSST106_Lab_Experiment_04_SURF_Feature_Detection.docx` | Local SURF/SIFT/ORB verified; deployment builds require verification |
 | Lab 5: PCA and Eigenfaces | `CSST106_Lab_Experiment_05_PCA_in_CV.docx` | No numbering conflict identified |
 | Lab 6: Object Detection | `CSST106_Lab_Experiment_06_YOLOV8_Object_Detection.docx` | Filename says YOLOv8; body says YOLOv11 and Activity 5 |
 | Lab 7: Segmentation | `CSST106_Lab_Experiment_07_Segmetation.docx` | Body calls this Exercise/Activity 6 |
@@ -103,7 +103,7 @@ For completion, verify source requirements, representative outputs, meaningful n
 
 **Completion checks:** histograms correspond to displayed processing channels and outputs; dimensions remain consistent; test constant and low-contrast images; color conversion preserves valid image output; methods can be compared on the same input.
 
-**Dependencies/open items:** OpenCV, NumPy, and a chart-rendering approach to select later. Source uses Matplotlib; the website may render equivalent plots without desktop windows. Define the precise linear-adjustment formula before implementation.
+**Implemented choices:** OpenCV/NumPy processing and a shared SVG histogram component; no chart dependency. Grayscale intensity or Y in YUV is processed. Color histograms are measured on each final reconstructed BGR image's Y channel, including gamut clipping/rounding effects. Defaults: CLAHE clip limit 2 and 8×8 tiles; manual linear scale 1.2 and offset 0. Manual adjustment uses `clip(rint(alpha × channel + beta), 0, 255)`. Full-range stretching maps observed minimum/maximum to 0/255, leaving constant channels unchanged. All methods use the same working original; all 256-bin charts share one count scale. Generated low-contrast, uneven-lighting (noise seed 42), and color samples are provided. PNG results and histogram CSV are downloadable.
 
 ## Lab 4 — SURF Features and Matching
 
@@ -124,7 +124,7 @@ For completion, verify source requirements, representative outputs, meaningful n
 
 **Completion checks:** actual SURF executes before claiming full completion; all three algorithms use equivalent input conditions; matching handles no-keypoint/no-match cases; incompatible descriptor matching is prevented; timings are measured rather than hardcoded.
 
-**Dependencies/open items:** verify SURF availability in the selected OpenCV build and document reproducible setup. The source permits ORB when SURF is unavailable, but ORB is not evidence of SURF execution; confirm acceptable fallback scope before marking the lab complete. Verify source algorithm availability/licensing statements against current primary documentation rather than copying them as fact.
+**Dependencies/open items:** local SURF execution and reproducible setup are verified in `SURF_SETUP.md`; deployment targets require their own build verification. The source permits ORB when SURF is unavailable, but ORB is not evidence of SURF execution; confirm acceptable fallback scope before marking the lab complete. Verify source algorithm availability/licensing statements against current primary documentation rather than copying them as fact.
 
 ## Lab 5 — PCA, Eigenfaces, and SVM Recognition
 
@@ -146,7 +146,7 @@ For completion, verify source requirements, representative outputs, meaningful n
 
 **Completion checks:** prevent train/test leakage; constrain components to dataset limits; record split/PCA seeds and configuration; metrics match held-out predictions; handle no misclassifications honestly. If the computed component range never reaches 90%, report that and compute a sufficient range before claiming the threshold is known.
 
-**Dependencies/open items:** scikit-learn and NumPy; dataset retrieval/cache, execution time, and fit strategy require decisions. Do not replace LFW with arbitrary uploaded faces without identifying the changed experiment. A cached fitted model must retain its training provenance and does not alone demonstrate the training procedure.
+**Dependencies/open items:** scikit-learn and NumPy; explicit dataset setup, bounded fresh fitting, and local verification are documented in `LAB5_SETUP.md`. Deployment resource validation remains pending. Do not replace LFW with arbitrary uploaded faces without identifying the changed experiment. A cached fitted model must retain its training provenance and does not alone demonstrate the training procedure.
 
 ## Lab 6 — YOLO Object Detection
 
@@ -197,7 +197,7 @@ For completion, verify source requirements, representative outputs, meaningful n
 | Item | Required next action |
 | --- | --- |
 | Lab numbering and YOLO mismatch | Confirm filename-based module order and intended detector version |
-| SURF capability | Verify the build and agree fallback/completion criteria |
+| SURF capability | Local custom build verified; standard wheels explicitly expose partial capability; see `SURF_SETUP.md` |
 | Training delivery | Agree how PCA fitting and custom YOLO training are executed and demonstrated |
 | Sample inputs | Inventory embedded document media and choose documented, appropriately licensed standalone samples; the folder currently contains DOCX files only |
 | Datasets/models | Record sources, versions, class mappings, download/cache process, and permissions; avoid committing large generated assets by default |
@@ -210,10 +210,35 @@ For completion, verify source requirements, representative outputs, meaningful n
 | --- | --- | --- |
 | Lab 1 | Implemented and locally verified | `backend/tests/test_lab1.py`: exact pixel values, BGR/RGB order, grayscale shape, single-pixel edits, crop, resize, rotation, upload handling, and validation. Browser checks exercised actual API requests, samples/uploads, zoom, all six tools, navigation, error/retry, stale request cancellation, and responsive layouts. |
 | Lab 2 | Implemented and locally verified | `backend/tests/test_lab2.py`: baseline preprocessing/Canny equality, directional Sobel response, scaled magnitude, zero-edge uniform input, color/tiny input, deterministic noise, parameter effects, and invalid files/settings. Browser checks exercised real comparison requests, all settings sections, uploads, downloads links, intermediate views, reset, errors/retry, cancellation, keyboard operation, and layouts from 320px to 1440px. |
-| Labs 3–7 | Not implemented | Their source requirements and open decisions remain above. |
+| Lab 3 | Implemented and locally verified | `backend/tests/test_lab3.py`: histogram counts, exact equalization/CLAHE output, linear clipping/stretching, constant/color inputs, final brightness-channel measurements, deterministic samples, and validation. Browser checks covered real methods/parameters, four histogram charts with common scales, color/grayscale switching, PNG/CSV downloads, uploads, reset, errors/retry, cancellation, and 320–1440px layouts. |
+| Labs 6–7 | Not implemented | Their source requirements and open decisions remain above. |
 
 Lab 1 code: `frontend/src/labs/lab1/`, `backend/routers/lab1.py`, `backend/schemas/lab1.py`, and `backend/services/`. Local verification is not evidence of production deployment or measured learning effectiveness. No source-required Lab 1 operation is intentionally deferred. Optional enhancements such as drag-to-crop, progress storage, and scored practice are not completion criteria.
 
 Lab 2 code: `frontend/src/labs/lab2/`, `backend/routers/lab2.py`, `backend/schemas/lab2.py`, and `backend/services/lab2.py`. All required Lab 2 operations are implemented. Fidelity to the particular missing `input.jpg` cannot be verified until that asset is supplied. Existing source numbering conflicts remain documented in the source register.
 
+Lab 3 code: `frontend/src/labs/lab3/`, `backend/routers/lab3.py`, `backend/schemas/lab3.py`, and `backend/services/lab3.py`; charts use `frontend/src/components/lab/Histogram.tsx`. All source-required Lab 3 methods and outputs are implemented. Color mode requires a color input; grayscale inputs retain grayscale mode. Local tests do not establish production hosting performance or measured learning effectiveness.
+
 For subsequent modules, track required items as pending, implemented, verified, or blocked with code locations and evidence. Proposed extensions must not obscure incomplete source requirements. Preserve the reasons for approved interpretation changes.
+
+### Lab 4 implementation evidence
+
+`/labs/4` implements SURF detection/descriptors, rich keypoint size/orientation
+views, Hessian threshold, upright SURF, two-image ratio-test matching, and real
+SURF/SIFT/ORB comparisons with counts, descriptor metadata, and measured timings.
+Generated pairs record seed and transform; uploaded pairs are not assumed to have
+known geometry. Artifacts can be downloaded. Blank inputs and unavailable SURF
+are tested explicitly. Seven API tests cover these behaviors; the custom SURF
+build executes all seven without skips. See [SURF setup](SURF_SETUP.md) for
+reproduction; a standard wheel provides only partial Lab 4 capability.
+
+### Lab 5 implementation evidence
+
+`/labs/5` loads actual LFW (70/.4), uses the source 80/20 seed42 split, fits
+150-component randomized whitened PCA on training data, displays first12/final3
+eigenfaces, trains balanced RBF SVM, and reports held-out precision/recall/F1.
+A separate full training-only spectrum measures the 90% threshold. Failures are
+extracted from predicted-versus-actual labels, with an explicit no-failure state.
+Tests cover training-only inputs, split isolation, metrics, variance, reproducibility,
+parameter/rank limits, missing data, lock recovery, and no misclassifications.
+Actual local baseline and dataset preparation are documented in `LAB5_SETUP.md`.

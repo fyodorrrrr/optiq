@@ -57,19 +57,21 @@ export default function Lab1() {
             {lab.output && <><p className="lab-result-notice">{lab.resultIsPrevious || lab.busy ? `Previous result · ${experiments[lab.output.operation].title}. Run to apply the current settings.` : `${experiments[lab.output.operation].title} result`}</p>
               <p className="lab-result-summary">{summary}</p></>}
             <div className="lab-image-grid">
-              <ImagePanel title="Original" frame={lab.source?.frame ?? null} onPick={pixelMode && !lab.busy ? lab.pick : undefined} selection={selection} empty={lab.busy ? 'Loading image…' : 'Choose a sample or upload an image.'} />
-              <ImagePanel title="Result" frame={lab.output?.result ?? null} empty={lab.busy ? 'Processing with OpenCV…' : 'Run an experiment to see its result.'} />
+              <ImagePanel metadataEssential title="Original" frame={lab.source?.frame ?? null} onPick={pixelMode && !lab.busy ? lab.pick : undefined} selection={selection} empty={lab.busy ? 'Loading image…' : 'Choose a sample or upload an image.'} />
+              <ImagePanel metadataEssential title="Result" frame={lab.output?.result ?? null} empty={lab.busy ? 'Processing with OpenCV…' : 'Run an experiment to see its result.'} />
             </div>
-            {lab.source && <p className="lab-source-name">Source: {lab.source.name}</p>}
+            {lab.source && <details className="lab-metadata-help"><summary>About image shape, channels & values</summary>
+              <p>Dimensions list width × height; array shape lists height, width, then channels for color images. OpenCV stores color channels in BGR order: blue, green, red. Grayscale has one channel. These images use uint8 whole-number values from 0 to 255.</p>
+            </details>}
             {lab.output?.pixel && <PixelComparison pixel={lab.output.pixel} />}
             {lab.error && <LabError message={lab.error} />}
             <LabStatus>{lab.busy ? 'Working with the image service…'
               : lab.error ? 'The request failed. Check the message above and try again.'
                 : lab.output ? lab.resultIsPrevious ? 'Settings changed. The previous result is still shown; run the experiment to update it.'
-                  : `${experiments[lab.output.operation].title} complete. ${summary} The original is unchanged.`
+                  : `${experiments[lab.output.operation].title} complete. The original is unchanged.`
                   : lab.source ? 'Ready. Choose settings and run the experiment.' : 'Choose a sample or upload an image to retry.'}</LabStatus>
             {lab.output && <div className="lab-result-actions"><a href={lab.output.result.image} download={`optiq-lab1-${lab.output.operation}.png`}>Download result PNG</a>
-              <details><summary>Run parameters</summary><pre>{JSON.stringify(lab.output.parameters, null, 2)}</pre></details></div>}
+              <details><summary>Run parameters</summary><pre>{JSON.stringify({ parameters: lab.output.parameters, engine: lab.output.engine, original_dtype: lab.source?.frame.dtype, result_dtype: lab.output.result.dtype }, null, 2)}</pre></details></div>}
       </LabWorkspace>
       <LabGuide ref={guide} id="lab-explanation">
         <section className="lab-learning" aria-label="Understand the experiment">

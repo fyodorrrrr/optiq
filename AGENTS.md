@@ -12,9 +12,9 @@ Read `docs/PRD.md` and `docs/ARCHITECTURE.md` when they exist. This guide govern
 
 ## Project Structure & Module Organization
 
-Optiq is a computer vision learning platform for Labs 1–7. The homepage and Labs 1–2 are implemented; Labs 3–7 are planned.
+Optiq is a computer vision learning platform for Labs 1–7. The homepage and Labs 1–5 are implemented; Labs 6–7 are planned.
 
-- `frontend/src/`: React and TypeScript source; `App.tsx` defines routes. `components/lab/` holds shared lab UI; `labs/lab1/` and `labs/lab2/` own experiment state, settings, and content. `api/images.ts` holds common image transport for Lab 2/future modules.
+- `frontend/src/`: React and TypeScript source; `App.tsx` defines routes. `components/lab/` holds shared lab UI and histogram rendering; `labs/lab1/`, `labs/lab2/`, `labs/lab3/`, `labs/lab4/`, and `labs/lab5/` own experiment state, settings, and content. `api/images.ts` holds common image transport for Labs 2–4/future modules.
 - `frontend/src/assets/`: imported images and SVGs; `frontend/public/`: static public assets.
 - `frontend/vite.config.ts`: React, Tailwind, and development API proxy configuration.
 - `backend/main.py`: FastAPI application and `/api/health`; `routers/`, `schemas/`, and `services/` separate lab HTTP handling, validation, and processing. `backend/tests/` contains unittest API tests.
@@ -75,6 +75,7 @@ Backend endpoints should focus on validation, orchestration, and response handli
 Use Python 3.12 and Node.js 22.12+ or another Vite-supported version.
 
 - Frontend installation: `cd frontend && npm ci`.
+- Root runner installation: `npm ci` from the repository root. Run `npm run dev` there to start both servers with labeled logs and coordinated shutdown; use `npm run dev:frontend` or `npm run dev:backend` for one service. Python/frontend dependencies still require their separate installation.
 - Frontend development: run `npm run dev` from `frontend/`; opens port 5173.
 - Frontend validation: `npm run lint` checks ESLint rules; `npm run build` checks TypeScript and builds production assets.
 - Backend environment: from `backend/`, run `python3.12 -m venv .venv`, then `source .venv/bin/activate`.

@@ -4,7 +4,7 @@
 
 Optiq helps students and developers understand computer vision through hands-on experimentation and inspectable implementations. It compiles CSST106 Labs 1–7 into one web application with accessible techniques and real outputs, meeting the assignment's review requirements through the same experience available to everyone.
 
-This document records the agreed product direction. Detailed laboratory obligations and source ambiguities are tracked in [LAB_REQUIREMENTS.md](LAB_REQUIREMENTS.md). The homepage and Python/OpenCV Labs 1–2 are implemented. Labs 3–7 remain planned. Workspaces use shared UI components, left tool sidebars on wider screens, and optional learning explanations. Common UI changes propagate across labs; experiment state, specialized controls, processing, and content remain lab-specific.
+This document records the agreed product direction. Detailed laboratory obligations and source ambiguities are tracked in [LAB_REQUIREMENTS.md](LAB_REQUIREMENTS.md). The homepage and Python/OpenCV Labs 1–5 are implemented. Labs 6–7 remain planned. Workspaces use shared UI components, left tool sidebars on wider screens, and optional learning explanations. Common UI changes propagate across labs; experiment state, specialized controls, processing, and content remain lab-specific.
 
 Initial visual constraints and the selected map-node treatment are recorded in [DESIGN_FOUNDATION.md](DESIGN_FOUNDATION.md). The homepage direction is a short introduction and a winding seven-lab map with shallow dimensional nodes; implemented labs remain freely accessible.
 
@@ -71,7 +71,7 @@ Product acceptance means students can perform and explain the intended compariso
 
 - Lab 1 interaction structure, sample assets, operation composition, and resource limits.
 - Source numbering conflicts and intended YOLO version.
-- SURF capability and acceptable fallback/completion criteria.
+- SURF deployment builds and resource verification; local execution is verified (see `SURF_SETUP.md`).
 - Dataset/model sourcing and reproducible training delivery for later labs.
 - Remaining visual decisions (including accent, typography, and final map layout) and production hosting.
 

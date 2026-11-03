@@ -2,7 +2,7 @@
 
 ## Current Boundaries
 
-React/TypeScript renders the homepage, Lab 1 at `/labs/1`, and Lab 2 at `/labs/2`; React Router handles navigation. FastAPI provides `/api/health` and per-lab endpoints. Vite proxies `/api` to port 8000 in development. Production hosting is undecided and must support API forwarding and SPA route fallback.
+React/TypeScript renders the homepage and Labs 1–5 at `/labs/1`, `/labs/2`, `/labs/3`, `/labs/4`, and `/labs/5`; React Router handles navigation. FastAPI provides `/api/health` and per-lab endpoints. Vite proxies `/api` to port 8000 in development. Production hosting is undecided and must support API forwarding and SPA route fallback.
 
 ## Lab 1 Request Flow
 
@@ -26,7 +26,19 @@ Lab 2 has `/api/labs/2/sample`, `/load`, and `/experiment` endpoints. Its servic
 
 Defaults match the activity: Gaussian 3×3, Sobel size 3, Canny 100/200. Canny retains aperture 3 and `L2gradient=False`. Gaussian sizes are odd 1–9; Sobel sizes are 3/5/7; thresholds are whole numbers with `0 ≤ lower < upper ≤ 2048`. Limits are engineering choices for exploration. Sobel magnitude/absolute derivatives are display-scaled independently to 0–255 with zero-safe normalization; signed gradient extrema remain available numerically. Edge-pixel percentage describes output density, not accuracy.
 
-Generated shapes and noisy shapes replace the absent source image, with noise seed 42 and standard deviation 18. Each run resends the original input; changed settings invalidate previous output and abort pending requests. Sidebar sections focus controls without hiding the required three-way comparison.
+Generated shapes and noisy shapes replace the absent source image, with noise seed 42 and standard deviation 18. Each run resends the original input; changed settings abort pending requests while retaining completed output. The status message identifies previous results when draft settings differ; the run-settings disclosure records the parameters that produced the displayed output. Successful runs replace the output; changing the source clears it. Sidebar sections focus controls without hiding the required three-way comparison.
+
+## Lab 3 Histograms and Contrast
+
+Lab 3 keeps its state, controls, content, and API client in `frontend/src/labs/lab3/`; processing lives in `services/lab3.py` with dedicated schemas/router. It consumes the same shell, tool sidebar, input picker, fields, feedback, viewers, and learning disclosure as the earlier labs.
+
+`/api/labs/3/sample`, `/load`, and `/experiment` follow the same bounded, stateless image transport. One comparison computes the working original, global equalization, CLAHE, and linear adjustment from the same input. Grayscale mode converts color first; color mode transforms Y in YUV and retains U/V before reconstructing BGR. Color mode requires color input.
+
+Every view includes its actual frame, 256-bin histogram, range, mean, standard deviation, and occupied-bin count. Histograms are measured from the final grayscale/Y channel, so color reconstruction clipping and rounding are reflected. Charts share one maximum count across all views and are rendered by the reusable `components/lab/Histogram.tsx` SVG component, with accessible descriptions and real-bin hover values. This adds no chart dependency.
+
+CLAHE defaults to clip limit 2 and 8×8 tiles; validated limits are `(0, 40]` and 1–16 tiles per axis. Manual linear adjustment is `clip(rint(alpha * channel + beta), 0, 255)` with scale 0–10 and integer offset −255 to 255. Full-range stretching computes scale/offset from observed extrema; a constant channel remains unchanged. Effective coefficients and notes are returned for reproducibility.
+
+Color inputs select color mode when loaded; grayscale inputs disable the unavailable color option. Reset restores grayscale/2/8×8/manual-1.2/0 defaults. Changed inputs/settings cancel pending work and clear obsolete results. Generated samples include low contrast, color, and uneven lighting with noise seed 42. Downloads use actual PNG results and the returned histogram counts as CSV.
 
 ## API
 
@@ -58,6 +70,7 @@ A Frame contains a PNG data URL, width, height, channels, shape, dtype, color sp
 - `SourceActions.tsx` and `SamplePicker.tsx`: upload control and configurable dropdown with dismissal and focus restoration.
 - `ImagePanel.tsx`: fit-to-panel viewer, optional pixel/crop overlays, metadata, and metadata help. Lab 1 retains a compatibility re-export; Lab 2's EdgeFigure adapter supplies edge-specific captions.
 - `LabGuide.tsx`: optional learning disclosure. `LabUI.css` owns common visual rules.
+- `Histogram.tsx` and `Histogram.css`: 256-bin brightness charts with an explicitly shared count scale.
 
 Changes to these components affect both labs. Local styles cover only specialized results such as pixel zoom or edge information. Hooks and settings remain independent: sharing UI does not share experiment state or algorithms.
 
@@ -69,6 +82,56 @@ Keep brief prediction prompts near controls. Put deeper theory, Python examples,
 
 ## Verification and Remaining Scope
 
-`backend/tests/test_lab1.py` and `test_lab2.py` use standard-library unittest and FastAPI TestClient against real PNG/JPEG inputs and actual OpenCV outputs. Browser checks have exercised all tools and responsive behavior locally; no permanent frontend browser-test runner is configured.
+`backend/tests/test_lab1.py`, `test_lab2.py`, and `test_lab3.py` use standard-library unittest and FastAPI TestClient against real PNG/JPEG inputs and actual OpenCV outputs. Browser checks have exercised all tools and responsive behavior locally; no permanent frontend browser-test runner is configured.
 
-Labs 1–2 are implemented; production hosting and deployment resource limits have not been validated. Labs 3–7, datasets, SURF capability, model training, and inference infrastructure remain separate pending work. See `LAB_REQUIREMENTS.md` for their obligations.
+Labs 1–5 are implemented; production hosting and deployment resource limits have not been validated. Labs 6–7, YOLO datasets, training, and inference infrastructure remain separate pending work. See `LAB_REQUIREMENTS.md` for their obligations.
+
+## Lab 4 feature comparison
+
+`/api/labs/4/capabilities`, `/sample`, `/load`, and `/experiment` expose runtime
+availability, deterministic image pairs, bounded upload validation, and feature
+comparison. `services/lab4.py` converts both inputs to grayscale and applies
+SURF, SIFT, and ORB with a shared feature budget. Strongest-response keypoints
+are retained before describing; matching uses L2 for SURF/SIFT and Hamming for
+ORB, with two-neighbor ratio filtering. No geometric accuracy is implied.
+
+Per-method failures remain explicit and do not fabricate results. Measured
+detection/description and matching times exclude transport and rendering.
+`labs/lab4/useFeatureExperiment.ts` owns pair state, cancellation, settings, and
+results, reusing shared image transport and lab UI. Two upload buttons reuse
+`ImageUploadButton`; all earlier labs continue through `SourceActions`.
+See [SURF setup](SURF_SETUP.md) for the platform-specific custom build.
+
+## Activity-aligned information density
+
+Lab 1 keeps dimensions, array shape, and channels visible for each image, with
+one shared representation explanation. Data type and engine information remain
+available in explanations/run details. Labs 2–3 put generic image properties in
+collapsed details; Lab 3 uses the completed working original for shared metadata
+so grayscale/color mode is represented correctly. Histograms remain visible,
+with one explanation of axes, shared scale, and measured brightness channel.
+Numerical edge/contrast statistics remain in run measurements and downloads.
+Lab 4 keeps keypoint counts, matches, timings, and size/orientation guidance
+visible, while generic image and descriptor properties are optional details.
+These presentation choices preserve the original activity outputs and
+measurements without repeating generic metadata beneath every comparison.
+
+## Lab 5 dataset-driven PCA
+
+`GET /api/labs/5/dataset` reads the local LFW subset; it never downloads from a
+request. `scripts/prepare_lfw.py` explicitly prepares ignored `.cache/lfw` data.
+`POST /api/labs/5/experiment` validates typed component settings and dispatches
+fresh training-only PCA and balanced RBF SVC fitting through the existing
+threadpool. A process-local nonblocking lock returns 409 for overlapping fits;
+threadpoolctl bounds numerical computation to two threads. This adds no queue,
+model persistence, or long-running training service.
+
+The fixed source split is unstratified, test_size=.2, seed42. Randomized whitened
+PCA (seed42) supplies recognition coordinates and eigenfaces; a separate full
+training-only PCA supplies the cumulative spectrum and exact 90% threshold.
+Results include all held-out labels/predictions and indices, classification
+metrics, first12/final3 components, bounded face galleries, fresh-run provenance,
+and timings. `labs/lab5/` owns state, JSON API transport, content, variance SVG,
+and galleries; shell/controls/viewers remain shared. The API client allows up to
+120 seconds and preserves previous completed results with their settings when
+drafts change or a rerun fails. See `LAB5_SETUP.md` for setup and limitations.
