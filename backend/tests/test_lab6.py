@@ -38,6 +38,43 @@ class Lab6Tests(unittest.TestCase):
         response = self.client.post('/api/labs/6/load', files={'file': ('bad.png', b'broken', 'image/png')})
         self.assertEqual(response.status_code, 422)
 
+    def test_review_approval_requires_exact_image_and_label_hashes(self):
+        import hashlib
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for index, split in enumerate(['train', 'val']):
+                (root / 'images' / split).mkdir(parents=True)
+                (root / 'labels' / split).mkdir(parents=True)
+                Image.new('RGB', (12, 10), (index * 80, 10, 20)).save(root / 'images' / split / 'photo.png')
+                (root / 'labels' / split / 'photo.txt').write_text('0 .5 .5 .5 .5')
+            config = root / 'data.yaml'
+            config.write_text('train: images/train\nval: images/val\nnames: [bottle]\n')
+            records = [{'image_sha256': hashlib.sha256((root / 'images' / split / 'photo.png').read_bytes()).hexdigest(),
+                        'label_sha256': hashlib.sha256((root / 'labels' / split / 'photo.txt').read_bytes()).hexdigest(),
+                        'status': 'approved'} for split in ['train', 'val']]
+            review = root / 'review-decisions.json'
+            review.write_text(json.dumps({'images': records}))
+            result = validate_dataset(config)
+            self.assertEqual(result['reviewed_images'], 2)
+            self.assertEqual(len(result['image_splits']), 2)
+            records[0]['label_sha256'] = 'changed'
+            review.write_text(json.dumps({'images': records}))
+            self.assertEqual(validate_dataset(config)['reviewed_images'], 0)
+
+    def test_sample_split_requires_matching_dataset_and_image(self):
+        import hashlib
+        with tempfile.TemporaryDirectory() as directory, patch.object(lab6, 'ROOT', Path(directory)):
+            root = Path(directory)
+            (root / 'bottle.jpg').write_bytes(png())
+            checksum = hashlib.sha256(png()).hexdigest()
+            (root / 'dataset.json').write_text(json.dumps({'sha256': 'dataset-a', 'image_splits': {checksum: 'val'}}))
+            training = {'status': 'pending', 'message': 'Pending', 'dataset_sha256': 'dataset-a'}
+            (root / 'training.json').write_text(json.dumps(training))
+            self.assertEqual(lab6.status().bottle_sample_split, 'val')
+            training['dataset_sha256'] = 'dataset-b'
+            (root / 'training.json').write_text(json.dumps(training))
+            self.assertIsNone(lab6.status().bottle_sample_split)
+
     def test_bottle_sample_availability_content_and_invalid_selection(self):
         with tempfile.TemporaryDirectory() as directory, patch.object(lab6, 'ROOT', Path(directory)):
             self.assertFalse(self.client.get('/api/labs/6/status').json()['bottle_sample_available'])

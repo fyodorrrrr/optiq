@@ -1,5 +1,6 @@
 """Validation for the explicitly configured local YOLO detection dataset."""
 import hashlib
+import json
 from pathlib import Path
 
 import numpy as np
@@ -28,6 +29,8 @@ def validate_dataset(config_path):
     seen = {}
     splits = {}
     train_classes = set()
+    image_splits = {}
+    file_pairs = set()
     for split in ['train', 'val', 'test']:
         value = config.get(split)
         if not value and split == 'test':
@@ -60,6 +63,9 @@ def validate_dataset(config_path):
             if label.resolve() in expected_labels:
                 raise ValueError(f'Ambiguous label pairing for {split}/{path.name}; use unique image stems.')
             expected_labels.add(label.resolve())
+            image_sha = hashlib.sha256(path.read_bytes()).hexdigest()
+            image_splits[image_sha] = split
+            file_pairs.add((image_sha, hashlib.sha256(label.read_bytes()).hexdigest()))
             lines = label.read_text().strip().splitlines()
             backgrounds += not lines
             for line in lines:
@@ -83,5 +89,16 @@ def validate_dataset(config_path):
         splits[split] = {'images': len(images), 'objects': objects, 'backgrounds': backgrounds}
     if train_classes != set(range(len(names))):
         raise ValueError('Every configured class must have an annotated object in training images.')
+    reviewed_images = 0
+    review_path = root / 'review-decisions.json'
+    if review_path.is_file() and review_path.stat().st_size <= 2_000_000:
+        try:
+            records = json.loads(review_path.read_text())['images']
+            approved = {(row['image_sha256'], row['label_sha256']) for row in records if row['status'] == 'approved'}
+            if len(records) == len(file_pairs) and approved == file_pairs:
+                reviewed_images = len(file_pairs)
+        except (OSError, ValueError, KeyError, TypeError):
+            pass  # Structural validation does not imply human approval.
     return {'ready': True, 'names': names, 'splits': splits, 'sha256': digest.hexdigest(),
+            'reviewed_images': reviewed_images, 'image_splits': image_splits,
             'config': str(config_path), 'message': 'Labels and exact decoded-image split separation validated; review related scenes manually.'}

@@ -1,12 +1,13 @@
 from typing import Annotated, Literal
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import PlainTextResponse
 from services import lab6
 from pydantic import ValidationError
 from routers.image_io import load_image, process, read_upload
 from schemas.images import Frame
 from schemas.lab6 import Result, Settings, Status
 from services.lab6 import execute, sample, status
+from services.public_metadata import public_log
 
 router = APIRouter(prefix='/api/labs/6', tags=['Lab 6'])
 
@@ -41,4 +42,5 @@ async def artifact(kind: Literal['log']):
     path = lab6.ROOT / 'training.log'
     if not path.is_file():
         raise HTTPException(404, 'No local training log is available yet.')
-    return FileResponse(path, media_type='text/plain', filename='optiq-lab6-training.log')
+    return PlainTextResponse(public_log(path.read_text(errors='replace')),
+                             headers={'Content-Disposition': 'attachment; filename="optiq-lab6-training.log"'})

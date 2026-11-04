@@ -6,6 +6,8 @@ import type { Model, Result, SampleKind, Status } from './api'
 
 export default function useDetectionExperiment() {
   const [status, setStatus] = useState<Status | null>(null)
+  const [statusBusy, setStatusBusy] = useState(true)
+  const [statusError, setStatusError] = useState('')
   const [source, setSource] = useState<{ file: File; frame: ImageFrame; name: string } | null>(null)
   const [result, setResult] = useState<Result | null>(null)
   const [resultCamera, setResultCamera] = useState(false)
@@ -23,19 +25,23 @@ export default function useDetectionExperiment() {
         const state = await getStatus(controller.signal)
         if (controller.signal.aborted) return
         setStatus(state)
+        setStatusBusy(false)
         if (state.bottle_sample_available || state.sample_available) {
           const kind = state.bottle_sample_available ? 'bottle' : 'bus'
-          const frame = await getSample(controller.signal, kind)
-          if (!controller.signal.aborted) setSource({ frame, file: frameFile(frame, `${kind}.png`), name: kind === 'bottle' ? 'Bottle · validation sample' : 'Ultralytics bus sample' })
+          try {
+            const frame = await getSample(controller.signal, kind)
+            if (!controller.signal.aborted) setSource({ frame, file: frameFile(frame, `${kind}.png`), name: kind === 'bottle' ? 'Bottle sample' : 'Ultralytics bus sample' })
+          } catch (error) { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not load the sample.') }
         }
-      } catch (error) { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not prepare the detector.') }
-      finally { if (!controller.signal.aborted) setBusy(false) }
+      } catch (error) { if (!controller.signal.aborted) setStatusError(error instanceof Error ? error.message : 'Could not check detector status.') }
+      finally { if (!controller.signal.aborted) { setBusy(false); setStatusBusy(false) } }
     }
     void initial()
     return () => active.current?.abort()
   }, [])
   function begin(clear = false) {
     active.current?.abort()
+    setStatusBusy(false)
     const controller = new AbortController()
     active.current = controller
     setBusy(true)
@@ -45,17 +51,20 @@ export default function useDetectionExperiment() {
   }
   function cancel() {
     active.current?.abort()
+    setStatusBusy(false)
     setBusy(false)
   }
   async function refresh() {
     const controller = begin()
+    setStatusBusy(true)
+    setStatusError('')
     try { const state = await getStatus(controller.signal); if (!controller.signal.aborted) setStatus(state) }
-    catch (error) { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not check model status.') }
-    finally { if (!controller.signal.aborted) setBusy(false) }
+    catch (error) { if (!controller.signal.aborted) setStatusError(error instanceof Error ? error.message : 'Could not refresh status.') }
+    finally { if (!controller.signal.aborted) { setBusy(false); setStatusBusy(false) } }
   }
   async function sample(kind: SampleKind) {
     const controller = begin(true)
-    try { const frame = await getSample(controller.signal, kind); if (!controller.signal.aborted) setSource({ frame, file: frameFile(frame, `${kind}.png`), name: kind === 'bottle' ? 'Bottle · validation sample' : 'Ultralytics bus sample' }) }
+    try { const frame = await getSample(controller.signal, kind); if (!controller.signal.aborted) setSource({ frame, file: frameFile(frame, `${kind}.png`), name: kind === 'bottle' ? 'Bottle sample' : 'Ultralytics bus sample' }) }
     catch (error) { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not load the sample.') }
     finally { if (!controller.signal.aborted) setBusy(false) }
   }
@@ -88,5 +97,5 @@ export default function useDetectionExperiment() {
   }
   function changeConfidence(value: string) { cancel(); setConfidence(value) }
   function changeModel(value: Model) { cancel(); setModel(value) }
-  return { status, source, result, resultCamera, confidence, model, busy, error, roundtrip, refresh, sample, upload, run, cancel, changeConfidence, changeModel }
+  return { status, statusBusy, statusError, source, result, resultCamera, confidence, model, busy, error, roundtrip, refresh, sample, upload, run, cancel, changeConfidence, changeModel }
 }

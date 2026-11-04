@@ -26,3 +26,36 @@
 .detection-reference details, .detection-training details { margin-top: 24px; }
 .detection-training ol { margin-block: 20px; }
 .detection-training li + li { margin-top: 8px; }
+
+/* Dataset and training use the shared workspace without an empty settings rail. */
+.detection-reference, .detection-training { max-width: 75ch; margin-inline: auto; }
+.detection-section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 16px; }
+.detection-section-heading h2 { margin: 0; }
+.detection-section-heading .lab-button { flex-shrink: 0; min-height: 44px; }
+.detection-reference-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 24px; padding-top: 12px; border-top: 1px solid var(--line); }
+.detection-reference-actions > div { min-width: 0; }
+.detection-training .detection-metrics { margin-block: 24px 32px; gap: 20px 32px; }
+.detection-training .detection-metrics dd { font-size: 22px; }
+.detection-loss { --detection-box: var(--accent); --detection-class: var(--focus); --detection-distribution: var(--ink-soft); }
+.detection-loss h3 { font-size: 16px; margin: 0 0 16px; }
+.detection-loss-plot { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; padding-top: 6px; }
+.detection-loss-plot svg { display: block; width: 100%; height: 180px; overflow: visible; }
+.detection-loss-axis { position: relative; height: 180px; text-align: right; font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.detection-loss-axis span { position: absolute; right: 0; transform: translateY(-50%); }
+.detection-loss-epochs { display: flex; justify-content: space-between; gap: 8px; margin-top: 10px; color: var(--ink-soft); font-size: 12px; }
+.detection-chart-grid { fill: none; stroke: var(--line); stroke-width: 1; }
+.detection-chart-legend { display: flex; flex-wrap: wrap; gap: 12px 20px; padding: 0; margin: 16px 0 0; list-style: none; font-size: 13px; }
+.detection-chart-legend li { display: flex; align-items: center; gap: 8px; }
+.detection-chart-legend svg { width: 32px; height: 12px; flex-shrink: 0; }
+.detection-training .detection-loss > p { font-size: 13px; }
+.detection-table td { overflow-wrap: anywhere; }
+.detection-table tr:last-child > * { border-bottom: 0; }
+.detection-reference-actions .lab-details-drawer pre { max-height: 360px; overflow: auto; }
+.detection-dataset-counts th, .detection-dataset-counts td { padding: 14px 12px; }
+@media (max-width: 600px) {
+  .detection-dataset-counts th, .detection-dataset-counts td { font-size: 12px; padding: 12px 6px; overflow-wrap: anywhere; }
+  .detection-section-heading { align-items: start; gap: 12px; }
+  .detection-section-heading .lab-button { padding-inline: 10px; font-size: 13px; }
+  .detection-section-heading h2 { font-size: 19px; }
+  .detection-reference-actions { gap: 8px 16px; }
+}

@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from starlette.concurrency import run_in_threadpool
 
 from services.images import MAX_BYTES, ImageError, decode_image, frame
+from services.public_metadata import public_message
 
 
 async def read_upload(file):
@@ -20,7 +21,7 @@ async def process(function, *args):
     try:
         return await run_in_threadpool(function, *args)
     except ImageError as error:
-        raise HTTPException(error.status, str(error)) from None
+        raise HTTPException(error.status, public_message(str(error))) from None
 
 
 def load_image(content):

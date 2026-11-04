@@ -1,22 +1,53 @@
+import type { ReactNode } from 'react'
 import DownloadLink from '../../components/lab/DownloadLink'
+import InfoDetails from '../../components/lab/InfoDetails'
+import RunMetadata from '../../components/lab/RunMetadata'
+import { LabError, LabStatus } from '../../components/lab/LabFeedback'
+import TrainingLoss from './TrainingLoss'
 import type { Status } from './api'
-export default function TrainingView({ status }: { status: Status | null }) {
+
+export default function TrainingView({ status, loading, unavailable, actions }: {
+  status: Status | null; loading: boolean; unavailable: boolean; actions: ReactNode
+}) {
   const training = status?.training
+  const matchesDataset = Boolean(status?.dataset.sha256 && status.dataset.sha256 === training?.dataset_sha256)
+  const dataset = matchesDataset ? status?.dataset : undefined
+  const splits = dataset?.splits
+  const photos = splits ? Object.values(splits).reduce((total, split) => total + split.images, 0) : null
+  const evaluated = splits?.[training?.evaluation_split ?? 'val']?.images
+  const completed = training?.status === 'completed'
   const history = training?.history ?? []
-  const losses = ['train/box_loss', 'train/cls_loss', 'train/dfl_loss'].filter(key => history.some(row => Number.isFinite(row[key])))
-  return <section className="detection-training"><h2>Training & evaluation</h2><p>{training?.message ?? 'Checking local training artifacts…'}</p>
-    {training?.status !== 'completed' && <p>Pretrained detection is available separately; it does not replace this part of the laboratory.</p>}
-    <ol><li>Collect and annotate your objects in YOLO format.</li><li>Validate the dataset with the local script.</li><li>Run training explicitly, then return here and select Refresh status.</li></ol>
-    <details className="lab-preprocessing"><summary>Local commands</summary><p>Run from the repository root. Replace the example dataset path with your own.</p><pre><code>{`backend/.venv/bin/python backend/scripts/train_yolo.py \\\n  --data /path/to/dataset/data.yaml --validate-only\n\n# Short hardware check (not the full lab baseline):\nbackend/.venv/bin/python backend/scripts/train_yolo.py \\\n  --data /path/to/dataset/data.yaml --epochs 2 --batch 4 --name check\n\n# Source baseline: 100 epochs at 640px\nbackend/.venv/bin/python backend/scripts/train_yolo.py \\\n  --data /path/to/dataset/data.yaml --epochs 100 --batch 4 --name baseline`}</code></pre><p>CPU is the default. Your Mac can try --device mps if the installed PyTorch supports it. Use --split test only when data.yaml includes a separate test split.</p></details>
-    {training?.status === 'completed' && <>
-      <p><strong>{training.epochs_completed} epochs completed</strong> · evaluation split: {training.evaluation_split}. {training.baseline ? 'Matches the 100-epoch source baseline.' : 'Exploratory run; does not meet the 100-epoch source baseline.'}</p>
-      {training.metrics && <dl className="detection-metrics">{Object.entries(training.metrics).map(([key, value]) => <div key={key}><dt>{{ precision: 'Precision', recall: 'Recall', map50: 'mAP@0.50', map50_95: 'mAP@0.50–0.95' }[key]}</dt><dd>{(value * 100).toFixed(1)}%</dd></div>)}</dl>}
-      {history.length > 0 && <><h3>Recorded training loss</h3><div className="detection-chart" tabIndex={0} role="region" aria-label="Scrollable training loss chart"><svg viewBox="0 0 640 250" role="img" aria-label={`Training loss over ${history.length} recorded epochs. Exact values available below.`}>
-        <path d="M45 20v190h570" fill="none" stroke="currentColor" opacity=".35" />
-        {losses.map((key, index) => { const maximum = Math.max(1e-9, ...history.flatMap(row => losses.map(loss => row[loss] ?? 0))); return <polyline key={key} points={history.map((row, i) => `${45 + i / Math.max(1, history.length - 1) * 560},${210 - (row[key] ?? 0) / maximum * 180}`).join(' ')} fill="none" stroke={['#3e6451', '#76522e', '#526590'][index]} strokeWidth="2" /> })}
-        <text x="45" y="235">Epoch 1</text><text x="605" y="235" textAnchor="end">Epoch {history.length}</text></svg></div><p>Green: box loss · brown: classification loss · blue: distribution focal loss. These share a linear scale. Loss is an optimization measure, not accuracy.</p></>}
-      <details className="lab-preprocessing"><summary>Recorded metrics & provenance</summary><pre>{JSON.stringify(training, null, 2)}</pre></details>
+  const names = dataset?.names ?? []
+  const sampleSplit = status?.bottle_sample_split
+  return <section className="detection-training">
+    <div className="detection-section-heading"><h2>Training & evaluation</h2>{actions}</div>
+    {!training && loading && <LabStatus>Checking training status…</LabStatus>}
+    {!training && unavailable ? null : training && <>
+      {['failed', 'invalid'].includes(training.status) ? <LabError title="Training did not complete." message={training.message} />
+        : <LabStatus>{completed ? `${training.epochs_completed} epochs completed · ${training.baseline ? '100-epoch baseline' : 'Exploratory run'}` : training.status === 'running' ? 'Local training is running.' : 'No custom training run yet.'}</LabStatus>}
+      {completed && <>
+        <div className="detection-table"><table><caption>About this model</caption><tbody>
+          {names.length > 0 && <tr><th scope="row">Detects</th><td>{names.length === 1 && names[0] === 'bottle' ? 'Bottles only' : names.join(' · ')}</td></tr>}
+          <tr><th scope="row">Model</th><td>YOLO11n, fine-tuned from pretrained weights</td></tr>
+          {photos !== null && <tr><th scope="row">Dataset</th><td>{photos} {dataset?.reviewed_images === photos ? 'reviewed photos' : 'photos'}</td></tr>}
+          {splits?.train && <tr><th scope="row">Training</th><td>{splits.train.images} images</td></tr>}
+          <tr><th scope="row">{training.evaluation_split === 'test' ? 'Test evaluation' : 'Validation'}</th><td>{evaluated !== undefined ? `${evaluated} images` : 'Recorded in training details'}</td></tr>
+        </tbody></table></div>
+        {sampleSplit && <p>The bottle sample was used for {sampleSplit === 'val' ? 'validation' : sampleSplit === 'train' ? 'training' : 'test evaluation'}. Try your own photos to explore how the model behaves.</p>}
+        {training.metrics && <dl className="detection-metrics">{Object.entries(training.metrics).map(([key, value]) => <div key={key}>
+          <dt>{{ precision: 'Precision', recall: 'Recall', map50: 'mAP@50', map50_95: 'mAP@50–95' }[key]}</dt><dd>{(value * 100).toFixed(1)}%</dd>
+        </div>)}</dl>}
+        {history.length > 0 && <TrainingLoss history={history} />}
+      </>}
+      <div className="detection-reference-actions">
+        {completed && <InfoDetails title="Training details"><RunMetadata value={{ parameters: training.parameters, provenance: {
+          evaluation_split: training.evaluation_split, dataset_sha256: training.dataset_sha256, weight_sha256: training.weight_sha256,
+          started_utc: training.started_utc, completed_utc: training.completed_utc, ultralytics: training.ultralytics, torch: training.torch,
+        } }} /></InfoDetails>}
+        {training.status !== 'running' && <InfoDetails title="Local commands"><ol><li>Collect and annotate objects in YOLO format.</li><li>Validate the dataset.</li><li>Train locally, then refresh status.</li></ol><pre tabIndex={0} aria-label="Local training commands"><code>{`# Replace the dataset path. Run from the repository root.\nbackend/.venv/bin/python backend/scripts/train_yolo.py \\\n  --data /path/to/dataset/data.yaml --validate-only\n\n# Source baseline: 100 epochs at 640px\nbackend/.venv/bin/python backend/scripts/train_yolo.py \\\n  --data /path/to/dataset/data.yaml --epochs 100 --batch 4 --name baseline`}</code></pre><p>CPU is the default. Use --split test only with a separate test split.</p></InfoDetails>}
+        {status?.training_log_available && <DownloadLink href="/api/labs/6/artifacts/log" download>Training log</DownloadLink>}
+        {completed && <DownloadLink href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(training, null, 2))}`} download="optiq-lab6-training.json">Training JSON</DownloadLink>}
+      </div>
     </>}
-    {training && training.status !== 'pending' && <DownloadLink href="/api/labs/6/artifacts/log" download>Local training log</DownloadLink>}
   </section>
 }

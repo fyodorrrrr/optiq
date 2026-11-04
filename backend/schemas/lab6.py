@@ -19,6 +19,8 @@ class ModelInfo(BaseModel):
 class Status(BaseModel):
     models: list[ModelInfo]
     bottle_sample_available: bool = False
+    bottle_sample_split: Literal['train', 'val', 'test'] | None = None
+    training_log_available: bool = False
     sample_available: bool
     dataset: dict
     training: dict
@@ -52,6 +54,8 @@ class DatasetArtifact(BaseModel):
     names: list[str] = []
     splits: dict[str, SplitCounts] = {}
     sha256: str | None = None
+    reviewed_images: int = Field(default=0, ge=0)
+    image_splits: dict[str, Literal['train', 'val', 'test']] = Field(default_factory=dict, exclude=True)
 
 
 class EvaluationMetrics(BaseModel):

@@ -14,6 +14,7 @@ from threadpoolctl import threadpool_limits
 
 from schemas.lab5 import DatasetInfo, Eigenface, Prediction, ReportRow, Result, Settings
 from services.images import frame, ImageError
+from services.public_metadata import public_message
 
 DATA_HOME = Path(__file__).resolve().parents[1] / '.cache' / 'lfw'
 RUN_LOCK = Lock()
@@ -43,7 +44,7 @@ def status():
     try:
         return dataset_info(load_dataset())
     except DatasetUnavailable as error:
-        return DatasetInfo(ready=False, message=str(error))
+        return DatasetInfo(ready=False, message=public_message(str(error)))
 
 
 def face_frame(values, eigenface=False):

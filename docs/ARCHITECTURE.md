@@ -267,6 +267,28 @@ The Lab 6 detection view leads with image comparison. Camera controls are in a
 collapsed section after results; closing it stops a pending/running stream and
 releases media tracks. Dataset/training instructions use a bounded reading width.
 
+Lab 6 Dataset and Training views omit the settings rail through the shared
+workspace’s optional-controls layout; Detect keeps its existing controls.
+Section-specific actions open the shared metadata drawers. Completed runs lead
+with the model summary and four evaluation metrics; the full epoch history is
+retained in the Training JSON download, with readable provenance in Training
+details. The loss chart uses numeric axes, responsive plotting, and solid/dashed/
+dotted series with a text legend and screen-reader summary. Dataset validation
+verifies optional review decisions against exact image/label byte hashes before
+publishing a reviewed-photo count. Internal image-hash split records identify
+whether the prepared bottle sample belongs to the displayed training dataset;
+these records are omitted from the status response. Status loading/failure is
+separate from inference failure; refresh failures retain previous artifacts.
+
+Public metadata is filtered separately from local training artifacts.
+`services/public_metadata.py` allowlists reproducible training settings, removes
+run/dataset directory fields, and replaces internal failure diagnostics with
+public guidance. Lab 6 log downloads omit lines containing absolute filesystem
+paths or credential assignments (after stripping terminal colors); the original
+log remains local. Shared image-processing errors and Lab 5 dataset errors use
+the same message guard. Numeric metrics, history, model/dataset hashes, and
+intentional public dataset labels remain available.
+
 ## Lab 7 segmentation
 
 `labs/lab7/` reuses the shared shell, prediction prompts, fields, sample/upload

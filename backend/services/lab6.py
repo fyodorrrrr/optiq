@@ -13,6 +13,7 @@ import numpy as np
 from schemas.lab6 import DatasetArtifact, Detection, ModelInfo, Result, Settings, Status, TrainingArtifact
 from pydantic import ValidationError
 from services.images import ImageError, decode_image, frame
+from services.public_metadata import public_message, public_training
 
 ROOT = Path(__file__).resolve().parents[1] / '.cache' / 'lab6'
 INFERENCE_LOCK = Lock()
@@ -63,10 +64,15 @@ def status():
             raise ValueError('Incomplete completed run')
     except (ValidationError, ValueError):
         training = {'status': 'invalid', 'message': 'Training artifacts are incomplete or invalid. Recreate them with the local script.'}
+    bottle_split = None
     try:
-        dataset = DatasetArtifact.model_validate(dataset).model_dump(exclude_none=True)
+        validated_dataset = DatasetArtifact.model_validate(dataset)
+        if (ROOT / 'bottle.jpg').is_file() and training.get('dataset_sha256') == validated_dataset.sha256:
+            bottle_split = validated_dataset.image_splits.get(weight_hash(ROOT / 'bottle.jpg'))
+        dataset = validated_dataset.model_dump(exclude_none=True)
     except ValidationError:
         dataset = {'ready': False, 'message': 'The dataset manifest is invalid. Validate the dataset again.'}
+    dataset['message'] = public_message(dataset.get('message', ''))
     custom = model_path('custom')
     custom_ready = False
     if runtime and training.get('status') == 'completed' and custom.is_file():
@@ -76,7 +82,7 @@ def status():
                   message='Detects COCO classes using pretrained weights.' if runtime and model_path('pretrained').is_file() else 'Pretrained model setup is required on this server.'),
         ModelInfo(id='custom', title='Your custom model', available=custom_ready,
                   message='Custom weights match the completed training artifact.' if custom_ready else 'No verified custom model is available yet.'),
-    ], bottle_sample_available=(ROOT / 'bottle.jpg').is_file(), sample_available=(ROOT / 'bus.jpg').is_file(), dataset=dataset, training=training)
+    ], training_log_available=(ROOT / 'training.log').is_file(), bottle_sample_split=bottle_split, bottle_sample_available=(ROOT / 'bottle.jpg').is_file(), sample_available=(ROOT / 'bus.jpg').is_file(), dataset=dataset, training=public_training(training))
 
 
 def get_model(kind):

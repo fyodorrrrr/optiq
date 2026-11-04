@@ -3,7 +3,7 @@ import type { ImageFrame } from '../../api/images'
 export type SampleKind = 'bus' | 'bottle'
 export type Model = 'pretrained' | 'custom'
 export interface Dataset {
-  ready?: boolean; message?: string; names?: string[]; sha256?: string
+  reviewed_images?: number; ready?: boolean; message?: string; names?: string[]; sha256?: string
   splits?: Record<string, { images: number; objects: number; backgrounds: number }>
 }
 export interface Training {
@@ -11,11 +11,12 @@ export interface Training {
   metrics?: { precision: number; recall: number; map50: number; map50_95: number }
   parameters?: Record<string, string | number | boolean>
   history?: Record<string, number>[]
+  started_utc?: string; completed_utc?: string; ultralytics?: string; torch?: string
   weight_sha256?: string; dataset_sha256?: string
 }
 export interface Status {
   models: { id: Model; title: string; available: boolean; message: string }[]
-  sample_available: boolean; bottle_sample_available: boolean; dataset: Dataset; training: Training
+  training_log_available?: boolean; sample_available: boolean; bottle_sample_available: boolean; bottle_sample_split?: 'train' | 'val' | 'test' | null; dataset: Dataset; training: Training
 }
 export interface Detection { class_id: number; label: string; confidence: number; xyxy: number[] }
 export interface Result {

@@ -122,6 +122,14 @@ provenance, run CSV/arguments/weights, `training.log`, evaluation outputs, and
 published `custom/best.pt`. The UI shows precision/recall/mAP, recorded loss,
 actual evaluation split, epoch count, and provenance; it marks exploratory runs
 as below the source baseline. Select **Refresh status** after running the CLI.
+Dataset and Training views show the current artifacts first; setup instructions
+and provenance open in right-side details. Training JSON retains the full loss
+history without expanding the page. Optional `review-decisions.json` approval
+records are checked against exact image/label hashes during dataset validation.
+Revalidate older packs to publish reviewed counts and sample-split provenance.
+Public status/JSON exports omit absolute paths and internal run directories.
+Downloaded logs omit private path/credential lines; complete original artifacts
+remain in the local cache for debugging.
 Custom inference becomes available only when completed artifacts and published
 weight SHA-256 agree. Only trusted local checkpoints are accepted; there is no
 web weight upload or training endpoint. Keep models, personal data, caches and

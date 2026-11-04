@@ -397,3 +397,5 @@
 .run-metadata-table td { font-weight: 500; }
 .run-metadata-table ol { margin: 0; padding-inline-start: 18px; }
 .run-metadata .run-metadata-previous { padding: 10px 12px; background: var(--accent-soft); color: var(--accent-deep); font-size: 14px; }
+
+.lab-workspace-body-wide { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'viewers'; }
