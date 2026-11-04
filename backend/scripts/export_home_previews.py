@@ -95,6 +95,7 @@ def export():
 
     detection_settings = DetectionSettings()
     detection = lab6.execute((lab6.ROOT / 'bus.jpg').read_bytes(), detection_settings)
+    comparison(6, lab6.sample(), detection.output)
     save(6, ImageOps.contain(picture(detection.output), (640, 400)), {'source': 'Ultralytics bus demonstration image', 'source_url': 'https://raw.githubusercontent.com/ultralytics/ultralytics/main/ultralytics/assets/bus.jpg', 'operation': 'Pretrained YOLO11n detections', 'settings': detection_settings.model_dump(), 'provenance': detection.provenance, 'custom_training': 'Not represented by this pretrained example'})
 
     segmentation_settings = SegmentationSettings(method='region')

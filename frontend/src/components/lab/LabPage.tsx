@@ -17,7 +17,6 @@ export default function LabPage({ labNumber, title, description, actions, inputN
       <nav aria-label="Lab navigation"><Link to="/#labs">All labs</Link><a href={`#${guideId}`} onClick={onOpenGuide}>How it works</a></nav>
     </header>
     <main className="lab-main" id={mainId}>
-      <Link className="lab-back" to="/#labs">← Back to labs</Link>
       <section className="lab-introduction" aria-labelledby={`lab-${labNumber}-title`}>
         <div><h1 id={`lab-${labNumber}-title`}>{title}</h1><p>{description}</p></div>
         <div className="lab-source-actions">{actions}</div>

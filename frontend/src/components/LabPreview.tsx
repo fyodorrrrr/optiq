@@ -1,3 +1,5 @@
+import before6 from '../assets/lab-previews/lab-6-before.webp'
+import after6 from '../assets/lab-previews/lab-6-after.webp'
 import before7 from '../assets/lab-previews/lab-7-before.webp'
 import after7 from '../assets/lab-previews/lab-7-after.webp'
 import before3 from '../assets/lab-previews/lab-3-before.webp'
@@ -26,19 +28,19 @@ const previews: Record<number, { image: string; caption: string; alt: string }> 
   7: { image: segmentation, caption: 'Watershed regions', alt: 'Touching circles beside their computed watershed region overlay.' },
 }
 
-const comparisons: Record<number, [string, string]> = { 1: [before1, after1], 2: [before2, after2], 3: [before3, after3], 7: [before7, after7] }
+const comparisons: Record<number, [string, string]> = { 1: [before1, after1], 2: [before2, after2], 3: [before3, after3], 6: [before6, after6], 7: [before7, after7] }
 
 export default function LabPreview({ lab, compact = false }: { lab: (typeof labs)[number]; compact?: boolean }) {
   const preview = previews[lab.id]
 
   return <section className="lab-detail" id="lab-details" aria-labelledby="lab-preview-title" aria-live="polite" aria-atomic="true">
     <div><h3 className="detail-heading" id="lab-preview-title">Lab {lab.id} · {lab.title}</h3>
-      {lab.id === 6 && <p className="detail-state">Partial · pretrained detection and local training workflow</p>}</div>
+    </div>
     {!compact && <figure className="lab-preview-figure">
       {comparisons[lab.id]
         ? <PreviewComparison key={lab.id} before={comparisons[lab.id][0]} after={comparisons[lab.id][1]} description={preview.alt} />
         : <img src={preview.image} alt={preview.alt} width="640" height="400" loading="lazy" decoding="async" />}
-      <figcaption>Sample output · {preview.caption}</figcaption>
+      <figcaption>{preview.caption}</figcaption>
     </figure>}
     <p className="detail-copy">{lab.description}</p>
     <div className="detail-action"><a className="button" href={lab.href}>Open lab <span aria-hidden="true">→</span></a></div>

@@ -804,3 +804,19 @@ h2 {
   outline: 3px solid var(--accent);
   outline-offset: 3px;
 }
+
+.preview-comparison .comparison-original { transition: clip-path 160ms cubic-bezier(.2, .7, .3, 1); }
+.preview-comparison .comparison-divider { transition: left 160ms cubic-bezier(.2, .7, .3, 1); }
+.preview-comparison[data-dragging='true'] .comparison-original { transition: clip-path 65ms linear; }
+.preview-comparison[data-dragging='true'] .comparison-divider { transition: left 65ms linear; }
+.comparison-divider span { transition: transform 160ms ease-out; }
+.preview-comparison[data-dragging='true'] .comparison-divider span { transform: translate(-50%, -50%) scale(1.08); }
+.preview-comparison input { touch-action: pan-y; }
+@media (prefers-reduced-motion: reduce) {
+  .preview-comparison .comparison-original,
+  .preview-comparison .comparison-divider,
+  .preview-comparison[data-dragging='true'] .comparison-original,
+  .preview-comparison[data-dragging='true'] .comparison-divider,
+  .preview-comparison .comparison-divider span { transition: none; }
+  .preview-comparison[data-dragging='true'] .comparison-divider span { transform: translate(-50%, -50%); }
+}

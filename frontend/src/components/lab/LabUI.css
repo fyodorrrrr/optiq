@@ -4,7 +4,6 @@
   padding: 32px 40px;
 }
 
-.lab-back { font-size: 14px; color: var(--ink-soft); }
 .lab-introduction { display: flex; justify-content: space-between; align-items: end; gap: 28px; margin: 24px 0 16px; }
 .lab-introduction h1 { font-size: clamp(28px, 3vw, 38px); line-height: 1.2; letter-spacing: -.03em; max-width: 25ch; margin-bottom: 12px; }
 .lab-introduction p { max-width: 65ch; color: var(--ink-soft); font-size: 15px; line-height: 1.7; }
@@ -318,3 +317,13 @@
 /* Learning guides share Lab 1's reading drawer rather than a full-width grid. */
 .lab-canvas-reading article { margin-block: 28px; }
 .lab-details-drawer-content .lab-guide-settings { margin-block: 28px; }
+
+/* Match the shared lab header to the workspace container at every breakpoint. */
+.lab-page .site-header { max-width: 1360px; padding-inline: 40px; }
+.lab-shell-wide .site-header { max-width: 1520px; }
+@media (max-width: 1359px) {
+  .lab-page .site-header { padding-inline: 24px; }
+}
+@media (max-width: 640px) {
+  .lab-page .site-header { padding-inline: 16px; }
+}

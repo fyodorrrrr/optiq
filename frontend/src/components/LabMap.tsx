@@ -54,13 +54,13 @@ export default function LabMap() {
         {labs.map((lab, index) => (
           <div className="map-stop" key={lab.id} style={{ '--mx': `${mobilePositions[index]}%`, '--my': `${index * 130}px` } as CSSProperties}>
           <button className="node-item" type="button" aria-pressed={selectedId === lab.id}
-            aria-label={`Lab ${lab.id}: ${lab.title}. ${lab.id === 6 ? 'Partial · custom training pending' : lab.href ? 'Available' : 'Planned'}. Show details.`}
+            aria-label={`Lab ${lab.id}: ${lab.title}. Show details.`}
             aria-controls="lab-details" onClick={() => selectLab(lab.id)}>
             <span className="node" aria-hidden="true">
               <span className="face"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={lab.icon} /></svg></span>
             </span>
             <span className="node-copy"><span className="node-title">{lab.title}</span><span className={`state ${lab.href ? 'preview' : ''}`}>
-              Lab {lab.id} · {lab.id === 6 ? 'Partial · custom training pending' : lab.href ? 'Available' : 'Planned'}
+              Lab {lab.id}
             </span></span>
           </button>
           {compact && selectedId === lab.id && <LabPreview lab={lab} compact />}
