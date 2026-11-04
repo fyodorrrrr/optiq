@@ -34,8 +34,16 @@ name `opencv-python`; actual cv2 compatibility is verified through the tests.
 The recorded packages were verified on macOS ARM64/Python 3.12. Other platforms,
 especially GPU-specific PyTorch installations, require their own verification.
 
-Explicit setup downloads official pretrained weights and the Ultralytics bus
-image into ignored `backend/.cache/lab6/`. Prediction requests do not download
+Explicit setup downloads official pretrained weights, the Ultralytics bus image,
+and an Open Images bottle photograph into ignored `backend/.cache/lab6/`.
+Lab 6 uses the shared sample dropdown for Bus and Bottle. It opens with the
+bottle sample when prepared, falling back to the bus sample otherwise. The bottle photo is
+Open Images ID `9bd3e32a2337f9bc`, by Feeling My Age,
+[CC BY 2.0](https://creativecommons.org/licenses/by/2.0/),
+[original photograph](https://www.flickr.com/photos/feelingmyage/14956869955).
+It is one of the custom model’s validation images, so this sample demonstrates
+inference rather than providing independent test evidence. Each sample is
+available only after its local file is prepared. Prediction requests do not download
 weights. The first inference loads the model; later requests reuse it. Inference
 uses CPU, imgsz640, confidence0.25, IoU0.7, and at most100 detections. Uploaded
 images use the existing 5MiB/4096px-side/4M-pixel limits and are not retained.

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { frameFile } from '../../api/images'
 import type { ImageFrame } from '../../api/images'
 import { detect, getSample, getStatus, loadImage } from './api'
-import type { Model, Result, Status } from './api'
+import type { Model, Result, SampleKind, Status } from './api'
 
 export default function useDetectionExperiment() {
   const [status, setStatus] = useState<Status | null>(null)
@@ -23,9 +23,10 @@ export default function useDetectionExperiment() {
         const state = await getStatus(controller.signal)
         if (controller.signal.aborted) return
         setStatus(state)
-        if (state.sample_available) {
-          const frame = await getSample(controller.signal)
-          if (!controller.signal.aborted) setSource({ frame, file: frameFile(frame, 'bus.png'), name: 'Ultralytics bus sample' })
+        if (state.bottle_sample_available || state.sample_available) {
+          const kind = state.bottle_sample_available ? 'bottle' : 'bus'
+          const frame = await getSample(controller.signal, kind)
+          if (!controller.signal.aborted) setSource({ frame, file: frameFile(frame, `${kind}.png`), name: kind === 'bottle' ? 'Bottle · validation sample' : 'Ultralytics bus sample' })
         }
       } catch (error) { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not prepare the detector.') }
       finally { if (!controller.signal.aborted) setBusy(false) }
@@ -52,9 +53,9 @@ export default function useDetectionExperiment() {
     catch (error) { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not check model status.') }
     finally { if (!controller.signal.aborted) setBusy(false) }
   }
-  async function sample() {
+  async function sample(kind: SampleKind) {
     const controller = begin(true)
-    try { const frame = await getSample(controller.signal); if (!controller.signal.aborted) setSource({ frame, file: frameFile(frame, 'bus.png'), name: 'Ultralytics bus sample' }) }
+    try { const frame = await getSample(controller.signal, kind); if (!controller.signal.aborted) setSource({ frame, file: frameFile(frame, `${kind}.png`), name: kind === 'bottle' ? 'Bottle · validation sample' : 'Ultralytics bus sample' }) }
     catch (error) { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not load the sample.') }
     finally { if (!controller.signal.aborted) setBusy(false) }
   }

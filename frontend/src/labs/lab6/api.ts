@@ -1,5 +1,6 @@
 import { imageRequest } from '../../api/images'
 import type { ImageFrame } from '../../api/images'
+export type SampleKind = 'bus' | 'bottle'
 export type Model = 'pretrained' | 'custom'
 export interface Dataset {
   ready?: boolean; message?: string; names?: string[]; sha256?: string
@@ -14,7 +15,7 @@ export interface Training {
 }
 export interface Status {
   models: { id: Model; title: string; available: boolean; message: string }[]
-  sample_available: boolean; dataset: Dataset; training: Training
+  sample_available: boolean; bottle_sample_available: boolean; dataset: Dataset; training: Training
 }
 export interface Detection { class_id: number; label: string; confidence: number; xyxy: number[] }
 export interface Result {
@@ -22,7 +23,7 @@ export interface Result {
   elapsed_ms: number; stages_ms: Record<string, number>; provenance: Record<string, string | number>
 }
 export const getStatus = (signal: AbortSignal) => imageRequest<Status>(6, 'status', signal)
-export const getSample = (signal: AbortSignal) => imageRequest<ImageFrame>(6, 'sample', signal)
+export const getSample = (signal: AbortSignal, kind: SampleKind = 'bus') => imageRequest<ImageFrame>(6, `sample?kind=${kind}`, signal)
 export function loadImage(file: File, signal: AbortSignal) {
   const body = new FormData()
   body.set('file', file)

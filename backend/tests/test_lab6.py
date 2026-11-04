@@ -38,6 +38,18 @@ class Lab6Tests(unittest.TestCase):
         response = self.client.post('/api/labs/6/load', files={'file': ('bad.png', b'broken', 'image/png')})
         self.assertEqual(response.status_code, 422)
 
+    def test_bottle_sample_availability_content_and_invalid_selection(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(lab6, 'ROOT', Path(directory)):
+            self.assertFalse(self.client.get('/api/labs/6/status').json()['bottle_sample_available'])
+            self.assertEqual(self.client.get('/api/labs/6/sample?kind=bottle').status_code, 503)
+            (Path(directory) / 'bottle.jpg').write_bytes(png())
+            self.assertTrue(self.client.get('/api/labs/6/status').json()['bottle_sample_available'])
+            response = self.client.get('/api/labs/6/sample?kind=bottle')
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json()['width'], 80)
+            self.assertIn('validation', ' '.join(response.json()['notes']))
+            self.assertEqual(self.client.get('/api/labs/6/sample?kind=../other').status_code, 422)
+
     def test_boxes_preserve_original_coordinates_and_empty_result(self):
         class Boxes:
             xyxy = np.array([[10., 12., 70., 50.]])

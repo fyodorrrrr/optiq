@@ -1,4 +1,4 @@
-"""Explicitly download trusted YOLO11n weights and the Ultralytics bus sample."""
+"""Explicitly download trusted YOLO11n weights and the bus and attributed Open Images bottle samples."""
 from pathlib import Path
 import os
 import sys
@@ -15,6 +15,7 @@ if __name__ == '__main__':
     # Use explicit fixed upstream URLs rather than a request-time auto-download.
     assets = {
         'yolo11n.pt': 'https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n.pt',
+        'bottle.jpg': 'https://open-images-dataset.s3.amazonaws.com/validation/9bd3e32a2337f9bc.jpg',
         'bus.jpg': 'https://raw.githubusercontent.com/ultralytics/ultralytics/main/ultralytics/assets/bus.jpg',
     }
     for name, url in assets.items():

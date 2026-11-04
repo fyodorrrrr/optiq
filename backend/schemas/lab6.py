@@ -18,6 +18,7 @@ class ModelInfo(BaseModel):
 
 class Status(BaseModel):
     models: list[ModelInfo]
+    bottle_sample_available: bool = False
     sample_available: bool
     dataset: dict
     training: dict

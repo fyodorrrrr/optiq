@@ -76,7 +76,7 @@ def status():
                   message='Detects COCO classes using pretrained weights.' if runtime and model_path('pretrained').is_file() else 'Pretrained model setup is required on this server.'),
         ModelInfo(id='custom', title='Your custom model', available=custom_ready,
                   message='Custom weights match the completed training artifact.' if custom_ready else 'No verified custom model is available yet.'),
-    ], sample_available=(ROOT / 'bus.jpg').is_file(), dataset=dataset, training=training)
+    ], bottle_sample_available=(ROOT / 'bottle.jpg').is_file(), sample_available=(ROOT / 'bus.jpg').is_file(), dataset=dataset, training=training)
 
 
 def get_model(kind):
@@ -98,12 +98,15 @@ def get_model(kind):
     return MODEL_CACHE[signature]
 
 
-def sample():
-    path = ROOT / 'bus.jpg'
+def sample(kind='bus'):
+    path = ROOT / ('bottle.jpg' if kind == 'bottle' else 'bus.jpg')
     if not path.is_file():
         raise ImageError('The sample image is not prepared. Upload a PNG/JPEG or run the model setup.', 503)
     image, notes = decode_image(path.read_bytes())
-    return frame(image, [*notes, 'Ultralytics bus demonstration image; downloaded during explicit setup.'])
+    credit = ('Open Images bottle validation sample (also used for model evaluation, not an independent test); '
+              'Feeling My Age, CC BY 2.0; https://www.flickr.com/photos/feelingmyage/14956869955'
+              if kind == 'bottle' else 'Ultralytics bus demonstration image; downloaded during explicit setup.')
+    return frame(image, [*notes, credit])
 
 
 def execute(content, settings):

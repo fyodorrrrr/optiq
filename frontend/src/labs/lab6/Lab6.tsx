@@ -9,7 +9,7 @@ import LabPage from '../../components/lab/LabPage'
 import LabWorkspace from '../../components/lab/LabWorkspace'
 import ToolSidebar from '../../components/lab/ToolSidebar'
 import ImagePanel from '../../components/lab/ImagePanel'
-import ImageUploadButton from '../../components/lab/ImageUploadButton'
+import SourceActions from '../../components/lab/SourceActions'
 import LabButton from '../../components/lab/LabButton'
 import LabGuide from '../../components/lab/LabGuide'
 import { NumberField, SelectField } from '../../components/lab/Fields'
@@ -34,7 +34,10 @@ export default function Lab6() {
   return <LabPage labNumber={6} title="See objects, not just pixels."
     description="Lab 6 — Object detection. Locate objects, explore confidence, and review your custom training."
     guideId="detection-guide" onOpenGuide={() => guide.current?.focus({ preventScroll: true })} wide
-    actions={<><ImageUploadButton busy={lab.busy || cameraRunning} onUpload={lab.upload} /><LabButton disabled={lab.busy || cameraRunning || !lab.status?.sample_available} onClick={() => void lab.sample()}>Try bus sample</LabButton></>}>
+    actions={<SourceActions busy={lab.busy || cameraRunning} onUpload={lab.upload} onSample={lab.sample} samples={[
+      ...(lab.status?.sample_available ? [{ value: 'bus' as const, label: 'Bus', description: 'Pretrained detection sample' }] : []),
+      ...(lab.status?.bottle_sample_available ? [{ value: 'bottle' as const, label: 'Bottle', description: 'Custom model · validation sample' }] : []),
+    ]} />}>
     <LabWorkspace label="Object detection workspace" resultsId="detection-results" busy={lab.busy}
       tools={<ToolSidebar<Section> value={section} onChange={setSection} tools={(Object.keys(sections) as Section[]).map(id => ({ id, label: sections[id].title,
         icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[id].icon} /></svg>,

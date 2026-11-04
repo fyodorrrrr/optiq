@@ -17,8 +17,8 @@ async def model_status():
 
 
 @router.get('/sample', response_model=Frame)
-async def sample_image():
-    return await process(sample)
+async def sample_image(kind: Literal['bus', 'bottle'] = 'bus'):
+    return await process(sample, kind)
 
 
 @router.post('/load', response_model=Frame)
