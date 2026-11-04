@@ -2,7 +2,8 @@ import type { MouseEvent } from 'react'
 import type { ImageFrame as Frame } from '../../api/images'
 import ImageMetadata from './ImageMetadata'
 
-export default function ImagePanel({ title, frame, onPick, empty, selection, description, showMetadata = true, metadataEssential = false, compact = false, imageAlt }: {
+export default function ImagePanel({ title, frame, onPick, empty, selection, description, showMetadata = true, metadataEssential = false, compact = false, imageAlt, pixelOverlay }: {
+  pixelOverlay?: 'prompt' | 'selected'
   compact?: boolean; imageAlt?: string; title: string; frame: Frame | null; showMetadata?: boolean; metadataEssential?: boolean; description?: string; onPick?: (x: number, y: number) => void; empty?: string
   selection?: { x: number; y: number; width?: number; height?: number }
 }) {
@@ -26,17 +27,20 @@ export default function ImagePanel({ title, frame, onPick, empty, selection, des
     <div className={`lab-image-stage ${onPick ? 'can-pick' : ''}`}>
       {frame ? <>
         <img src={frame.image} alt={imageAlt ?? `${title} image`} loading={compact ? 'lazy' : undefined} onClick={onPick ? pick : undefined} draggable={false} />
-        {selection && validSelection && <svg
+        {selection && validSelection && pixelOverlay !== 'prompt' && <svg
           className="lab-selection" viewBox={`0 0 ${frame.width} ${frame.height}`} aria-hidden="true">
           {selection.width !== undefined && selection.height !== undefined
             ? selection.width > 0 && selection.height > 0 && selection.x + selection.width <= frame.width && selection.y + selection.height <= frame.height && <rect className="lab-crop-marker" x={selection.x} y={selection.y} width={selection.width} height={selection.height} />
             : <circle className="lab-pixel-marker" cx={selection.x + .5} cy={selection.y + .5} r={Math.max(frame.width, frame.height) * .016} />}
         </svg>}
+        {pixelOverlay && <span className="lab-pixel-hint" role="status">{!validSelection
+          ? 'Check pixel coordinates'
+          : pixelOverlay === 'selected' ? `Selected pixel: (${selection!.x}, ${selection!.y})` : 'Click to select a pixel'}</span>}
       </>
         : <p>{empty ?? 'Choose an image to begin.'}</p>}
     </div>
     {description && <p className="lab-image-description">{description}</p>}
-    {frame && selection && <p className="lab-selection-label">{validSelection
+    {frame && selection && !pixelOverlay && <p className="lab-selection-label">{validSelection
       ? <>{selection.width === undefined ? 'Selected pixel' : 'Crop origin'}: ({selection.x}, {selection.y}){selection.width !== undefined && ` · ${selection.width} × ${selection.height} px`}</>
       : 'Enter valid coordinates and dimensions to preview the selection.'}</p>}
     {frame && showMetadata && (metadataEssential

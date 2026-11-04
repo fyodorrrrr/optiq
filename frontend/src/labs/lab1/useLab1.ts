@@ -13,6 +13,7 @@ export default function useLab1() {
   const [source, setSource] = useState<{ file: File; frame: Frame; name: string } | null>(null)
   const [operation, setOperation] = useState<Operation>('inspect')
   const [settings, setSettings] = useState<Partial<Record<Operation, Fields>>>({})
+  const [pixelSelections, setPixelSelections] = useState<Partial<Record<Operation, boolean>>>({})
   const fields = settings[operation] ?? initialFields
   const [resultIsPrevious, setResultIsPrevious] = useState(false)
   const [output, setOutput] = useState<ExperimentResult | null>(null)
@@ -38,6 +39,7 @@ export default function useLab1() {
 
   const acceptSource = useCallback((frame: Frame, file: File, name: string) => {
     setSource({ frame, file, name })
+    setPixelSelections({})
     const defaults = { ...initialFields, width: String(Math.max(1, Math.floor(frame.width / 2))), height: String(Math.max(1, Math.floor(frame.height / 2))) }
     setSettings(Object.fromEntries(['inspect', 'edit', 'grayscale', 'crop', 'resize', 'rotate'].map(key => [key, { ...defaults }])))
     setResultIsPrevious(false)
@@ -112,6 +114,9 @@ export default function useLab1() {
 
   function change(key: keyof Fields, value: string | boolean) {
     invalidateResult()
+    if ((operation === 'inspect' || operation === 'edit') && (key === 'x' || key === 'y')) {
+      setPixelSelections(all => ({ ...all, [operation]: true }))
+    }
     setSettings(all => {
       const previous = all[operation] ?? initialFields
       const next = { ...previous, [key]: value }
@@ -129,6 +134,7 @@ export default function useLab1() {
 
   function pick(x: number, y: number) {
     invalidateResult()
+    setPixelSelections(all => ({ ...all, [operation]: true }))
     setSettings(all => ({ ...all, [operation]: { ...(all[operation] ?? initialFields), x: String(x), y: String(y) } }))
   }
 
@@ -152,6 +158,7 @@ export default function useLab1() {
       const response = await runExperiment(source.file, settings, controller.signal)
       if (!controller.signal.aborted) {
         setOutput(response)
+        if (response.pixel) setPixelSelections(all => ({ ...all, [operation]: true }))
         setResultIsPrevious(false)
         if (operation === 'rotate') setRotationTurns(Number(response.parameters.quarter_turns))
       }
@@ -162,5 +169,5 @@ export default function useLab1() {
     }
   }
 
-  return { notice, source, operation, fields, output, rotationTurns, resultIsPrevious, busy, error, loadSample, upload, select, change, pick, run, reset }
+  return { notice, source, operation, fields, output, rotationTurns, resultIsPrevious, pixelSelected: pixelSelections[operation] ?? false, busy, error, loadSample, upload, select, change, pick, run, reset }
 }

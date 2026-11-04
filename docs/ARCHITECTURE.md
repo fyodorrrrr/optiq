@@ -70,6 +70,17 @@ A Frame contains a PNG data URL, width, height, channels, shape, dtype, color sp
 - `SourceActions.tsx` and `SamplePicker.tsx`: upload control and configurable dropdown with dismissal and focus restoration.
 - `ImagePanel.tsx`: fit-to-panel viewer, optional pixel/crop overlays, metadata, and metadata help. Lab 1 retains a compatibility re-export; Lab 2's EdgeFigure adapter supplies edge-specific captions.
 - `LabGuide.tsx`: optional learning disclosure. `LabUI.css` owns common visual rules.
+- `LearningCanvas.tsx`: annotated figure/caption with an optional nonmodal
+  “How it works” reading panel. Lab 1 uses it below the experiment; its six
+  static diagrams and concise captions live in `labs/lab1/LearningFigure.tsx`
+  and `learningContent.ts`. Examples are explicitly illustrative, independent
+  of uploaded images and API results. Other labs retain `LabGuide`.
+  The reading action sits with the caption. `DetailsDrawer.tsx` supplies the
+  shared nonmodal popover for learning content, image details/upload limits,
+  and run details. Only one drawer opens at a time; none changes workspace
+  height. Run details use readable labels with optional raw JSON. Lab 1's
+  pixel-selection hint lives inside the image viewer, updates after pointer
+  or coordinate-field selection, and resets when a new source is accepted.
 - `Histogram.tsx` and `Histogram.css`: 256-bin brightness charts with an explicitly shared count scale.
 
 Changes to these components affect both labs. Local styles cover only specialized results such as pixel zoom or edge information. Hooks and settings remain independent: sharing UI does not share experiment state or algorithms.
@@ -78,7 +89,7 @@ On wider screens, tools occupy the left sidebar, image comparisons the center, a
 
 Lab 1 retains separate settings for each operation. Editing settings or switching tools cancels superseded processing while retaining the last completed result, labeled as previous output with its original operation and parameters. A new source clears results and initializes settings. Result summaries describe the actual returned changes; previews explicitly fit images to their panels and do not imply a shared display scale.
 
-Keep brief prediction prompts near controls. Put deeper theory, Python examples, reflection prompts, and preprocessing explanations in optional collapsed learning content. No account, progress gate, or scoring is required.
+Keep brief prediction prompts near controls. Put deeper theory, Python examples, reflection prompts, and preprocessing explanations in optional learning content (Lab 1's reading panel or the other labs' collapsed guides). No account, progress gate, or scoring is required.
 
 ## Verification and Remaining Scope
 

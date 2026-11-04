@@ -1,5 +1,5 @@
 import LabMap from './components/LabMap'
-import BackendStatus from './components/BackendStatus'
+import HeroPixel from './components/HeroPixel'
 import { useEffect } from 'react'
 import { Link, Route, Routes, useLocation } from 'react-router'
 import Lab1 from './labs/lab1/Lab1'
@@ -24,6 +24,7 @@ function Home() {
     <main id="main" className="page-content">
       <section className="intro" id="home" aria-labelledby="intro-title">
         <div className="intro-content">
+          <HeroPixel />
           <h1 id="intro-title">A different way<br />to see.</h1>
           <div className="intro-copy">
             <p>Get hands-on with computer vision. Explore an image, change the parameters, and discover why the result changes.</p>
@@ -37,7 +38,7 @@ function Home() {
       </section>
       <LabMap />
       <footer className="site-footer">
-        <div><p>Optiq — computer vision, through experimentation.</p><BackendStatus /></div>
+        <div><p>Optiq — computer vision, through experimentation.</p></div>
         <p>For students and developers.<br />Built one lab at a time.</p>
       </footer>
     </main>

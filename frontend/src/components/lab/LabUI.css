@@ -47,6 +47,7 @@
 .lab-view-result { display: inline-block; padding: 12px 0; font-size: 14px; color: var(--accent); }
 .lab-image-stage p { padding: 16px; text-align: center; font-size: 14px; line-height: 1.6; color: var(--ink-soft); }
 .lab-image-stage.can-pick img { cursor: crosshair; }
+.lab-pixel-hint { position: absolute; left: 20px; bottom: 20px; max-width: calc(100% - 40px); padding: 5px 8px; background: var(--paper-deep); color: var(--ink); border: 1px solid var(--line-strong); border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; line-height: 1.5; overflow-wrap: anywhere; pointer-events: none; }
 .lab-metadata { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; margin: 16px 0 0; font-size: 13px; font-variant-numeric: tabular-nums; }
 .lab-metadata-help { font-size: 13px; line-height: 1.7; margin-top: 12px; }
 .lab-metadata-help summary { cursor: pointer; color: var(--accent); padding: 8px 0; }
@@ -70,7 +71,8 @@
 .lab-controls .lab-hint { font-size: 14px; margin-top: 14px; }
 .lab-run-status { border-top: 1px solid var(--line); padding-top: 18px; margin-top: 20px; font-size: 13px; line-height: 1.6; color: var(--ink-soft); }
 .lab-error { padding: 16px; margin-top: 20px; border: 1px solid var(--error-border); background: var(--error-surface); color: var(--error-ink); border-radius: var(--radius-control); font-size: 14px; line-height: 1.6; }
-.lab-result-actions { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 16px; font-size: 13px; }
+.lab-result-actions { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 18px; margin-top: 16px; font-size: 13px; }
+.lab-result-actions > details { min-width: 0; max-width: 100%; }
 .lab-result-actions summary, .lab-learning summary, .lab-preprocessing summary { cursor: pointer; color: var(--accent); }
 .lab-result-actions pre, .lab-learning pre { background: var(--paper); border-radius: var(--radius-control); padding: 16px; margin-top: 14px; font-size: 12px; line-height: 1.7; max-width: 100%; overflow: auto; }
 .lab-learning { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr); gap: 32px; max-width: 1120px; margin: 20px 0 28px; scroll-margin-top: 24px; }
@@ -211,7 +213,7 @@
 .lab-controls .lab-control-help > summary { min-height: 44px; padding-block: 10px; color: var(--ink-soft); font-size: 13px; font-weight: 400; }
 .lab-controls .feature-actions, .lab-controls .pca-actions, .lab-controls .detection-actions { margin: 16px 0 0; gap: 0; }
 .lab-controls .feature-actions .lab-primary, .lab-controls .pca-actions .lab-primary, .lab-controls .detection-actions .lab-primary { margin-top: 0; }
-.lab-controls { align-self: start; }
+.lab-controls { align-self: stretch; }
 .lab-settings-group:empty { display: none; }
 .lab-controls summary:focus-visible { outline-offset: 2px; }
 
@@ -256,4 +258,58 @@
 .lab-guide-settings h2 { font-size: 18px; margin: 0 0 12px; }
 .lab-guide-settings p { color: var(--ink-soft); font-size: 15px; line-height: 1.75; margin: 0 0 12px; }
 .lab-guide-settings:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+
+/* Shared visual explanation; each lab owns its figures and teaching content. */
+.learning-canvas { margin: 40px 0 32px; padding: 28px 0 0; border-top: 1px solid var(--line-strong); scroll-margin-top: 24px; }
+.learning-canvas:focus-visible { outline: 3px solid var(--focus); outline-offset: 8px; }
+.learning-canvas-header { display: flex; align-items: baseline; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap; }
+.learning-canvas-header h2 { margin: 0; font-size: clamp(20px, 2vw, 26px); font-weight: 600; line-height: 1.35; letter-spacing: -.025em; text-wrap: balance; }
+.learning-canvas-example { color: var(--ink-soft); font-size: 13px; }
+.learning-canvas-body { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 40px; align-items: center; margin: 24px 0; }
+.learning-canvas-visual { min-width: 0; padding: 12px; border-radius: var(--radius-panel); background: var(--paper-deep); }
+.learning-canvas-diagram { display: block; width: 100%; max-height: 300px; color: var(--ink); }
+.learning-canvas-diagram text { fill: var(--ink); font-family: inherit; font-size: 16px; }
+.learning-canvas-diagram .learning-diagram-strong { font-weight: 600; }
+.learning-canvas-diagram .learning-diagram-code { font-family: ui-monospace, monospace; }
+.learning-canvas-caption { min-width: 0; max-width: 48ch; }
+.learning-canvas-caption h3 { margin: 0 0 12px; font-size: 19px; font-weight: 600; line-height: 1.4; letter-spacing: -.015em; text-wrap: balance; }
+.learning-canvas-caption p { margin: 0; font-size: 16px; line-height: 1.7; }
+.learning-canvas-caption .learning-canvas-note { margin-top: 12px; font-size: 14px; line-height: 1.7; color: var(--ink-soft); }
+.learning-canvas-link { display: inline-flex; gap: 10px; align-items: center; min-height: 44px; margin-top: 20px; padding: 8px 0; color: var(--accent); background: transparent; border: 0; font-size: 15px; font-weight: 600; text-underline-offset: 4px; }
+.learning-canvas-link:hover { color: var(--accent-deep); text-decoration: underline; }
+.learning-canvas-link svg { width: 20px; height: 20px; }
+.lab-details-drawer { position: fixed; inset: 0 0 0 auto; margin: 0; width: min(560px, 100%); height: 100dvh; max-height: none; padding: 0 28px 28px; color: var(--ink); background: var(--paper-deep); border: 0; border-inline-start: 1px solid var(--line-strong); overflow-y: auto; overscroll-behavior: contain; }
+.lab-details-drawer-header { position: sticky; top: 0; display: flex; gap: 20px; align-items: start; justify-content: space-between; padding: 24px 0 20px; background: var(--paper-deep); border-bottom: 1px solid var(--line); }
+.lab-details-drawer-header h2 { margin: 6px 0 0; font-size: 22px; line-height: 1.4; font-weight: 600; text-wrap: balance; letter-spacing: -.02em; }
+.lab-details-drawer-header button { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; background: var(--paper); color: var(--ink); border: 1px solid var(--line-strong); border-radius: var(--radius-control); }
+.lab-details-drawer-header button:hover { background: var(--accent-soft); }
+.lab-details-drawer-header svg { width: 20px; height: 20px; }
+.lab-details-drawer-content section { margin: 28px 0; }
+.lab-details-drawer-content h3 { font-size: 16px; font-weight: 600; line-height: 1.5; margin: 0 0 10px; }
+.lab-details-drawer-content p, .lab-details-drawer-content li { font-size: 15px; line-height: 1.75; overflow-wrap: anywhere; }
+.lab-details-drawer-content ul { list-style: disc; padding-inline-start: 20px; margin: 0; }
+.lab-details-drawer-content li + li { margin-top: 8px; }
+.lab-details-drawer-content pre { max-width: 100%; overflow-x: auto; padding: 16px; background: var(--paper); border-radius: var(--radius-control); font-size: 13px; line-height: 1.8; tab-size: 4; }
+.lab-details-drawer-content pre:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.lab-details-drawer-done { display: block; min-height: 44px; padding: 10px 16px; background: var(--accent); color: var(--paper-deep); border: 0; border-radius: var(--radius-control); font-weight: 600; font-size: 14px; }
+.lab-details-drawer-done:hover { background: var(--accent-deep); }
+.learning-canvas ~ .site-footer { gap: 20px; align-items: center; padding-top: 24px; }
+.learning-canvas ~ .site-footer > a { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; max-width: 100%; padding: 12px 18px; border: 1px solid var(--line-strong); border-radius: var(--radius-control); background: var(--paper-deep); color: var(--accent); font-size: 14px; font-weight: 600; text-decoration: none; }
+.learning-canvas ~ .site-footer > a:hover { background: var(--accent-soft); border-color: var(--control-border); }
+.lab-details-trigger { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 0; border: 0; background: transparent; color: var(--accent); font-size: 13px; font-weight: 500; text-underline-offset: 4px; }
+.lab-details-trigger:hover { color: var(--accent-deep); text-decoration: underline; }
+.lab-detail-list { margin: 24px 0; }
+.lab-detail-list > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; padding-block: 12px; border-bottom: 1px solid var(--line); font-size: 15px; line-height: 1.6; }
+.lab-detail-list dt { color: var(--ink-soft); }
+.lab-detail-list dd { margin: 0; font-weight: 500; overflow-wrap: anywhere; }
+.lab-drawer-raw { margin: 24px 0; }
+.lab-drawer-raw summary { min-height: 44px; padding-block: 10px; color: var(--accent); font-size: 14px; cursor: pointer; }
+@media (max-width: 700px) {
+  .learning-canvas { margin-top: 32px; }
+  .learning-canvas-header { gap: 8px; }
+  .learning-canvas-body { grid-template-columns: minmax(0, 1fr); gap: 20px; margin-block: 20px; }
+  .learning-canvas-visual { padding: 8px 0; }
+  .learning-canvas-caption { max-width: 60ch; }
+  .lab-details-drawer { padding-inline: 20px; }
+}
 
