@@ -1,3 +1,5 @@
+import LearningFigure from './LearningFigure'
+import { learningConcepts } from './learningContent'
 import DownloadLink from '../../components/lab/DownloadLink'
 import SettingsHelpLink from '../../components/lab/SettingsHelpLink'
 import { useRef, useState } from 'react'
@@ -25,14 +27,14 @@ function PredictionGallery({ items }: { items: Prediction[] }) {
 export default function Lab5() {
   const lab = usePcaExperiment()
   const [section, setSection] = useState<Section>('eigenfaces')
-  const guide = useRef<HTMLDetailsElement>(null)
+  const guide = useRef<HTMLElement>(null)
   const content = sections[section]
   const result = lab.result
   const stale = result && result.parameters.components !== Number(lab.components)
   return <LabPage labNumber={5} title="Find the patterns behind a face."
     description="Lab 5 — PCA & eigenfaces. Reduce dimensions, inspect variation, and test recognition on held-out faces."
     inputNote="Dataset experiment · LFW faces · no personal uploads required. Each run fits a new PCA and SVM."
-    guideId="pca-guide" onOpenGuide={() => { if (guide.current) guide.current.open = true }} wide
+    guideId="pca-guide" onOpenGuide={() => guide.current?.focus({ preventScroll: true })} wide
     actions={<LabButton disabled={lab.busy} onClick={() => void lab.refresh()}>Check dataset</LabButton>}>
     <LabWorkspace label="PCA and eigenfaces workspace" resultsId="pca-results" busy={lab.busy}
       tools={<ToolSidebar<Section> heading="Explore" value={section} onChange={setSection} tools={(Object.keys(sections) as Section[]).map(id => ({ id, label: sections[id].title,
@@ -42,7 +44,7 @@ export default function Lab5() {
         <NumberField required label="PCA components" value={lab.components} min={12} max={lab.dataset?.max_components || 300} step={1} disabled={lab.busy} onChange={lab.setComponents} />
         <div className="pca-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || !lab.dataset?.ready}>Run experiment</LabButton>
           <LabButton disabled={lab.busy} onClick={() => lab.setComponents('150')}>Reset baseline</LabButton></div>
-        <SettingsHelpLink guideId="pca-guide" onOpen={() => { if (guide.current) guide.current.open = true }} />
+        <SettingsHelpLink guideId="pca-guide" onOpen={() => guide.current?.querySelector<HTMLButtonElement>('.learning-canvas-link')?.click()} />
       </form></>}>
       <details className="pca-dataset lab-metadata-help" open={!result}><summary>Dataset details{lab.dataset?.ready ? ` · ${lab.dataset.samples.toLocaleString()} faces · ${lab.dataset.names.length} identities` : ''}</summary>
         <p>{lab.dataset?.message ?? 'Checking the LFW dataset…'}</p>
@@ -70,11 +72,11 @@ export default function Lab5() {
         <details className="lab-preprocessing"><summary>Run settings, provenance & timings</summary><pre>{JSON.stringify({ parameters: result.parameters, provenance: result.provenance, timings: result.timings }, null, 2)}</pre></details>
       </> : <p className="pca-empty">Run an experiment to see eigenfaces, the variance curve, recognition results, and misclassified faces. All four tools inspect the same completed run.</p>}
     </LabWorkspace>
-    <LabGuide id="pca-guide" ref={guide} settingsHelp={<> <p>The component count sets how many variation patterns represent each face. Fewer components retain less information. Start with 150, then compare retained variance, recognition, and failures at a smaller count.</p>        <p>Baseline: 150 · whitened PCA · balanced RBF SVM · fixed split, seed 42.</p>
+    <LabGuide id="pca-guide" ref={guide} key={section} title={content.heading} concept={learningConcepts[section]} visual={<LearningFigure section={section} />} settingsHelp={<> <p>The component count sets how many variation patterns represent each face. Fewer components retain less information. Start with 150, then compare retained variance, recognition, and failures at a smaller count.</p>        <p>Baseline: 150 · whitened PCA · balanced RBF SVM · fixed split, seed 42.</p>
         <p className="lab-hint">Each run fits fresh models. Leaving the page or losing the connection stops waiting, but the server fit may continue. Wait for it to finish before retrying.</p>
- </>}><div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p></article>
-      <article><h2>What to compare</h2><p>Start with 150 components, then try a smaller count. Compare retained variance, classification metrics, and the actual failures. More components do not guarantee better recognition.</p></article></div>
-      <details className="lab-guide-code"><summary>See the Python operations</summary><pre><code>{pythonExample}</code></pre></details>
+ </>}><div className="lab-canvas-reading"><article><h3>{content.heading}</h3><p>{content.explanation}</p></article>
+      <article><h3>What to compare</h3><p>Start with 150 components, then try a smaller count. Compare retained variance, classification metrics, and the actual failures. More components do not guarantee better recognition.</p></article></div>
+      <section><h3>Connect it to Python</h3><pre tabIndex={0} aria-label="Python implementation"><code>{pythonExample}</code></pre></section>
       <details className="lab-preprocessing"><summary>Reproducibility & limitations</summary><ul>
         <li>LFW uses min_faces_per_person=70 and resize=0.4. The source's unstratified 80/20 split uses random_state=42.</li>
         <li>Both PCA fits use training data only. The classifier sees training projections only. Test labels are used for evaluation, never fitting.</li>

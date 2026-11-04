@@ -314,3 +314,7 @@
   .lab-details-drawer { padding-inline: 20px; }
 }
 
+
+/* Learning guides share Lab 1's reading drawer rather than a full-width grid. */
+.lab-canvas-reading article { margin-block: 28px; }
+.lab-details-drawer-content .lab-guide-settings { margin-block: 28px; }

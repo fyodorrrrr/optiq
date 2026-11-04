@@ -27,6 +27,6 @@ export default function LearningCanvas({ id, ref, title, visual, children, detai
         </button>
       </figcaption>
     </figure>
-    <DetailsDrawer id={panelId} title={title}>{details}</DetailsDrawer>
+    <DetailsDrawer id={panelId} title={`How it works: ${title}`}>{details}</DetailsDrawer>
   </section>
 }

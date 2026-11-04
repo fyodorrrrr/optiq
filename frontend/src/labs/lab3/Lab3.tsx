@@ -1,3 +1,5 @@
+import LearningFigure from './LearningFigure'
+import { learningConcepts } from './learningContent'
 import DownloadLink from '../../components/lab/DownloadLink'
 import ContrastRunDetails from './ContrastRunDetails'
 import { useRef, useState } from 'react'
@@ -20,7 +22,7 @@ import './Lab3.css'
 export default function Lab3() {
   const lab = useContrastExperiment()
   const [section, setSection] = useState<Section>('compare')
-  const guide = useRef<HTMLDetailsElement>(null)
+  const guide = useRef<HTMLElement>(null)
   const content = sections[section]
   const views = lab.result ? [lab.result.original, lab.result.equalized, lab.result.clahe, lab.result.linear] : []
   const maxCount = Math.max(0, ...views.flatMap(view => view.histogram))
@@ -35,7 +37,7 @@ export default function Lab3() {
 
   return <LabPage labNumber={3} title="Bring the details into view."
     description="Lab 3 — Histograms & contrast. Compare global equalization, CLAHE, and linear adjustment."
-    guideId="contrast-guide" onOpenGuide={() => { if (guide.current) guide.current.open = true }} wide
+    guideId="contrast-guide" onOpenGuide={() => guide.current?.focus({ preventScroll: true })} wide
     actions={<SourceActions busy={lab.busy} onSample={lab.sample} onUpload={lab.upload} samples={[
       { value: 'low-contrast', label: 'Low contrast', description: 'Expand a narrow range of brightness values.' },
       { value: 'uneven', label: 'Uneven lighting', description: 'Compare local enhancement and noise; seed 42.' },
@@ -46,7 +48,7 @@ export default function Lab3() {
           id: key, label: sections[key].title,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[key].icon} /></svg>,
         }))} />}
-        controls={<><h2>{content.title === 'Compare' ? 'Compare contrast' : content.title}</h2><ContrastControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} onOpenHelp={() => { if (guide.current) guide.current.open = true }} /></>}>
+        controls={<><h2>{content.title === 'Compare' ? 'Compare contrast' : content.title}</h2><ContrastControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} onOpenHelp={() => guide.current?.querySelector<HTMLButtonElement>('.learning-canvas-link')?.click()} /></>}>
         <div className="lab-image-grid" data-columns={3}>
           <ContrastPanel title="Original" view={lab.result?.original ?? null} original={lab.source?.frame} pending={lab.busy} maxCount={maxCount} channel={channel}
             description={lab.result ? `Working original · ${channel}` : 'Input preview · run to apply the selected mode'} />
@@ -91,15 +93,15 @@ export default function Lab3() {
           {lab.result && <ContrastRunDetails result={lab.result} />}
         </div>
       </LabWorkspace>
-      <LabGuide id="contrast-guide" ref={guide} settingsHelp={<>
+      <LabGuide id="contrast-guide" ref={guide} key={section} title={content.heading} concept={learningConcepts[section]} visual={<LearningFigure section={section} />} settingsHelp={<>
         <p>Choose settings, then run the comparison. All methods use the same original, and all histograms share one count scale.</p>
         <p>CLAHE limits local contrast amplification; larger clip limits can reveal more noise. Tiles divide the image into regions for local enhancement.</p>
         <p>For manual adjustment, a scale of 1 keeps the brightness scale. Larger values increase its spread before clipping. The offset adds brightness; negative values darken. Values are clipped to 0–255.</p>
        </>}>
-        <div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p>
+        <div className="lab-canvas-reading"><article><h3>{content.heading}</h3><p>{content.explanation}</p>
           </article>
-          <article><h2>Try thinking about this</h2><p>{content.reflection}</p></article></div>
-        <details className="lab-guide-code"><summary>See the Python operations</summary><pre><code>{pythonExample}</code></pre></details>
+          <article><h3>Try thinking about this</h3><p>{content.reflection}</p></article></div>
+        <section><h3>Connect it to Python</h3><pre tabIndex={0} aria-label="Python implementation"><code>{pythonExample}</code></pre></section>
         <details className="lab-preprocessing"><summary>Input handling & reproducibility</summary>
           <div className="lab-reference-grid">
             <section aria-labelledby="contrast-processing-notes"><h3 id="contrast-processing-notes">Processing</h3><ul>

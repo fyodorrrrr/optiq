@@ -21,10 +21,10 @@ Use a guided playground within each laboratory module. Techniques belong inside 
 
 The learning pattern is **predict → experiment → compare → explain**. Provide short contextual explanations and useful starting inputs; students can explore without compulsory lesson completion. Predictions and reflections do not require scoring or answer storage in the initial release.
 
-Lab 1 includes a static, annotated Learning Canvas for the selected concept,
-with deeper explanations and Python in a **How it works** drawer. Its visuals
-are explicitly illustrative. Labs 2–7 provide optional learning guides and
-Python examples; Learning Canvas has not been rolled out to those labs.
+All seven labs include a static, annotated Learning Canvas for the selected
+concept, with deeper explanations and Python in a **How it works** drawer.
+Its visuals are explicitly illustrative and independent of experiment results.
+Labs 2–7 also retain settings help and reproducibility notes in that drawer.
 
 Dedicated Learn, Code, and Practice sections may follow later. The initial educational value comes from understandable controls, visible consequences, and comparisons using actual computation.
 

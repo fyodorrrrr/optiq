@@ -1,3 +1,5 @@
+import LearningFigure from './LearningFigure'
+import { learningConcepts } from './learningContent'
 import DownloadLink from '../../components/lab/DownloadLink'
 import { useRef, useState } from 'react'
 import { pythonExample, sections } from './content'
@@ -17,12 +19,12 @@ import './Lab2.css'
 export default function Lab2() {
   const lab = useEdgeExperiment()
   const [section, setSection] = useState<Section>('compare')
-  const guide = useRef<HTMLDetailsElement>(null)
+  const guide = useRef<HTMLElement>(null)
   const content = sections[section]
 
   return <LabPage labNumber={2} title="Find where the image changes."
     description="Lab 2 — Edge detection. Compare Sobel and Canny on the same image."
-    guideId="edge-guide" onOpenGuide={() => { if (guide.current) guide.current.open = true }} wide
+    guideId="edge-guide" onOpenGuide={() => guide.current?.focus({ preventScroll: true })} wide
     actions={<SourceActions busy={lab.busy} onSample={lab.sample} onUpload={lab.upload} samples={[
       { value: 'shapes', label: 'Shapes sample', description: 'Compare crisp boundaries with different contrast.' },
       { value: 'noisy', label: 'Noisy sample', description: 'Investigate noise, smoothing, and thresholds.' },
@@ -33,7 +35,7 @@ export default function Lab2() {
             icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[key].icon} /></svg>,
           }))} />}
         controls={<><h2>{content.title === 'Compare' ? 'Compare edges' : content.title}</h2>
-          <EdgeControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} onOpenHelp={() => { if (guide.current) guide.current.open = true }} /></>}>
+          <EdgeControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} onOpenHelp={() => guide.current?.querySelector<HTMLButtonElement>('.learning-canvas-link')?.click()} /></>}>
           <div className="lab-image-grid" data-columns={3}>
             <EdgeFigure title="Original (grayscale)" frame={lab.source?.frame ?? null} description="Input before Gaussian smoothing" pending={lab.busy} />
                         <EdgeFigure title="Sobel combined" frame={lab.result?.sobel ?? null} description="Brighter pixels show stronger changes · scaled for display" pending={lab.busy} />
@@ -61,15 +63,15 @@ export default function Lab2() {
             <details className="edge-run"><summary>Run settings & measurements</summary>            <p className="edge-scaling">Sobel is scaled to 0–255 for display; raw magnitude max: {Number(lab.result.statistics.sobel_max.toFixed(2))}. Canny edge pixels: {lab.result.statistics.canny_edge_pixels.toLocaleString()} ({lab.result.statistics.canny_edge_percent}%).</p><p>Edge-pixel percentage measures output density, not accuracy.</p><pre>{JSON.stringify({ engine: lab.result.engine, parameters: lab.result.parameters, statistics: lab.result.statistics, display_scaling: lab.result.display_scaling, canny_aperture: 3, canny_L2gradient: false }, null, 2)}</pre></details>
           </>}
       </LabWorkspace>
-      <LabGuide id="edge-guide" ref={guide} settingsHelp={<>
+      <LabGuide id="edge-guide" ref={guide} key={section} title={content.heading} concept={learningConcepts[section]} visual={<LearningFigure section={section} />} settingsHelp={<>
         <p>Choose settings, then run both detectors. They always use the same input and Gaussian blur.</p>
         <p>Larger Gaussian kernels smooth more noise and fine detail. The Sobel kernel sets the neighborhood used to measure brightness changes.</p>
         <p>Higher Canny thresholds generally retain fewer weak edges. The lower threshold must be smaller than the upper threshold.</p>
        </>}>
-        <div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p>
+        <div className="lab-canvas-reading"><article><h3>{content.heading}</h3><p>{content.explanation}</p>
           </article>
-          <article><h2>Try thinking about this</h2><p>{content.reflection}</p></article></div>
-        <details className="lab-guide-code"><summary>See the Python operations</summary><pre><code>{pythonExample}</code></pre></details>
+          <article><h3>Try thinking about this</h3><p>{content.reflection}</p></article></div>
+        <section><h3>Connect it to Python</h3><pre tabIndex={0} aria-label="Python implementation"><code>{pythonExample}</code></pre></section>
       <details className="lab-preprocessing"><summary>Input handling & reproducibility</summary><ul>
           <li>The activity's input.jpg was not supplied. The generated samples are explicit replacements; upload the assigned image when available.</li>
           <li>The noisy sample uses Gaussian noise with seed 42 and standard deviation 18.</li>

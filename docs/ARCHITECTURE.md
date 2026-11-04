@@ -87,12 +87,16 @@ A Frame contains a PNG data URL, width, height, channels, shape, dtype, color sp
 - `LabButton.tsx`, `Fields.tsx`, and `LabFeedback.tsx`: controls and feedback states.
 - `SourceActions.tsx` and `SamplePicker.tsx`: upload control and configurable dropdown with dismissal and focus restoration.
 - `ImagePanel.tsx`: fit-to-panel viewer, optional pixel/crop overlays, metadata, and metadata help. Lab 1 retains a compatibility re-export; Lab 2's EdgeFigure adapter supplies edge-specific captions.
-- `LabGuide.tsx`: optional learning disclosure. `LabUI.css` owns common visual rules.
+- `LabGuide.tsx`: Learning Canvas adapter for Labs 2–7, retaining settings help,
+  Python examples, and reproducibility notes in the shared reading drawer. `LabUI.css` owns common visual rules.
 - `LearningCanvas.tsx`: annotated figure/caption with an optional nonmodal
-  “How it works” reading panel. Lab 1 uses it below the experiment; its six
-  static diagrams and concise captions live in `labs/lab1/LearningFigure.tsx`
-  and `learningContent.ts`. Examples are explicitly illustrative, independent
-  of uploaded images and API results. Other labs retain `LabGuide`.
+  “How it works” reading panel below each lab experiment. Static diagrams and
+  concise captions live in each lab’s `LearningFigure.tsx` and
+  `learningContent.ts`; Labs 2–7 reuse small SVG primitives from
+  `ConceptDiagram.tsx`. Examples are explicitly illustrative, independent of
+  uploaded images and API results. Selecting another tool/method updates the
+  canvas and closes its previous reading panel. Settings help opens the same
+  reading drawer; header navigation focuses the visible canvas.
   The reading action sits with the caption. `DetailsDrawer.tsx` supplies the
   shared nonmodal popover for learning content, image details/upload limits,
   and run details. Only one drawer opens at a time; none changes workspace

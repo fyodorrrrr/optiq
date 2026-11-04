@@ -1,3 +1,5 @@
+import LearningFigure from './LearningFigure'
+import { learningConcepts } from './learningContent'
 import DownloadLink from '../../components/lab/DownloadLink'
 import SettingsHelpLink from '../../components/lab/SettingsHelpLink'
 import { useRef, useState } from 'react'
@@ -22,7 +24,7 @@ export default function Lab4() {
   const lab = useFeatureExperiment()
   const [section, setSection] = useState<Section>('compare')
   const [algorithm, setAlgorithm] = useState<Algorithm>('surf')
-  const guide = useRef<HTMLDetailsElement>(null)
+  const guide = useRef<HTMLElement>(null)
   const content = sections[section]
   const selected = lab.result?.algorithms.find(item => item.algorithm === algorithm)
   const surf = lab.capabilities?.algorithms.find(item => item.id === 'surf')
@@ -32,7 +34,7 @@ export default function Lab4() {
   }
   return <LabPage labNumber={4} title="Find what stays recognizable."
     description="Lab 4 — Features & matching. Compare SURF, SIFT, and ORB on the same image pair."
-    guideId="features-guide" onOpenGuide={() => { if (guide.current) guide.current.open = true }} wide
+    guideId="features-guide" onOpenGuide={() => guide.current?.focus({ preventScroll: true })} wide
     actions={<><ImageUploadButton busy={lab.busy} label="Upload image A" onUpload={file => lab.upload('first', file)} />
       <ImageUploadButton busy={lab.busy} label="Upload image B" onUpload={file => lab.upload('second', file)} />
       <SamplePicker disabled={lab.busy} onSelect={lab.sample} options={[
@@ -56,7 +58,7 @@ export default function Lab4() {
           <div className="feature-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || !lab.sources.first || !lab.sources.second}>{lab.busy ? 'Processing…' : 'Compare features'}</LabButton>
           </div></fieldset>
           <LabButton type="button" disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>
-          <SettingsHelpLink guideId="features-guide" onOpen={() => { if (guide.current) guide.current.open = true }} />
+          <SettingsHelpLink guideId="features-guide" onOpen={() => guide.current?.querySelector<HTMLButtonElement>('.learning-canvas-link')?.click()} />
         </form></>}>
       {surf && !surf.available && <LabError title="SURF is unavailable on this server." message={surf.reason ?? 'A SURF-enabled OpenCV build is required. This laboratory is partially available.'} />}
       <div className="lab-image-grid"><ImagePanel title="Image A" frame={lab.sources.first?.frame ?? null} description={lab.sources.first?.name} />
@@ -90,13 +92,13 @@ export default function Lab4() {
         <details className="lab-preprocessing"><summary>Run settings & measurements</summary><pre>{JSON.stringify({ engine: lab.result.engine, parameters: lab.result.parameters, algorithms: lab.result.algorithms.map(({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms }) => ({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms })) }, null, 2)}</pre></details>
       </>}
     </LabWorkspace>
-    <LabGuide id="features-guide" ref={guide} settingsHelp={<>
+    <LabGuide id="features-guide" ref={guide} key={section} title={content.heading} concept={learningConcepts[section]} visual={<LearningFigure section={section} />} settingsHelp={<>
             <p>Choose settings, then compare the same image pair across all available methods.</p>
             <p>Higher SURF Hessian thresholds usually detect fewer keypoints. Upright mode disables SURF orientation invariance.</p>
             <p>Higher match ratios accept more candidate matches; they do not prove accuracy. Maximum displayed matches limits drawn lines, not the number of accepted matches.</p>
-           </>}><div className="lab-learning"><article><h2>{content.heading}</h2><p>{content.explanation}</p></article>
-      <article><h2>Try thinking about this</h2><p>{content.reflection}</p></article></div>
-      <details className="lab-guide-code"><summary>See the Python operations</summary><pre><code>{pythonExample}</code></pre></details>
+           </>}><div className="lab-canvas-reading"><article><h3>{content.heading}</h3><p>{content.explanation}</p></article>
+      <article><h3>Try thinking about this</h3><p>{content.reflection}</p></article></div>
+      <section><h3>Connect it to Python</h3><pre tabIndex={0} aria-label="Python implementation"><code>{pythonExample}</code></pre></section>
       <details className="lab-preprocessing"><summary>Input handling & reproducibility</summary><ul>
         <li>Both inputs are converted to grayscale. Transparency is composited onto white; EXIF orientation is not applied.</li>
         <li>Features are capped at the strongest responses before describing them. A higher ratio threshold accepts more candidates; the display limit only reduces drawn lines.</li>
