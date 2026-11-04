@@ -93,7 +93,7 @@ A Frame contains a PNG data URL, width, height, channels, shape, dtype, color sp
   optional raw JSON; specialized Lab 1 and Lab 3 run summaries are retained.
 - `LabButton.tsx`, `Fields.tsx`, and `LabFeedback.tsx`: controls and feedback states.
 - `SourceActions.tsx` and `SamplePicker.tsx`: upload control and configurable dropdown with dismissal and focus restoration.
-- `ImagePanel.tsx`: fit-to-panel viewer, optional pixel/crop overlays, metadata, and metadata help. Lab 1 retains a compatibility re-export; Lab 2's EdgeFigure adapter supplies edge-specific captions.
+- `ImagePanel.tsx`: fit-to-panel viewer, optional pixel/crop overlays, metadata, and metadata help. `ImageMetadata.tsx` renders semantic property tables with columns for available source/result images, one shared explanation, and optional changed-value highlighting. On narrow screens, each property stacks its image values within the row. Lab 4 and Lab 7 group input/output tables; Lab 3 retains uploaded-source and working-original metadata separately. Lab 1 collapses upload/handling notes and identifies retained previous results. Lab 1 retains a compatibility re-export; Lab 2's EdgeFigure adapter supplies edge-specific captions.
 - `LabGuide.tsx`: Learning Canvas adapter for Labs 2–7, retaining settings help,
   Python examples, and reproducibility notes in the shared reading drawer. `LabUI.css` owns common visual rules.
 - `LearningCanvas.tsx`: annotated figure/caption with an optional nonmodal

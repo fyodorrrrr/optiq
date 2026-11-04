@@ -40,7 +40,10 @@ export default function Lab6() {
         icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[id].icon} /></svg>,
       }))} />}
       details={[
-        lab.source && { id: 'image', title: 'Image details', content: <ImageMetadata frame={lab.source.frame} /> },
+        (lab.source || lab.result) && { id: 'image', title: 'Image details', content: <ImageMetadata highlightChanges images={[
+          ...(lab.source && !lab.resultCamera ? [{ label: 'Original', frame: lab.source.frame }] : []),
+          ...(lab.result ? [{ label: 'Result', frame: lab.result.output }] : []),
+        ]} /> },
         lab.result && { id: 'run', title: 'Run details', content: <RunMetadata value={{ parameters: lab.result.parameters, provenance: lab.result.provenance, stages_ms: lab.result.stages_ms }} /> }
       ]}
       controls={<><h2>{content.title}</h2>

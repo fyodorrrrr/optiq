@@ -1,5 +1,5 @@
 import RunMetadata from '../../components/lab/RunMetadata'
-import ImageMetadata from '../../components/lab/ImageMetadata'
+import ImageMetadata, { ImageMetadataHelp } from '../../components/lab/ImageMetadata'
 import LearningFigure from './LearningFigure'
 import { learningConcepts } from './learningContent'
 import DownloadLink from '../../components/lab/DownloadLink'
@@ -35,7 +35,12 @@ export default function Lab7() {
         icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[id].icon} /></svg>,
       }))} />}
       details={[
-        lab.source && { id: 'image', title: 'Image details', content: <ImageMetadata frame={lab.source.frame} /> },
+        lab.source && { id: 'image', title: 'Image details', content: <>
+          <ImageMetadata showHelp={false} images={[{ label: 'Original', frame: lab.source.frame }]} />
+          {result && <section><h3>Outputs</h3><ImageMetadata showHelp={false} caption="Output image properties"
+            images={result.views.map(view => ({ label: view.title, frame: view.frame }))} /></section>}
+          <ImageMetadataHelp />
+        </> },
         result && { id: 'run', title: 'Run details', content: <RunMetadata value={{ parameters: result.parameters, measurements: result.measurements, provenance: result.provenance, notes: result.notes }} /> }
       ]}
       controls={<><h2>{content.title}</h2><SegmentationControls lab={lab} /></>}>

@@ -45,12 +45,11 @@ export default function Lab1() {
         }))} />}
         details={[
           lab.source && { id: 'image', title: 'Image details', content: <>
-            <section><h3>Original image</h3><ImageMetadata frame={lab.source.frame} /></section>
-            {lab.output && <section><h3>Result image</h3><ImageMetadata frame={lab.output.result} /></section>}
-              <section><h3>Shape, channels & values</h3>
-              <p>Dimensions list width × height; array shape lists height, width, then channels for color images. OpenCV stores color channels in BGR order: blue, green, red. Grayscale has one channel. These images use uint8 whole-number values from 0 to 255.</p>
-              </section>
-              <section><h3>Upload limits & image handling</h3>
+            <ImageMetadata highlightChanges images={[
+              { label: 'Original', frame: lab.source.frame },
+              ...(lab.output ? [{ label: lab.resultIsPrevious || lab.busy ? 'Previous result' : 'Result', frame: lab.output.result }] : []),
+            ]} />
+              <details className="lab-metadata-handling"><summary>Upload limits & image handling</summary>
               <ul>
                 {lab.source?.frame.notes.map(note => <li key={note}>{note}</li>)}
                 <li>PNG/JPEG inputs: up to 5 MiB, 4096 pixels per side, and 4 million pixels total.</li>
@@ -59,7 +58,7 @@ export default function Lab1() {
                 <li>Operations use the original image. Rotation advances in 90° steps and applies the accumulated angle to the original, avoiding repeated encoding.</li>
                 <li>Result downloads are lossless PNGs. The displayed shape describes the OpenCV array, not the browser image buffer.</li>
               </ul>
-              </section>
+              </details>
           </> },
           lab.output && { id: 'run', title: 'Run details', content: <RunDetails output={lab.output} source={lab.source?.frame} previous={lab.resultIsPrevious || lab.busy} /> },
         ]}

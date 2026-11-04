@@ -1,5 +1,5 @@
 import InfoDetails from '../../components/lab/InfoDetails'
-import ImageMetadata from '../../components/lab/ImageMetadata'
+import ImageMetadata, { ImageMetadataHelp } from '../../components/lab/ImageMetadata'
 import RunMetadata from '../../components/lab/RunMetadata'
 import LearningFigure from './LearningFigure'
 import { learningConcepts } from './learningContent'
@@ -50,11 +50,18 @@ export default function Lab4() {
       }))} />}
       details={[
         (lab.sources.first || lab.sources.second) && { id: 'image', title: 'Image details', content: <>
-          {lab.sources.first && <section><h3>Image A</h3><ImageMetadata frame={lab.sources.first.frame} /></section>}
-          {lab.sources.second && <section><h3>Image B</h3><ImageMetadata frame={lab.sources.second.frame} /></section>}
-          {selected?.keypoints_first_image && <section><h3>Keypoints A</h3><ImageMetadata frame={selected.keypoints_first_image} /></section>}
-          {selected?.keypoints_second_image && <section><h3>Keypoints B</h3><ImageMetadata frame={selected.keypoints_second_image} /></section>}
-          {selected?.matches_image && <section><h3>Matches</h3><ImageMetadata frame={selected.matches_image} /></section>}
+          <section><h3>Inputs</h3><ImageMetadata showHelp={false} caption="Input image properties" images={[
+            ...(lab.sources.first ? [{ label: 'Image A', frame: lab.sources.first.frame }] : []),
+            ...(lab.sources.second ? [{ label: 'Image B', frame: lab.sources.second.frame }] : []),
+          ]} /></section>
+          {(selected?.keypoints_first_image || selected?.keypoints_second_image || selected?.matches_image) && <section><h3>Outputs</h3>
+            <ImageMetadata showHelp={false} caption="Output image properties" images={[
+              ...(selected.keypoints_first_image ? [{ label: 'Keypoints A', frame: selected.keypoints_first_image }] : []),
+              ...(selected.keypoints_second_image ? [{ label: 'Keypoints B', frame: selected.keypoints_second_image }] : []),
+              ...(selected.matches_image ? [{ label: 'Matches', frame: selected.matches_image }] : []),
+            ]} />
+          </section>}
+          <ImageMetadataHelp />
         </> },
         lab.result && { id: 'run', title: 'Run details', content: <RunMetadata value={{ engine: lab.result.engine, parameters: lab.result.parameters, algorithms: lab.result.algorithms.map(({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms }) => ({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms })) }} /> }
       ]}

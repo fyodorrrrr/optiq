@@ -52,7 +52,10 @@ export default function Lab3() {
         details={[
           lab.source && { id: 'image', title: 'Image details', content: <>
             {!lab.result && <p>The selected processing mode is applied when you run the comparison.</p>}
-            <ImageMetadata frame={lab.result?.original.frame ?? lab.source.frame} />
+            <ImageMetadata highlightChanges images={[
+              { label: 'Original', frame: lab.source.frame },
+              ...(lab.result ? [{ label: 'Working original', frame: lab.result.original.frame }] : []),
+            ]} />
           </> },
           lab.result && { id: 'run', title: 'Run details', content: <ContrastRunDetails result={lab.result} /> },
         ]}

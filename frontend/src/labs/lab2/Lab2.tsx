@@ -36,7 +36,10 @@ export default function Lab2() {
             icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[key].icon} /></svg>,
           }))} />}
         details={[
-          lab.source && { id: 'image', title: 'Image details', content: <ImageMetadata frame={lab.source.frame} /> },
+          lab.source && { id: 'image', title: 'Image details', content: <ImageMetadata highlightChanges images={[
+            { label: 'Original', frame: lab.source.frame },
+            ...(lab.result ? [{ label: 'Sobel', frame: lab.result.sobel }, { label: 'Canny', frame: lab.result.canny }] : []),
+          ]} /> },
           lab.result && { id: 'run', title: 'Run details', content: <RunMetadata value={{ engine: lab.result.engine, parameters: lab.result.parameters, statistics: lab.result.statistics, measurement_note: 'Edge-pixel percentage measures output density, not accuracy.', display_scaling: lab.result.display_scaling, canny_aperture: 3, canny_L2gradient: false }} /> }
         ]}
         controls={<><h2>{content.title === 'Compare' ? 'Compare edges' : content.title}</h2>
