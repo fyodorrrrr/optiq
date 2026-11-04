@@ -17,7 +17,7 @@ export default function Lab7() {
   const guide = useRef<HTMLDetailsElement>(null)
   const content = sections[lab.method]
   const result = lab.result
-  return <LabPage labNumber={7} title="Give each pixel a place." processingLabel="OpenCV/PyTorch segmentation"
+  return <LabPage labNumber={7} title="Give each pixel a place."
     description="Lab 7 — Segmentation. Compare brightness, connected regions, boundaries, and learned pixel classes."
     guideId="segmentation-guide" onOpenGuide={() => { if (guide.current) guide.current.open = true }} wide
     actions={<SourceActions busy={lab.busy} onUpload={lab.upload} onSample={lab.sample} samples={[

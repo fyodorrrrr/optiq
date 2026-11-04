@@ -27,7 +27,7 @@ export default function Lab6() {
   const content = sections[section]
   const available = lab.status?.models.find(item => item.id === lab.model)?.available ?? false
   const stale = lab.result && (lab.result.parameters.model !== lab.model || lab.result.parameters.confidence !== Number(lab.confidence))
-  return <LabPage labNumber={6} title="See objects, not just pixels." processingLabel="Python/YOLO11 processing"
+  return <LabPage labNumber={6} title="See objects, not just pixels."
     description="Lab 6 — Object detection. Locate objects, explore confidence, and review your custom training."
     guideId="detection-guide" onOpenGuide={() => { if (guide.current) guide.current.open = true }} wide
     actions={<><ImageUploadButton busy={lab.busy || cameraRunning} onUpload={lab.upload} /><LabButton disabled={lab.busy || cameraRunning || !lab.status?.sample_available} onClick={() => void lab.sample()}>Try bus sample</LabButton></>}>

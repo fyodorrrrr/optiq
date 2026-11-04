@@ -29,7 +29,7 @@ export default function Lab5() {
   const content = sections[section]
   const result = lab.result
   const stale = result && result.parameters.components !== Number(lab.components)
-  return <LabPage labNumber={5} processingLabel="Python/scikit-learn processing" title="Find the patterns behind a face."
+  return <LabPage labNumber={5} title="Find the patterns behind a face."
     description="Lab 5 — PCA & eigenfaces. Reduce dimensions, inspect variation, and test recognition on held-out faces."
     inputNote="Dataset experiment · LFW faces · no personal uploads required. Each run fits a new PCA and SVM."
     guideId="pca-guide" onOpenGuide={() => { if (guide.current) guide.current.open = true }} wide

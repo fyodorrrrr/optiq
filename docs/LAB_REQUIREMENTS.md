@@ -167,9 +167,20 @@ For completion, verify source requirements, representative outputs, meaningful n
 
 **Completion checks:** boxes align with input dimensions; class/confidence outputs come from real inference; camera denial is handled; custom data and evaluation provenance are reviewable; pretrained inference alone is marked partial.
 
-**Dependencies/open items:** body provisionally targets YOLOv11 despite the filename. Verify supported weight names and API against primary documentation before coding; do not copy `YOLOv11n.pt` unverified. Select runtime/device and safe media limits. Source says test-set validation but provides train/val paths only: document actual evaluation split and obtain a test split if required.
+**Implemented interpretation and remaining work:** the body specifies YOLO11
+despite the filename. Implementation uses the official `yolo11n.pt` checkpoint,
+CPU inference, browser camera capture, bounded uploads, and explicit local
+training. See [LAB6_SETUP.md](LAB6_SETUP.md) for setup and limits. Preserve the
+source discrepancy. Actual custom-dataset training remains pending. The source
+says test-set validation but provides train/val paths only: record the actual
+evaluation split and obtain a separate test split before claiming test results.
 
-**Approved scope decision (2026-11-03):** custom training is required by the lab, while general-purpose training infrastructure is outside the initial product scope. Proposed resolution: train through a reproducible local/offline workflow and integrate real artifacts plus custom inference into the UI. The user approved local training and Web UI artifact review; no custom dataset has been supplied. The training requirement remains incomplete until an actual custom dataset is trained and evaluated.
+**Approved scope decision (2026-11-03):** custom training is required by the lab,
+while general-purpose training infrastructure is outside the initial product
+scope. The approved local/offline training workflow and UI artifact/custom
+inference integration are implemented. No custom dataset has been supplied.
+The training requirement remains incomplete until an actual custom dataset is
+trained and evaluated.
 
 ## Lab 7 — Segmentation Techniques
 
@@ -190,19 +201,26 @@ For completion, verify source requirements, representative outputs, meaningful n
 
 **Completion checks:** every required method executes; seed coordinates map correctly; region growth terminates; watershed labels and semantic class maps are valid; overlays preserve alignment. IoU requires matching class IDs, dimensions, and documented ignored-label handling; do not equate unlabeled regions with semantic classes.
 
-**Dependencies/open items:** OpenCV/NumPy plus selected segmentation libraries and pretrained weights. Select the semantic architecture, dataset/class mapping, preprocessing, runtime, and sample assets before implementation. Semantic model training is optional in the source.
+**Implemented choices and remaining work:** classical methods use OpenCV/NumPy.
+Semantic segmentation uses pretrained DeepLabV3 MobileNetV3 Large with
+`COCO_WITH_VOC_LABELS_V1` weights, 21 VOC IDs including background, and CPU
+inference. Inputs use documented RGB normalization and a longest-side resize
+to 520 pixels. Generated geometry and the explicitly prepared bus photo supply
+sample inputs. See [LAB7_SETUP.md](LAB7_SETUP.md) for dependencies, model setup,
+label exports, and limits. Compatible ground truth is still required before
+computing IoU; semantic model training is optional in the source.
 
-## Decisions and Assets to Resolve Before Implementation
+## Implemented Decisions and Remaining Work
 
-| Item | Required next action |
+| Item | Current decision and remaining work |
 | --- | --- |
-| Lab numbering and YOLO mismatch | Confirm filename-based module order and intended detector version |
-| SURF capability | Local custom build verified; standard wheels explicitly expose partial capability; see `SURF_SETUP.md` |
-| Training delivery | Agree how PCA fitting and custom YOLO training are executed and demonstrated |
-| Sample inputs | Inventory embedded document media and choose documented, appropriately licensed standalone samples; the folder currently contains DOCX files only |
-| Datasets/models | Record sources, versions, class mappings, download/cache process, and permissions; avoid committing large generated assets by default |
-| Media and compute limits | Specify accepted formats, dimensions, sizes, durations, device assumptions, and timeouts in the architecture |
-| Web presentation | Decide charts, comparison layout, execution states, and specialized controls in the UX specification |
+| Lab numbering and YOLO mismatch | Implementation uses filename-based lab order and the Lab 6 body's YOLO11 choice. Preserve the original numbering/version discrepancies in the source register. |
+| SURF capability | Local custom build verified; standard wheels explicitly expose partial capability. Verify builds on each deployment target; see `SURF_SETUP.md`. |
+| Training delivery | Lab 5 fits fresh PCA/SVM models in a bounded request. Lab 6 trains through trusted local scripts and reviews artifacts in the UI. Supply/review the custom dataset and complete actual YOLO training/evaluation. |
+| Sample inputs | Generated samples serve the classical image labs; Lab 5 uses LFW; detection and semantic segmentation use the explicitly prepared bus photo. Lab 2's assigned `input.jpg` remains unavailable; its generated replacements are labeled. See setup guides for asset sources. |
+| Datasets/models | LFW, YOLO11n, and DeepLab weights, versions/class mappings, preparation scripts, and provenance are documented in the setup guides. Keep caches, personal datasets, and generated weights out of Git. |
+| Media and compute limits | Local formats, dimensions, pixel limits, timeouts, and process-level guards are implemented and documented in `ARCHITECTURE.md` and setup guides. Validate production capacity, concurrency, and target hardware separately. |
+| Web presentation | Shared workspaces, lab-specific comparisons, controls, charts, and result/error states are implemented. Lab 1 has Learning Canvas and details drawers; other labs retain optional learning guides. Further UI improvements do not imply these workflows are unimplemented. |
 
 ## Completion Tracking
 
@@ -211,6 +229,8 @@ For completion, verify source requirements, representative outputs, meaningful n
 | Lab 1 | Implemented and locally verified | `backend/tests/test_lab1.py`: exact pixel values, BGR/RGB order, grayscale shape, single-pixel edits, crop, resize, rotation, upload handling, and validation. Browser checks exercised actual API requests, samples/uploads, zoom, all six tools, navigation, error/retry, stale request cancellation, and responsive layouts. |
 | Lab 2 | Implemented and locally verified | `backend/tests/test_lab2.py`: baseline preprocessing/Canny equality, directional Sobel response, scaled magnitude, zero-edge uniform input, color/tiny input, deterministic noise, parameter effects, and invalid files/settings. Browser checks exercised real comparison requests, all settings sections, uploads, downloads links, intermediate views, reset, errors/retry, cancellation, keyboard operation, and layouts from 320px to 1440px. |
 | Lab 3 | Implemented and locally verified | `backend/tests/test_lab3.py`: histogram counts, exact equalization/CLAHE output, linear clipping/stretching, constant/color inputs, final brightness-channel measurements, deterministic samples, and validation. Browser checks covered real methods/parameters, four histogram charts with common scales, color/grayscale switching, PNG/CSV downloads, uploads, reset, errors/retry, cancellation, and 320–1440px layouts. |
+| Lab 4 | Implemented and locally verified with SURF setup | `backend/tests/test_lab4.py` and recorded local browser checks cover SURF/SIFT/ORB features, matches, unavailable capabilities, and validation. See the Lab 4 evidence below and `SURF_SETUP.md`; standard wheels do not provide full SURF functionality. |
+| Lab 5 | Implemented and locally verified with dataset setup | `backend/tests/test_lab5.py` and recorded local browser checks cover training-only PCA/SVM, variance, predictions/failures, provenance, missing data, concurrency, and recovery. See the Lab 5 evidence below and `LAB5_SETUP.md`. |
 | Lab 6 | Partial | Pretrained inference and local training workflow implemented; actual custom dataset/training pending. |
 | Lab 7 | Implemented | Classical and pretrained semantic segmentation; IoU unavailable without ground truth. |
 
@@ -220,7 +240,11 @@ Lab 2 code: `frontend/src/labs/lab2/`, `backend/routers/lab2.py`, `backend/schem
 
 Lab 3 code: `frontend/src/labs/lab3/`, `backend/routers/lab3.py`, `backend/schemas/lab3.py`, and `backend/services/lab3.py`; charts use `frontend/src/components/lab/Histogram.tsx`. All source-required Lab 3 methods and outputs are implemented. Color mode requires a color input; grayscale inputs retain grayscale mode. Local tests do not establish production hosting performance or measured learning effectiveness.
 
-For subsequent modules, track required items as pending, implemented, verified, or blocked with code locations and evidence. Proposed extensions must not obscure incomplete source requirements. Preserve the reasons for approved interpretation changes.
+Maintain this table as required items move between pending, implemented,
+verified, or blocked states. The local verification entries summarize recorded
+checks, not a guarantee that optional dependencies/artifacts are installed in
+every checkout. Proposed extensions must not obscure incomplete source
+requirements. Preserve the reasons for approved interpretation changes.
 
 ### Lab 4 implementation evidence
 

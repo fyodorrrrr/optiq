@@ -1,5 +1,7 @@
 import LabMap from './components/LabMap'
 import HeroPixel from './components/HeroPixel'
+import LearningCards from './components/LearningCards'
+import Wordmark from './components/Wordmark'
 import { useEffect } from 'react'
 import { Link, Route, Routes, useLocation } from 'react-router'
 import Lab1 from './labs/lab1/Lab1'
@@ -14,10 +16,9 @@ import './App.css'
 function Home() {
   return <>
     <a className="skip-link" href="#main">Skip to content</a>
-    <header className="site-header">
-      <a className="brand" href="#home" aria-label="Optiq home">optiq<span>.</span></a>
+    <header className="site-header home-header">
+      <a className="brand" href="#home" aria-label="Optiq home"><Wordmark /></a>
       <nav aria-label="Main navigation">
-        <a href="#labs">Explore labs</a>
         <a href="https://github.com/fyodorrrrr/optiq" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
       </nav>
     </header>
@@ -34,8 +35,8 @@ function Home() {
             </div>
           </div>
         </div>
-        <a className="scroll-cue" href="#labs">Your next experiment is below <span aria-hidden="true">↓</span></a>
       </section>
+      <LearningCards />
       <LabMap />
       <footer className="site-footer">
         <div><p>Optiq — computer vision, through experimentation.</p></div>

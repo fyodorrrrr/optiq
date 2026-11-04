@@ -1,0 +1,115 @@
+{
+  "1": {
+    "source": "Optiq generated color sample",
+    "operation": "grayscale",
+    "engine": "OpenCV 5.0.0"
+  },
+  "2": {
+    "source": "Optiq shapes sample",
+    "operation": "Canny",
+    "settings": {
+      "blur_kernel": 3,
+      "sobel_kernel": 3,
+      "low_threshold": 100,
+      "high_threshold": 200
+    },
+    "engine": "OpenCV 5.0.0"
+  },
+  "3": {
+    "source": "Optiq low-contrast sample",
+    "operation": "Global histogram equalization",
+    "histogram": "256 bins, shared maximum count scale",
+    "settings": {
+      "mode": "grayscale",
+      "clip_limit": 2.0,
+      "tiles_x": 8,
+      "tiles_y": 8,
+      "linear_method": "adjust",
+      "alpha": 1.2,
+      "beta": 0
+    },
+    "engine": "OpenCV 5.0.0"
+  },
+  "4": {
+    "source": [
+      "Optiq-generated feature target, seed 42; second image: 25\u00b0 rotation, scale 0.9, linear resampling.",
+      "No external sample asset; geometry is known for exploration, but matches are not automatically scored against it."
+    ],
+    "operation": "SIFT candidate matches",
+    "settings": {
+      "hessian_threshold": 400.0,
+      "upright": false,
+      "ratio_threshold": 0.75,
+      "max_features": 120,
+      "max_matches": 20
+    },
+    "verified_accuracy": false
+  },
+  "5": {
+    "source": "LFW prepared local dataset",
+    "operation": "First six training-only PCA eigenfaces",
+    "settings": {
+      "components": 150
+    },
+    "provenance": {
+      "dataset": "LFW people",
+      "min_faces_per_person": 70,
+      "resize": 0.4,
+      "split_seed": 42,
+      "test_size": 0.2,
+      "stratified": false,
+      "pca_seed": 42,
+      "solver": "randomized",
+      "whiten": true,
+      "svm_kernel": "rbf",
+      "svm_class_weight": "balanced",
+      "svm_C": 1.0,
+      "svm_gamma": "scale",
+      "sklearn": "1.9.1",
+      "numpy": "2.5.4",
+      "dataset_sha256": "df8f221771152ce1b66ad2b78f7d54ebdb300fe33cc5e5ca9ac0f9ec5e203e32",
+      "execution": "fresh fit; dataset cache only"
+    }
+  },
+  "6": {
+    "source": "Ultralytics bus demonstration image",
+    "source_url": "https://raw.githubusercontent.com/ultralytics/ultralytics/main/ultralytics/assets/bus.jpg",
+    "operation": "Pretrained YOLO11n detections",
+    "settings": {
+      "model": "pretrained",
+      "confidence": 0.25
+    },
+    "provenance": {
+      "model": "yolo11n.pt",
+      "weight_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+      "device": "cpu",
+      "imgsz": 640,
+      "iou": 0.7,
+      "max_detections": 100,
+      "ultralytics": "8.3.253",
+      "torch": "2.15.0",
+      "opencv": "5.0.0"
+    },
+    "custom_training": "Not represented by this pretrained example"
+  },
+  "7": {
+    "source": "Optiq touching-object sample",
+    "operation": "Watershed regions",
+    "settings": {
+      "method": "region",
+      "invert": false,
+      "adaptive_block": 31,
+      "adaptive_c": 5,
+      "seed_x": 170,
+      "seed_y": 180,
+      "tolerance": 20,
+      "watershed_fraction": 0.7,
+      "canny_low": 60,
+      "canny_high": 150,
+      "closing_size": 3,
+      "min_area": 50,
+      "opacity": 0.5
+    },
+    "class_predictions": false
+  }
+}

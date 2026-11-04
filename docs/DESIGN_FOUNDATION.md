@@ -2,9 +2,12 @@
 
 ## Status and Scope
 
-This is the initial design foundation, not a finalized design system. It records the developer-supplied neutral palette and radius conventions and the selected learning-map treatment. Expand it as real mockups and implementation establish additional requirements.
+This records the current implemented palette, radius conventions, learning-map
+treatment, and lab UI conventions. It is not a finalized brand system. Earlier
+mockups informed these choices; current availability and component descriptions
+below reflect the working application.
 
-## Neutral Colors and Corner Radii
+## Implemented Colors and Corner Radii
 
 ```css
 :root {
@@ -15,6 +18,14 @@ This is the initial design foundation, not a finalized design system. It records
   --line: #e5e5e2;
   --line-strong: #d4d4d0;
   --surface-muted: #e4e4e0;
+  --accent: #365c49;
+  --accent-deep: #254333;
+  --accent-soft: #e7eee7;
+  --control-border: #8b948a;
+  --error-border: #b75d4c;
+  --error-surface: #fff5f1;
+  --error-ink: #823a2b;
+  --focus: #90541a;
 
   --radius-sm: 4px;
   --radius-control: 8px;
@@ -27,7 +38,11 @@ Use `paper` for the application background and `paper-deep` for panels and image
 
 Use 8px corners for standard controls, 12px for panels, and 4px for compact elements. Reserve pill corners for badges and tags that benefit from them. Specialized node geometry is a deliberate map treatment rather than a general component-radius convention.
 
-Keep these neutrals consistent unless testing justifies a change. Introduce dedicated interactive-border, focus, disabled, or semantic tokens when needed for accessibility; subtle neutral dividers alone may not provide sufficient control contrast.
+Keep these tokens consistent unless testing justifies a change. Forest green
+identifies primary actions and selected tools; pale sage supports softer
+highlights. Use the dedicated control-border, focus, and error tokens instead
+of relying on subtle neutral dividers for interactive states. The values above
+come from `frontend/src/index.css`.
 
 ## Surface Principles
 
@@ -47,20 +62,59 @@ Keep navigation, text, and laboratory workspaces flat. The node treatment is a f
 
 The homepage direction is a short introduction followed by a winding map of seven labeled labs. Use the map to suggest order without enforcing prerequisites: all implemented labs are directly accessible.
 
-Availability and learning progress are separate concepts. Lab 1 currently has a browser prototype and should be labeled **Preview**; Labs 2–7 are **Planned**. Do not use completion checkmarks or unlocked states as decoration. Completion criteria and progress tracking are undecided.
+Availability and learning progress are separate concepts. Labs 1–5 and 7 are
+labeled **Available**. Lab 6 is **Partial · custom training pending**, with
+pretrained detection and a local training workflow available. Use **Planned**
+only for an unimplemented module. These labels describe functionality, not a
+student's completion. There is no saved learning progress or completion gate;
+do not use completion checkmarks or unlocked states as decoration.
+
+## Laboratory Learning Content
+
+All labs share the page shell, workspace, controls, viewers, and applicable
+input patterns in `frontend/src/components/lab/`. Lab 1 shows a static annotated
+Learning Canvas beneath the experiment; short explanations sit beside the
+visual on larger screens and below it on small screens. Examples are labeled
+illustrative. Its **How it works**, **Image details**, and **Run details** actions
+use the shared side drawer. Other labs currently retain `LabGuide` disclosures.
+Keep specialized experiment state, algorithms, and teaching visuals per lab.
 
 ## Intentionally Open
 
-- Primary accent and supporting colors. Green in the comparison is provisional.
-- Typography, type scale, logo, and iconography.
-- Final node shape, geometry, path spacing, and mobile composition.
-- Spacing tokens, reusable component details, and semantic colors.
-- Motion timing and accessible interaction-state tokens.
+- Further brand/typography refinements beyond the implemented system font,
+  wordmark, pixel character, and SVG icons.
+- Future refinements to node geometry, map spacing, and responsive composition.
+- Additional spacing/motion tokens or reusable components when a real interface
+  need emerges; the current color, radius, and focus tokens already exist.
 
 The chosen node treatment is not approval of the entire comparison screen as the homepage, a final brand identity, or production implementation.
 
-## Reference and Next Step
+## Historical Reference and Current Homepage
 
-The local browser comparison is stored in `.superpowers/brainstorm/81780-1793602108/content/map-node-comparison.html`. This directory is ignored by Git; the durable decisions are recorded here.
+The original local comparison used
+`.superpowers/brainstorm/81780-1793602108/content/map-node-comparison.html`.
+That directory is ignored by Git and is not required in a fresh checkout;
+the durable decisions are recorded here.
 
-The homepage is now implemented with a viewport-height introduction followed by a two-column lab browser: a vertical winding seven-lab map on the left and selected-lab information on the right. The information panel stays visible while scrolling on wider screens and stacks below the map on smaller screens. Green and system typography carry forward the approved mockup for this implementation without settling the final brand identity. Continue validating readability, navigation, responsive behavior, and contrast as the application evolves. Product scope remains governed by [PRD.md](PRD.md).
+The homepage has a pixel character, introduction, and links to the labs,
+followed by three **How learning works** cards and a two-column lab browser.
+The shared wordmark replaces its initial “o” with the mascot's pixel-art body,
+top stem, and blue glass, exported from `frontend/src/assets/learning/logo.piskel`.
+The browser-tab favicon uses the same artwork on a transparent 32 × 32 canvas.
+Homepage sections use generous vertical whitespace
+instead of horizontal divider rules; laboratory dividers remain separate.
+Each learning card contains only a tagline, a short supporting sentence, and
+a static pixel-art illustration of the existing magnifying-glass mascot
+acting out the tagline. The cards describe starting with an input,
+experimenting/comparing, and connecting results to explanations/Python. They
+form three columns on larger screens and stack on smaller screens; text stays
+in HTML and illustrations are decorative. Source assets and generation prompts
+live in `frontend/src/assets/learning/`.
+
+The lab browser has a vertical winding seven-lab map on the
+left and selected-lab information on the right. The information panel stays
+visible while scrolling on wider screens and includes saved sample outputs from
+the lab algorithms. On smaller screens, a compact text preview opens immediately
+below the selected node, pushing later nodes down and adjusting the connecting path. Continue validating readability, navigation, responsive behavior, and
+contrast as the application evolves. Product scope remains governed by
+[PRD.md](PRD.md).

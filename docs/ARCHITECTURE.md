@@ -2,7 +2,13 @@
 
 ## Current Boundaries
 
-React/TypeScript renders the homepage and Labs 1–5 at `/labs/1`, `/labs/2`, `/labs/3`, `/labs/4`, and `/labs/5`; React Router handles navigation. Lab 6 is at `/labs/6` with pretrained detection and pending custom training. FastAPI provides `/api/health` and per-lab endpoints. Vite proxies `/api` to port 8000 in development. Production hosting is undecided and must support API forwarding and SPA route fallback.
+React/TypeScript renders the homepage and all seven lab routes, `/labs/1`
+through `/labs/7`; React Router handles navigation. Labs 1–5 and 7 are
+implemented. Lab 6 provides pretrained detection and local training/artifact
+review, with actual custom-dataset training pending. FastAPI provides
+`/api/health` and per-lab endpoints. Vite proxies `/api` to port 8000 in
+development. Production hosting is undecided and must support API forwarding
+and SPA route fallback.
 
 ## Lab 1 Request Flow
 
@@ -14,11 +20,18 @@ React/TypeScript renders the homepage and Labs 1–5 at `/labs/1`, `/labs/2`, `/
 6. `backend/services/lab1.py` runs the selected operation on a copy and returns the image, parameters, OpenCV version, and pixel comparisons where applicable.
 7. React displays the returned PNG and metadata. Abort controllers prevent responses from superseded inputs or operations from replacing current state. Downloads use the returned PNG directly.
 
-Stateless requests trade repeated upload/decoding work for a simpler lifecycle. This is suitable for bounded Lab 1 images; expensive model workflows will need their own design.
+Stateless requests trade repeated upload/decoding work for a simpler lifecycle.
+This suits bounded image experiments. The implemented PCA fitting, detection,
+segmentation, and local YOLO training workflows have their own processing and
+concurrency rules, described below.
 
 ## Lab 2 Separation and Processing
 
-Lab-specific state, API clients, settings, algorithms, and learning content stay under their own modules. Both labs consume the common UI below. `frontend/src/api/images.ts` provides common image transport/types for Lab 2 and future modules; Lab 1 retains its existing API client and per-tool state behavior.
+Lab-specific state, API clients, settings, algorithms, and learning content
+stay under their own modules. Labs 1 and 2 established the common UI now used
+across all seven labs. `frontend/src/api/images.ts` provides common image
+transport/types used by later image-based modules; Lab 1 retains its own API
+client and per-tool state behavior.
 
 Both backend routers share the image schema in `schemas/images.py`, upload/thread-pool helpers in `routers/image_io.py`, and validation/encoding in `services/images.py`. `schemas/lab1.py` re-exports the common Frame contract for compatibility. Shared helpers preserve existing Lab 1 behavior.
 
@@ -54,6 +67,9 @@ A Frame contains a PNG data URL, width, height, channels, shape, dtype, color sp
 
 - Inputs: 8-bit grayscale/color PNG or JPEG, including supported palette/transparency normalization. Unsupported depth/layout is rejected.
 - File limit: 5 MiB; dimensions: at most 4096 per side and four million pixels. Resize outputs obey the same dimension/pixel bounds.
+- Labs 4 and 7 additionally cap each input at one million pixels. Lab 4 caps
+  its match canvas at two million pixels. Lab 5 uses a prepared dataset rather
+  than image uploads; Lab 6 camera frames have the separate limits below.
 - OpenCV color arrays are BGR; encoded PNGs display correctly as RGB in the browser. Grayscale arrays retain a two-dimensional shape and one channel.
 - Transparency is composited onto white. EXIF orientation is not applied; coordinates follow decoded array orientation. No automatic downscaling.
 - Coordinates are zero-based `(x, y)`; array indexing is `[y, x]`. Crop uses exclusive end bounds derived from left/top/width/height. Rotation accepts `quarter_turns` 0–3 (default 1); the client advances one clockwise step per successful run and applies the total angle to the original. Failed or superseded runs do not advance it. Clearing results or accepting a new image resets the angle.
@@ -65,6 +81,8 @@ A Frame contains a PNG data URL, width, height, channels, shape, dtype, color sp
 `frontend/src/components/lab/` is the canonical lab UI layer:
 
 - `LabPage.tsx`: page shell, navigation, introduction/actions, and footer.
+  Footer navigation links to the previous and next labs; Lab 1 has no previous
+  link, and Lab 7 returns to the catalogue instead of a next lab.
 - `LabWorkspace.tsx` and `ToolSidebar.tsx`: shared workspace, responsive ordering, and tools.
 - `LabButton.tsx`, `Fields.tsx`, and `LabFeedback.tsx`: controls and feedback states.
 - `SourceActions.tsx` and `SamplePicker.tsx`: upload control and configurable dropdown with dismissal and focus restoration.
@@ -83,7 +101,10 @@ A Frame contains a PNG data URL, width, height, channels, shape, dtype, color sp
   or coordinate-field selection, and resets when a new source is accepted.
 - `Histogram.tsx` and `Histogram.css`: 256-bin brightness charts with an explicitly shared count scale.
 
-Changes to these components affect both labs. Local styles cover only specialized results such as pixel zoom or edge information. Hooks and settings remain independent: sharing UI does not share experiment state or algorithms.
+Changes to shared components affect every lab that consumes them. Local styles
+cover specialized results such as pixel zoom, edge information, PCA galleries,
+and detection/segmentation outputs. Hooks and settings remain independent:
+sharing UI does not share experiment state or algorithms.
 
 On wider screens, tools occupy the left sidebar, image comparisons the center, and settings the right. Smaller layouts place settings before image comparisons; mobile tools wrap into two columns. Numerical controls provide keyboard alternatives to clicking pixels. Original-image overlays preview the selected pixel or valid crop region, using the same contained image coordinates as pointer selection.
 
@@ -93,9 +114,20 @@ Keep brief prediction prompts near controls. Put deeper theory, Python examples,
 
 ## Verification and Remaining Scope
 
-`backend/tests/test_lab1.py`, `test_lab2.py`, and `test_lab3.py` use standard-library unittest and FastAPI TestClient against real PNG/JPEG inputs and actual OpenCV outputs. Browser checks have exercised all tools and responsive behavior locally; no permanent frontend browser-test runner is configured.
+`backend/tests/test_lab1.py` through `test_lab7.py` use standard-library unittest
+and FastAPI TestClient to exercise the lab APIs and processing. Tests cover
+real image values and outputs where applicable, PCA fitting, model readiness,
+and processing/validation failures. Optional models, datasets, and SURF require
+their documented setup for corresponding execution checks. Recorded browser
+checks have exercised the implemented workflows and responsive behavior
+locally; no permanent frontend browser-test runner is configured.
 
-Labs 1–5 are implemented; production hosting and deployment resource limits have not been validated. Lab 6 custom data/training remains pending; the approved local training workflow and pretrained Lab 6 inference are implemented. See `LAB_REQUIREMENTS.md` for their obligations.
+Labs 1–5 and 7 are implemented; production hosting and deployment resource
+limits have not been validated. Lab 6 custom data/training remains pending;
+the approved local training workflow and pretrained Lab 6 inference are
+implemented. See `LAB_REQUIREMENTS.md` for their obligations. Dated files under
+`docs/superpowers/` and `docs/audits/` record plans/reviews at that time; current
+architecture and completion status are maintained here and in the requirements.
 
 ## Lab 4 feature comparison
 

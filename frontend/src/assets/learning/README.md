@@ -1,0 +1,39 @@
+# Learning-card artwork
+
+Open `optiq-learning-cards.piskel` in Piskel with **Import → Browse .piskel files**.
+It contains three static illustrations as frames, in homepage order:
+
+1. Start with an image.
+2. Change it. Compare it.
+3. See why it works.
+
+Each frame is **160 × 128 pixels**, transparent, with **Mascot**, **Props**, and
+blank **Touch-ups** layers. Individual `start.piskel`, `compare.piskel`, and
+`understand.piskel` projects are also provided for editing one card at a time.
+The current user-edited sources are `start-updated.piskel`,
+`compare-updated2.piskel`, and `understand-updated.piskel`. Their matching
+canonical projects (`start.piskel`, `compare.piskel`, `understand.piskel`), PNG
+previews, and combined project are synchronized. Earlier suffixed files remain
+available as previous drafts.
+The one-frame-per-second setting in the combined project is an editor preview;
+the homepage uses static PNGs.
+
+The starting scenes were generated with the built-in image generator using
+the existing `public/assets/glass-with-glass.png` mascot as a reference, then
+converted to a native pixel grid and restricted 12-color palette. Exact prompts
+and the palette are in `prompts.json`. The Mascot/Props layers are spatial
+cutouts of that generated artwork; covered details have not been reconstructed.
+
+After editing, export each frame as a transparent PNG at **1×** scale and replace
+the matching `start.png`, `compare.png`, or `understand.png` beside these files.
+`LearningCards.tsx` imports these previews directly. Keep their 160 × 128 canvas
+size; the website scales them with crisp pixel rendering. Saving the `.piskel`
+alone does not update the PNG on the website.
+
+## Logo
+
+`logo.piskel` is the user's 32 × 32 logo source, with BODY and GLASS layers.
+`logo.png` exports the first frame, cropping transparent margins to 22 × 26.
+The shared `Wordmark.tsx` uses that PNG as the “o” on the homepage and lab pages.
+The same artwork is centered without resampling in `public/favicon.png` on a
+transparent 32 × 32 canvas for browser tabs, linked from `index.html`.
