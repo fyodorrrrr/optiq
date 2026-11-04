@@ -4,7 +4,7 @@
 
 Map the seven supplied CSST106 laboratory documents to functional modules in one web application for students and developers. Users should understand techniques, experiment with parameters, compare results, and connect outputs to implementations. Every module is directly accessible without completing learning prompts. Assignment review uses this same experience; no separate instructor role or workflow is planned.
 
-This document records source requirements and proposed web adaptations. Labs 1–5 are implemented in React and Python/OpenCV; Lab 6 has pretrained inference and the approved local training workflow, with custom training pending. Lab 7 segmentation is implemented. The final section records implementation evidence.
+This document records source requirements and proposed web adaptations. Labs 1–5 are implemented in React and Python/OpenCV; Lab 6 has pretrained inference and the approved local training workflow, with a completed local custom bottle baseline. Lab 7 segmentation is implemented. The final section records implementation evidence.
 
 Printed, handwritten, and PDF report submission requirements are excluded at the developer's request. Their conceptual questions and analysis tasks remain useful learning content. Standalone scripts alone do not satisfy the Web UI requirement.
 
@@ -171,16 +171,17 @@ For completion, verify source requirements, representative outputs, meaningful n
 despite the filename. Implementation uses the official `yolo11n.pt` checkpoint,
 CPU inference, browser camera capture, bounded uploads, and explicit local
 training. See [LAB6_SETUP.md](LAB6_SETUP.md) for setup and limits. Preserve the
-source discrepancy. Actual custom-dataset training remains pending. The source
+source discrepancy. The approved public-data bottle subset completed 100 epochs locally. The source
 says test-set validation but provides train/val paths only: record the actual
 evaluation split and obtain a separate test split before claiming test results.
 
 **Approved scope decision (2026-11-03):** custom training is required by the lab,
 while general-purpose training infrastructure is outside the initial product
 scope. The approved local/offline training workflow and UI artifact/custom
-inference integration are implemented. No custom dataset has been supplied.
-The training requirement remains incomplete until an actual custom dataset is
-trained and evaluated.
+inference integration are implemented. On 2026-11-05 the user approved all 38
+images in the curated Open Images bottle subset; the 100-epoch local baseline
+completed and was evaluated on its eight-image validation split. This is public
+data, not user-captured photos; independent test evaluation remains unavailable.
 
 ## Lab 7 — Segmentation Techniques
 
@@ -231,7 +232,7 @@ computing IoU; semantic model training is optional in the source.
 | Lab 3 | Implemented and locally verified | `backend/tests/test_lab3.py`: histogram counts, exact equalization/CLAHE output, linear clipping/stretching, constant/color inputs, final brightness-channel measurements, deterministic samples, and validation. Browser checks covered real methods/parameters, four histogram charts with common scales, color/grayscale switching, PNG/CSV downloads, uploads, reset, errors/retry, cancellation, and 320–1440px layouts. |
 | Lab 4 | Implemented and locally verified with SURF setup | `backend/tests/test_lab4.py` and recorded local browser checks cover SURF/SIFT/ORB features, matches, unavailable capabilities, and validation. See the Lab 4 evidence below and `SURF_SETUP.md`; standard wheels do not provide full SURF functionality. |
 | Lab 5 | Implemented and locally verified with dataset setup | `backend/tests/test_lab5.py` and recorded local browser checks cover training-only PCA/SVM, variance, predictions/failures, provenance, missing data, concurrency, and recovery. See the Lab 5 evidence below and `LAB5_SETUP.md`. |
-| Lab 6 | Partial | Pretrained inference and local training workflow implemented; actual custom dataset/training pending. |
+| Lab 6 | Implemented locally | Pretrained inference plus approved custom bottle baseline (100 epochs), validation metrics, and verified custom inference; no independent test set. |
 | Lab 7 | Implemented | Classical and pretrained semantic segmentation; IoU unavailable without ground truth. |
 
 Lab 1 code: `frontend/src/labs/lab1/`, `backend/routers/lab1.py`, `backend/schemas/lab1.py`, and `backend/services/`. Local verification is not evidence of production deployment or measured learning effectiveness. No source-required Lab 1 operation is intentionally deferred. Optional enhancements such as drag-to-crop, progress storage, and scored practice are not completion criteria.
@@ -282,8 +283,13 @@ and people in the official sample and no detections on a blank image.
 normalized labels and split separation, trains locally, retains logs and weights,
 evaluates the named val/test split, and publishes checksummed artifacts for custom
 inference. An isolated one-epoch synthetic smoke test verified the pipeline;
-it is not the user's custom lab training. No user dataset has been supplied;
-custom training and baseline100-epoch evaluation remain pending. See `LAB6_SETUP.md`.
+it is not the custom lab baseline. The user-approved Open Images bottle subset
+subsequently completed 100 epochs on CPU with 30 training images (44 boxes),
+8 validation images (12 boxes), seed42, imgsz640, and batch4. Validation metrics:
+precision0.7963, recall0.7500, mAP50 0.7432, mAP50–95 0.6556. Published weight
+hash, completed artifacts, and real custom API inference were verified. These
+are small-sample validation results, not independent test results. See
+`LAB6_SETUP.md` and `LAB6_DATASET_REVIEW.md`.
 
 
 ### Lab 7 implementation evidence
@@ -300,4 +306,4 @@ The source's Lab6 numbering is preserved as a documented discrepancy; filename
 order remains Lab7. Semantic training is optional and is not added. No compatible
 ground truth exists in this increment, so the conditional IoU requirement is
 explicitly unavailable. Dependencies, preprocessing and verification are recorded
-in `LAB7_SETUP.md`. Lab6 custom training remains a separate outstanding task.
+in `LAB7_SETUP.md`. Lab6 custom bottle training is recorded separately above.

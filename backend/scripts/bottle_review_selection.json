@@ -1,0 +1,146 @@
+{
+  "source": "Open Images validation bottle candidates, seed 42",
+  "review_policy": "Assistant contact-sheet pass with selected full-resolution checks; user approval still required. No manual coordinate edits; source boxes converted exactly.",
+  "image_ids": [
+    "2667b07b9aee53e5",
+    "ccbbb3175f571466",
+    "bf7648f1cec9338a",
+    "24766458a9f83849",
+    "add64f57c356a343",
+    "450d4ffc19548f56",
+    "2a548bd4b973dca8",
+    "6c6bab990f122299",
+    "9cbe18690768d242",
+    "41252915ac13a574",
+    "c4e1dfa2575bfd4e",
+    "cd4e964d17223b05",
+    "392c3c9f706c5bb5",
+    "483cda6a77505e11",
+    "d973420311b00730",
+    "03abc39ad2c14097",
+    "b5bbb96eefd779eb",
+    "56578e312e04853a",
+    "642432bbaecbccc7",
+    "9bd3e32a2337f9bc",
+    "541750198e8ce193",
+    "5cc6d803cefe4dbf",
+    "874f0a9275b8ed9b",
+    "a352a0994a0cc0b2",
+    "ea1f6d8b3ad4a5dd",
+    "e7ff04aefb2cc102",
+    "1b55f9174167a8d3",
+    "7d56049eb3de444a",
+    "e11dfeb7dbf842fd",
+    "19a9c18bb631cf3f",
+    "7d3ed25abc40bbd4",
+    "cea38a4de93855f4",
+    "934bcc59d465fa8d",
+    "c264f4ac854e66eb",
+    "4ce448635c113f11",
+    "4cc6516b9be3d77d",
+    "a4ce8204dc010b24",
+    "c3850f8a5eaaeb52"
+  ],
+  "notes": {
+    "2667b07b9aee53e5": "Decorative soap dispenser: confirm household/cosmetic bottles belong in your class.",
+    "ccbbb3175f571466": "Check the partially occluded bottles on the left.",
+    "bf7648f1cec9338a": "No obvious issue in overview; user review pending.",
+    "24766458a9f83849": "No obvious issue in overview; user review pending.",
+    "add64f57c356a343": "Three bottles; one is behind the front-right bottle. Check overlapping boxes.",
+    "450d4ffc19548f56": "Very dark truncated wine bottle; inspect the full-resolution image.",
+    "2a548bd4b973dca8": "Top/neck is cropped; check visible bounds.",
+    "6c6bab990f122299": "Lower bottle is cropped; box represents its visible part.",
+    "9cbe18690768d242": "Bottle neck is cropped at the top.",
+    "41252915ac13a574": "No obvious issue in overview; user review pending.",
+    "c4e1dfa2575bfd4e": "No obvious issue in overview; user review pending.",
+    "cd4e964d17223b05": "Background objects are cans, intentionally not labeled as bottles.",
+    "392c3c9f706c5bb5": "No obvious issue in overview; user review pending.",
+    "483cda6a77505e11": "No obvious issue in overview; user review pending.",
+    "d973420311b00730": "White bottle on a white background; verify tight boundaries.",
+    "03abc39ad2c14097": "No obvious issue in overview; user review pending.",
+    "b5bbb96eefd779eb": "Bottle is partly behind the glass.",
+    "56578e312e04853a": "No obvious issue in overview; user review pending.",
+    "642432bbaecbccc7": "Only the far-right cropped bottle is labeled; can/cartons are not bottles.",
+    "9bd3e32a2337f9bc": "Glass milk-style bottle/carafe; confirm your class boundary.",
+    "541750198e8ce193": "Both bottles are cropped; boxes cover the visible portions.",
+    "5cc6d803cefe4dbf": "Perfume/cosmetic bottle included; confirm your class boundary.",
+    "874f0a9275b8ed9b": "Pouring bottle enters from the right; body is cropped.",
+    "a352a0994a0cc0b2": "Two toiletry bottles; tubes and sticks are excluded.",
+    "ea1f6d8b3ad4a5dd": "Diagonal bottle; axis-aligned box necessarily includes some background.",
+    "e7ff04aefb2cc102": "Decorative mouthwash bottle; confirm your class boundary.",
+    "1b55f9174167a8d3": "Tiny second bottle at the far-left edge; inspect its small box.",
+    "7d56049eb3de444a": "Truncated close-up bottle; verify visible body boundary.",
+    "e11dfeb7dbf842fd": "Soft-focus bottle behind glassware; check visible extent.",
+    "19a9c18bb631cf3f": "Two bottles; foreground glass is not a bottle.",
+    "7d3ed25abc40bbd4": "Bottle at upper left; the other glassware is not labeled.",
+    "cea38a4de93855f4": "Three household/cosmetic bottles; verify partial occlusions.",
+    "934bcc59d465fa8d": "Bottle is partially hidden behind the burger.",
+    "c264f4ac854e66eb": "One beer bottle; the adjacent glass is intentionally not labeled.",
+    "4ce448635c113f11": "Three overlapping cropped bottles, including a tiny edge instance.",
+    "4cc6516b9be3d77d": "Bottle beside the glass; verify tight boundaries.",
+    "a4ce8204dc010b24": "Nail-polish bottles included; confirm cosmetics belong in your class.",
+    "c3850f8a5eaaeb52": "Cropped bottle at left behind the drink; verify visible bounds."
+  },
+  "excluded": [
+    {
+      "image_id": "6605e4abcc222e76",
+      "initial_review_number": 1,
+      "reason": "Tiny ambiguous heavily occluded fourth source box."
+    },
+    {
+      "image_id": "189a9911f39e9afd",
+      "initial_review_number": 3,
+      "reason": "Flower vase; outside the chosen bottle definition."
+    },
+    {
+      "image_id": "8389085968bd2d8e",
+      "initial_review_number": 10,
+      "reason": "Fish jars rather than narrow-neck bottles."
+    },
+    {
+      "image_id": "92eb72d6587bfbf9",
+      "initial_review_number": 11,
+      "reason": "Extreme label-only close-up; poor starter example."
+    },
+    {
+      "image_id": "8cf6f25f08e058f0",
+      "initial_review_number": 13,
+      "reason": "Extreme cropped labels without enough bottle outline."
+    },
+    {
+      "image_id": "792df257e39f4750",
+      "initial_review_number": 19,
+      "reason": "Dark crowded bar scene with ambiguous background instances."
+    },
+    {
+      "image_id": "a1119d540ba829e4",
+      "initial_review_number": 24,
+      "reason": "Drinking glass incorrectly annotated as bottle."
+    },
+    {
+      "image_id": "ac359b78738c1d8f",
+      "initial_review_number": 32,
+      "reason": "Wire cage and background glassware make exhaustive labels ambiguous."
+    },
+    {
+      "image_id": "25275432b3ec6f9b",
+      "initial_review_number": 34,
+      "reason": "Salt/pepper shakers; outside the chosen bottle definition."
+    },
+    {
+      "image_id": "d03bc87602737363",
+      "initial_review_number": 35,
+      "reason": "Many unboxed decorative bottle/candle holders."
+    },
+    {
+      "image_id": "6c304280c24a90f8",
+      "initial_review_number": 41,
+      "reason": "Extreme macro without useful bottle outline."
+    },
+    {
+      "image_id": "7313ab9a917e81a6",
+      "initial_review_number": 47,
+      "reason": "Extreme cropped transparent-container macro."
+    }
+  ]
+}

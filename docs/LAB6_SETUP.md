@@ -1,8 +1,8 @@
 # Lab 6 — YOLO11 setup and local training
 
 Lab 6 currently provides real pretrained image/camera detection and a local
-custom-training workflow. **Custom training is pending until you provide an
-annotated dataset and complete a run.** Opening Optiq never starts training.
+custom-training workflow. **A user-approved 38-image bottle subset completed a local 100-epoch custom
+training run on 2026-11-05.** Opening Optiq never starts training.
 
 The activity filename says YOLOv8; its body specifies YOLO11. Optiq follows the
 body with the official `yolo11n.pt` checkpoint, preserving the numbering conflict
@@ -44,6 +44,11 @@ per second; this is not a guaranteed video frame rate. Stop/leave/hide the view
 to release camera tracks. Use localhost or HTTPS for browser camera permission.
 
 ## Prepare your dataset
+
+A local public-data bottle review pack is now available; see
+[LAB6_DATASET_REVIEW.md](LAB6_DATASET_REVIEW.md). All 38 images were approved by the user on 2026-11-05; the documented local
+100-epoch baseline completed with validation evaluation and published custom weights. See the review guide and local training
+artifact for its outcome.
 
 Collect varied images and annotate them with an external tool. Use:
 

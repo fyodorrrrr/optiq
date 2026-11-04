@@ -5,7 +5,7 @@
 React/TypeScript renders the homepage and all seven lab routes, `/labs/1`
 through `/labs/7`; React Router handles navigation. Labs 1–5 and 7 are
 implemented. Lab 6 provides pretrained detection and local training/artifact
-review, with actual custom-dataset training pending. FastAPI provides
+review, with a completed 100-epoch custom bottle run and validation evaluation. FastAPI provides
 `/api/health` and per-lab endpoints. Vite proxies `/api` to port 8000 in
 development. Production hosting is undecided and must support API forwarding
 and SPA route fallback.
@@ -141,7 +141,7 @@ checks have exercised the implemented workflows and responsive behavior
 locally; no permanent frontend browser-test runner is configured.
 
 Labs 1–5 and 7 are implemented; production hosting and deployment resource
-limits have not been validated. Lab 6 custom data/training remains pending;
+limits have not been validated. Lab 6 custom bottle training and validation completed locally;
 the approved local training workflow and pretrained Lab 6 inference are
 implemented. See `LAB_REQUIREMENTS.md` for their obligations. Dated files under
 `docs/superpowers/` and `docs/audits/` record plans/reviews at that time; current
@@ -258,7 +258,9 @@ Ultralytics has an optional pinned dependency closure installed with --no-deps
 so its opencv-python requirement does not overwrite the existing cv2 provider.
 The SURF build now includes highgui/videoio symbols required for import, while
 native GUI/FFmpeg capture remain disabled. See `LAB6_SETUP.md` for reproducible
-setup and known limits. The actual custom dataset/training remains pending.
+setup and known limits. The user approved all 38 Open Images bottle images on 2026-11-05. The local CPU
+100-epoch run completed with 30 training and 8 validation images; custom weight
+hashes and API inference were verified. See `LAB6_DATASET_REVIEW.md`.
 
 
 The Lab 6 detection view leads with image comparison. Camera controls are in a

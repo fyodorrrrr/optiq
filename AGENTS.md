@@ -12,7 +12,7 @@ Read `docs/PRD.md` and `docs/ARCHITECTURE.md` when they exist. This guide govern
 
 ## Project Structure & Module Organization
 
-Optiq is a computer vision learning platform for Labs 1–7. The homepage and Labs 1–5 are implemented. Lab 6 has pretrained detection and a local training workflow; custom training is pending. Lab 7 segmentation is implemented.
+Optiq is a computer vision learning platform for Labs 1–7. The homepage and Labs 1–5 are implemented. Lab 6 has pretrained detection and a local training workflow; the approved bottle custom model completed a local 100-epoch training run and validation evaluation. Lab 7 segmentation is implemented.
 
 - `frontend/src/`: React and TypeScript source; `App.tsx` defines routes. `components/lab/` holds shared lab UI and histogram rendering; `labs/lab1/`, `labs/lab2/`, `labs/lab3/`, `labs/lab4/`, `labs/lab5/`, `labs/lab6/`, and `labs/lab7/` own experiment state, settings, and content. `api/images.ts` holds common image transport for Labs 2–4/future modules.
 - `frontend/src/assets/`: imported images and SVGs; `frontend/public/`: static public assets.

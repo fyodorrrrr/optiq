@@ -4,7 +4,7 @@
 
 Optiq helps students and developers understand computer vision through hands-on experimentation and inspectable implementations. It compiles CSST106 Labs 1–7 into one web application with accessible techniques and real outputs, meeting the assignment's review requirements through the same experience available to everyone.
 
-This document records the agreed product direction. Detailed laboratory obligations and source ambiguities are tracked in [LAB_REQUIREMENTS.md](LAB_REQUIREMENTS.md). The homepage and Labs 1–5 are implemented, including scikit-learn PCA and recognition in Lab 5. Lab 6 has pretrained detection and local training/artifact integration; actual custom-dataset training is pending. Lab 7 segmentation is implemented with classical methods and pretrained semantic weights. Workspaces use shared UI components, left tool sidebars on wider screens, and optional learning explanations. Common UI changes propagate across labs; experiment state, specialized controls, processing, and content remain lab-specific.
+This document records the agreed product direction. Detailed laboratory obligations and source ambiguities are tracked in [LAB_REQUIREMENTS.md](LAB_REQUIREMENTS.md). The homepage and Labs 1–5 are implemented, including scikit-learn PCA and recognition in Lab 5. Lab 6 has pretrained detection and local training/artifact integration; the user-approved Open Images bottle subset completed a local 100-epoch custom training run and validation evaluation. Lab 7 segmentation is implemented with classical methods and pretrained semantic weights. Workspaces use shared UI components, left tool sidebars on wider screens, and optional learning explanations. Common UI changes propagate across labs; experiment state, specialized controls, processing, and content remain lab-specific.
 
 Initial visual constraints and the selected map-node treatment are recorded in [DESIGN_FOUNDATION.md](DESIGN_FOUNDATION.md). The homepage direction is a short introduction and a winding seven-lab map with shallow dimensional nodes; implemented labs remain freely accessible.
 
@@ -41,13 +41,14 @@ The complete initial release must include:
 
 Printed/handwritten reports and PDF submission workflows are excluded. Accounts, cloud experiment storage, arbitrary code execution, scored exercises, an annotation editor, and general-purpose training infrastructure are not initial product requirements.
 
-Excluding training infrastructure does **not** remove the source's custom-model training obligation. Its execution and presentation use the approved local CLI workflow with Web UI artifact review. Actual custom training remains required before Lab 6 is considered complete.
+Excluding training infrastructure does **not** remove the source's custom-model training obligation. Its execution and presentation use the approved local CLI workflow with Web UI artifact review. A local 100-epoch custom bottle run is complete; its small validation set does not establish independent test performance.
 
 ## Delivery Strategy
 
 Delivery proceeds laboratory by laboratory, with local verification of each
-implemented workflow. Labs 1–5 and 7 are implemented; Lab 6's outstanding custom
-training prevents claiming the whole seven-lab release is complete.
+implemented workflow. All seven labs have local implementations, including a
+completed Lab 6 custom bottle baseline. Production deployment and independent
+custom-model test evaluation remain unverified.
 
 Lab 1 implements image loading/display, dimensions and channels, BGR/grayscale
 explanations, pixel inspection/editing, grayscale conversion, cropping,
