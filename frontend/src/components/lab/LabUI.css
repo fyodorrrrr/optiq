@@ -389,3 +389,11 @@
   .lab-metadata-table td { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 12px; padding: 6px 8px; border: 0; }
   .metadata-mobile-label { display: block; font-size: 13px; color: var(--ink-soft); font-weight: 400; }
 }
+
+.run-metadata > section { margin: 24px 0; }
+.run-metadata-table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 14px; line-height: 1.6; font-variant-numeric: tabular-nums; }
+.run-metadata-table th, .run-metadata-table td { padding: 9px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+.run-metadata-table th { width: 48%; font-weight: 400; color: var(--ink-soft); }
+.run-metadata-table td { font-weight: 500; }
+.run-metadata-table ol { margin: 0; padding-inline-start: 18px; }
+.run-metadata .run-metadata-previous { padding: 10px 12px; background: var(--accent-soft); color: var(--accent-deep); font-size: 14px; }

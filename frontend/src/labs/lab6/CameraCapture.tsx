@@ -81,12 +81,14 @@ export default function CameraCapture({ available, onFrame, onStop, onRunning }:
       stop()
     }
   }
-  return <section className="detection-camera" aria-label="Camera input"><div className="detection-actions">
+  return <details className="detection-camera" onToggle={event => {
+    if (event.newState === 'closed' && (running || pending)) stop()
+  }}><summary>Camera input</summary><div className="detection-actions">
     <LabButton disabled={!available || running || pending} onClick={() => void start()}>Start camera</LabButton>
     <LabButton disabled={!running && !pending} onClick={stop}>Stop camera</LabButton></div>
     <p>Frames are sent to the detection server only while running. Up to 2 requests per second, one at a time. Stop the camera before using an uploaded image.</p>
     <video ref={video} muted playsInline aria-label="Live camera preview" hidden={!running} />
     <span role="status">{running ? 'Camera running · sending frames for detection.' : pending ? 'Waiting for camera permission…' : 'Camera stopped.'}</span>
     {error && <LabError title="Camera unavailable." message={error} />}
-  </section>
+  </details>
 }

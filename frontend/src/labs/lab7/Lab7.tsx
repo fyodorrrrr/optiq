@@ -16,6 +16,13 @@ import useSegmentation from './useSegmentation'
 import { sections, pythonExample } from './content'
 import type { Method } from './api'
 import './Lab7.css'
+const parameterKeys = {
+  threshold: ['method', 'invert', 'adaptive_block', 'adaptive_c'],
+  region: ['method', 'invert', 'seed_x', 'seed_y', 'tolerance', 'watershed_fraction', 'opacity'],
+  edges: ['method', 'canny_low', 'canny_high', 'closing_size', 'min_area', 'opacity'],
+  semantic: ['method', 'opacity'],
+} as const
+
 export default function Lab7() {
   const lab = useSegmentation()
   const guide = useRef<HTMLElement>(null)
@@ -41,15 +48,19 @@ export default function Lab7() {
             images={result.views.map(view => ({ label: view.title, frame: view.frame }))} /></section>}
           <ImageMetadataHelp />
         </> },
-        result && { id: 'run', title: 'Run details', content: <RunMetadata value={{ parameters: result.parameters, measurements: result.measurements, provenance: result.provenance, notes: result.notes }} /> }
+        result && { id: 'run', title: 'Run details', content: <RunMetadata previous={lab.stale || lab.busy} parameterKeys={parameterKeys[result.parameters.method]} value={{ parameters: result.parameters, measurements: result.measurements, provenance: result.provenance, notes: result.notes }} /> }
       ]}
       controls={<><h2>{content.title}</h2><SegmentationControls lab={lab} /></>}>
-      <ImagePanel title="Input image" frame={lab.source?.frame ?? null} showMetadata={false} description={lab.method === 'region' ? `${lab.source?.name ?? ''} · click to select a seed, or enter x/y coordinates.` : lab.source?.name}
-        onPick={lab.method === 'region' ? lab.seed : undefined} selection={lab.method === 'region' ? { x: Number(lab.draft.seed_x), y: Number(lab.draft.seed_y) } : undefined} />
       {lab.error && <LabError title="Could not segment this image." message={lab.error} />}
-      <LabStatus>{lab.busy ? 'Processing the image…' : result ? `${lab.stale ? 'Previous result · settings have changed. ' : ''}${sections[result.parameters.method].title} · ${result.measurements.elapsed_ms.toFixed(0)} ms, including result encoding and any first model load.` : 'Choose a method, predict the result, then run segmentation.'}</LabStatus>
-      {result && <section className="segmentation-output" aria-labelledby="segmentation-output-title"><h2 id="segmentation-output-title">{sections[result.parameters.method].title} results</h2>
-        <div className="lab-image-grid">{result.views.map(view => <ImagePanel key={view.title} title={view.title} frame={view.frame} description={view.description} showMetadata={false} />)}</div>
+      {result && <h2 className="segmentation-result-title" id="segmentation-output-title">{sections[result.parameters.method].title} results</h2>}
+      <div className={`lab-image-grid segmentation-comparison${result ? ' has-result' : ''}`}>
+        <ImagePanel title="Input image" frame={lab.source?.frame ?? null} showMetadata={false} description={lab.method === 'region' ? `${lab.source?.name ?? ''} · click to select a seed, or enter x/y coordinates.` : lab.source?.name}
+          onPick={lab.method === 'region' ? lab.seed : undefined} selection={lab.method === 'region' ? { x: Number(lab.draft.seed_x), y: Number(lab.draft.seed_y) } : undefined} />
+        {result?.views[0] && <ImagePanel title={result.views[0].title} frame={result.views[0].frame} description={result.views[0].description} showMetadata={false} />}
+      </div>
+      {!lab.error && (lab.busy || result) && <LabStatus>{lab.busy ? 'Processing the image…' : result ? `${lab.stale ? 'Previous result · settings have changed. ' : ''}${sections[result.parameters.method].title} · ${result.measurements.elapsed_ms.toFixed(0)} ms, including result encoding and any first model load.` : null}</LabStatus>}
+      {result && <section className="segmentation-output" aria-labelledby="segmentation-output-title">
+        {result.views.length > 1 && <div className="lab-image-grid segmentation-secondary">{result.views.slice(1).map(view => <ImagePanel key={view.title} title={view.title} frame={view.frame} description={view.description} showMetadata={false} />)}</div>}
         {result.legend.length > 0 && <section aria-labelledby="segmentation-legend-title"><h3 id="segmentation-legend-title">Predicted classes</h3><ul className="segmentation-legend">{result.legend.map(item => <li key={item.id}><span aria-hidden="true" style={{ background: item.color }} />{item.name === '__background__' ? 'Background' : item.name} · ID {item.id} · {item.pixels.toLocaleString()} pixels</li>)}</ul></section>}
         <p>IoU is unavailable because no compatible ground-truth mask was provided. Masks, pixel counts, and region colors are not accuracy scores.</p>
         <div className="segmentation-actions lab-downloads">{result.views.map((view, index) => <DownloadLink key={view.title} href={view.frame.image} download={`optiq-lab7-${result.parameters.method}-${index + 1}.png`}>{view.title} PNG</DownloadLink>)}

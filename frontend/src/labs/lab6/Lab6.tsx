@@ -44,29 +44,29 @@ export default function Lab6() {
           ...(lab.source && !lab.resultCamera ? [{ label: 'Original', frame: lab.source.frame }] : []),
           ...(lab.result ? [{ label: 'Result', frame: lab.result.output }] : []),
         ]} /> },
-        lab.result && { id: 'run', title: 'Run details', content: <RunMetadata value={{ parameters: lab.result.parameters, provenance: lab.result.provenance, stages_ms: lab.result.stages_ms }} /> }
+        lab.result && { id: 'run', title: 'Run details', content: <RunMetadata previous={Boolean(stale || lab.busy)} value={{ parameters: lab.result.parameters, provenance: lab.result.provenance, stages_ms: lab.result.stages_ms }} /> }
       ]}
       controls={<><h2>{content.title}</h2>
         {section === 'detect' && <form onSubmit={event => { event.preventDefault(); void lab.run() }}><SelectField label="Detection model" value={lab.model} onChange={value => lab.changeModel(value as Model)} options={(lab.status?.models ?? [{ id: 'pretrained', title: 'YOLO11n · pretrained COCO', available: false }]).map(model => ({ value: model.id, label: `${model.id === 'pretrained' ? 'YOLO11n · COCO' : 'Custom model'}${model.available ? '' : ' · unavailable'}`, disabled: !model.available }))} />
           <NumberField label="Confidence threshold" value={lab.confidence} min={0.01} max={1} step="any" onChange={lab.changeConfidence} disabled={cameraRunning} />
           <div className="detection-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || cameraRunning || !lab.source || !available}>Detect objects</LabButton></div></form>}
         <LabButton variant="quiet" disabled={lab.busy || cameraRunning} onClick={() => void lab.refresh()}>Refresh status</LabButton>
-        <p>Custom training: {lab.status?.training.status ?? 'checking'}. Training starts only from your local command.</p>          <SettingsHelpLink guideId="detection-guide" onOpen={() => guide.current?.querySelector<HTMLButtonElement>('.learning-canvas-link')?.click()} />
+        {section !== 'detect' && <p>Custom training: {lab.status?.training.status ?? 'checking'}. Training starts only from your local command.</p>}          <SettingsHelpLink guideId="detection-guide" onOpen={() => guide.current?.querySelector<HTMLButtonElement>('.learning-canvas-link')?.click()} />
 </>}>
       {lab.error && <LabError title="Could not process the image." message={lab.error} />}
       {section === 'detect' && <>
-        {!available && <p className="detection-notice" role="status">{lab.status?.models.find(item => item.id === lab.model)?.message ?? 'Checking detector setup…'}</p>}
-        <CameraCapture available={available && !lab.busy} onFrame={file => lab.run(file, true)} onStop={lab.cancel} onRunning={setCameraRunning} />
+        {!available && !lab.error && <p className="detection-notice" role="status">{lab.status?.models.find(item => item.id === lab.model)?.message ?? 'Checking detector setup…'}</p>}
         <div className={cameraRunning || lab.resultCamera ? undefined : 'lab-image-grid'}>
           {!cameraRunning && !lab.resultCamera && <ImagePanel title="Input image" frame={lab.source?.frame ?? null} description={lab.source?.name} showMetadata={false} />}
           <ImagePanel title="Detected objects" frame={lab.result?.output ?? null} showMetadata={false} empty="Run detection to see real boxes, labels, and confidence scores." description={lab.result ? `${stale ? 'Previous result · ' : ''}${lab.resultCamera ? 'Camera frame · ' : ''}${lab.result.detections.length} detections · confidence ≥ ${lab.result.parameters.confidence} · ${lab.result.parameters.model} model` : undefined} />
         </div>
-        <LabStatus>{lab.busy ? 'Processing…' : lab.result ? `${stale ? 'Previous result. ' : ''}Last frame: ${lab.result.elapsed_ms.toFixed(0)} ms server processing · ${lab.roundtrip?.toFixed(0)} ms request round trip. These are timings, not an accuracy measure.` : 'Choose an image or start the camera, then run detection to see boxes, labels, and confidence scores.'}</LabStatus>
+        {!lab.error && <LabStatus>{lab.busy ? 'Processing…' : lab.result ? `${stale ? 'Previous result. ' : ''}Last frame: ${lab.result.elapsed_ms.toFixed(0)} ms server processing · ${lab.roundtrip?.toFixed(0)} ms request round trip. These are timings, not an accuracy measure.` : 'Choose an image or start the camera, then run detection to see boxes, labels, and confidence scores.'}</LabStatus>}
         {lab.result && <>
           {lab.result.detections.length === 0 ? <p>No objects met this threshold. Try a lower confidence or an image containing the model’s supported classes.</p> : <details><summary>Detection details ({lab.result.detections.length})</summary><div className="detection-table" tabIndex={0} role="region" aria-label="Detected objects"><table><caption>Boxes in original input pixels · x1, y1, x2, y2</caption><thead><tr><th>Object</th><th>Confidence</th><th>Box coordinates</th></tr></thead><tbody>{lab.result.detections.map((item, index) => <tr key={index}><th scope="row">{item.label}</th><td>{(item.confidence * 100).toFixed(1)}%</td><td>{item.xyxy.map(value => value.toFixed(1)).join(', ')}</td></tr>)}</tbody></table></div></details>}
           <div className="detection-actions lab-downloads"><DownloadLink href={lab.result.output.image} download="optiq-lab6-detections.png">Detection PNG</DownloadLink><DownloadLink href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify({ ...lab.result, output: undefined }, null, 2))}`} download="optiq-lab6-detections.json">Detection JSON</DownloadLink></div>
 
         </>}
+        <CameraCapture available={available && !lab.busy} onFrame={file => lab.run(file, true)} onStop={lab.cancel} onRunning={setCameraRunning} />
       </>}
       {section === 'dataset' && <DatasetView dataset={lab.status?.dataset} />}
       {section === 'training' && <TrainingView status={lab.status} />}

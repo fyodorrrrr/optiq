@@ -55,7 +55,7 @@ export default function useSegmentation() {
     finally { if (!controller.signal.aborted) setBusy(false) }
   }
   function change(key: keyof Draft, value: string | boolean) { cancel(); setDraft(previous => ({ ...previous, [key]: value })) }
-  function choose(value: Method) { cancel(); setMethod(value) }
+  function choose(value: Method) { if (value === method) return; cancel(); setResult(null); setMethod(value) }
   function seed(x: number, y: number) { cancel(); setDraft(previous => ({ ...previous, seed_x: String(x), seed_y: String(y) })) }
   function reset() { cancel(); setDraft({ ...baseline, seed_x: String(Math.min(170, (source?.frame.width ?? 171) - 1)), seed_y: String(Math.min(180, (source?.frame.height ?? 181) - 1)) }) }
   function settings(): Settings {

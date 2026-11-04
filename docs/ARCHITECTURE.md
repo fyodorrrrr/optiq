@@ -89,8 +89,11 @@ A Frame contains a PNG data URL, width, height, channels, shape, dtype, color sp
   changing workspace height or unmounting controls. `InfoDetails.tsx` reuses
   `DetailsDrawer.tsx` for these actions and contextual explanations. Escape, outside click, and close actions dismiss the popover and return
   focus to its trigger. Small screens use the same overlay at full width.
-  `RunMetadata.tsx` renders nested settings/provenance as labeled values with
-  optional raw JSON; specialized Lab 1 and Lab 3 run summaries are retained.
+  `RunMetadata.tsx` renders settings and measurements in full-width label/value
+  tables, formats visible timings with units, and collapses provenance/notes and
+  raw JSON. The raw view retains every original response field. Labs 5–7 pass
+  previous-result state; Lab 7 filters only the compact parameter view by the
+  completed method. Specialized Lab 1 and Lab 3 summaries remain separate.
 - `LabButton.tsx`, `Fields.tsx`, and `LabFeedback.tsx`: controls and feedback states.
 - `SourceActions.tsx` and `SamplePicker.tsx`: upload control and configurable dropdown with dismissal and focus restoration.
 - `ImagePanel.tsx`: fit-to-panel viewer, optional pixel/crop overlays, metadata, and metadata help. `ImageMetadata.tsx` renders semantic property tables with columns for available source/result images, one shared explanation, and optional changed-value highlighting. On narrow screens, each property stacks its image values within the row. Lab 4 and Lab 7 group input/output tables; Lab 3 retains uploaded-source and working-original metadata separately. Lab 1 collapses upload/handling notes and identifies retained previous results. Lab 1 retains a compatibility re-export; Lab 2's EdgeFigure adapter supplies edge-specific captions.
@@ -192,7 +195,9 @@ metrics, first12/final3 components, bounded face galleries, fresh-run provenance
 and timings. `labs/lab5/` owns state, JSON API transport, content, variance SVG,
 and galleries; shell/controls/viewers remain shared. The API client allows up to
 120 seconds and preserves previous completed results with their settings when
-drafts change or a rerun fails. See `LAB5_SETUP.md` for setup and limitations.
+drafts change or a rerun fails. Empty, busy, and error presentations are mutually
+exclusive before a first result. The variance chart reserves space for all axis
+labels without an incidental scroll region. See `LAB5_SETUP.md` for setup and limitations.
 
 ## Experiment recovery conventions
 
@@ -256,13 +261,19 @@ native GUI/FFmpeg capture remain disabled. See `LAB6_SETUP.md` for reproducible
 setup and known limits. The actual custom dataset/training remains pending.
 
 
+The Lab 6 detection view leads with image comparison. Camera controls are in a
+collapsed section after results; closing it stops a pending/running stream and
+releases media tracks. Dataset/training instructions use a bounded reading width.
+
 ## Lab 7 segmentation
 
 `labs/lab7/` reuses the shared shell, prediction prompts, fields, sample/upload
 controls and image viewers. Its own state/transport controls four method families.
 The input viewer supports original-coordinate seed selection plus keyboard x/y
-fields. Previous outputs remain labeled with their generating settings; new
-sources clear outputs, and aborted responses cannot overwrite current state.
+fields. The input and first output share a comparison row; secondary outputs
+remain below it. Previous outputs remain labeled with their generating settings
+when fields change. Switching method families or accepting a new source clears
+outputs; aborted responses cannot overwrite current state.
 
 `/api/labs/7/status`, `/sample`, `/load`, and `/experiment` use a typed settings
 schema and common bounded upload/threadpool helpers. `services/lab7.py` owns

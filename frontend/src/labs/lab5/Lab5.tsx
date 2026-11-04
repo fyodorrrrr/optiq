@@ -35,7 +35,6 @@ export default function Lab5() {
   const stale = result && result.parameters.components !== Number(lab.components)
   return <LabPage labNumber={5} title="Find the patterns behind a face."
     description="Lab 5 — PCA & eigenfaces. Reduce dimensions, inspect variation, and test recognition on held-out faces."
-    inputNote="Dataset experiment · LFW faces · no personal uploads required. Each run fits a new PCA and SVM."
     guideId="pca-guide" onOpenGuide={() => guide.current?.focus({ preventScroll: true })} wide
     actions={<LabButton disabled={lab.busy} onClick={() => void lab.refresh()}>Check dataset</LabButton>}>
     <LabWorkspace label="PCA and eigenfaces workspace" resultsId="pca-results" busy={lab.busy}
@@ -48,7 +47,7 @@ export default function Lab5() {
         {lab.dataset?.ready && <><dl className="pca-facts"><div><dt>Faces</dt><dd>{lab.dataset.samples.toLocaleString()}</dd></div><div><dt>Image size</dt><dd>{lab.dataset.width} × {lab.dataset.height}</dd></div><div><dt>Pixel features</dt><dd>{lab.dataset.features.toLocaleString()}</dd></div><div><dt>Identities</dt><dd>{lab.dataset.names.length}</dd></div></dl>
           <details><summary>Included identities</summary><p>{lab.dataset.names.join(' · ')}</p></details></>}
 </> },
-        result && { id: 'run', title: 'Run details', content: <RunMetadata value={{ parameters: result.parameters, provenance: result.provenance, timings: result.timings }} /> }
+        result && { id: 'run', title: 'Run details', content: <RunMetadata previous={Boolean(stale || lab.busy)} value={{ parameters: result.parameters, provenance: result.provenance, timings: result.timings }} /> }
       ]}
       controls={<><h2>{content.title}</h2><form onSubmit={event => { event.preventDefault(); void lab.run() }}>
         <NumberField required label="PCA components" value={lab.components} min={12} max={lab.dataset?.max_components || 300} step={1} disabled={lab.busy} onChange={lab.setComponents} />
@@ -58,9 +57,8 @@ export default function Lab5() {
       </form></>}>
 
       {lab.error && <LabError title="Could not run the experiment." message={lab.error} />}
-      <LabStatus>{lab.busy ? 'Checking the dataset or fitting PCA and SVM… Keep this page open. Previous results remain available.'
-        : lab.error ? 'Check the message above and retry.' : result ? `${stale ? 'Previous result · ' : ''}${result.parameters.components} components · ${result.train_count} training faces / ${result.test_count} held-out faces.`
-          : lab.dataset?.ready ? 'Ready. Predict what will change, then run the experiment.' : 'The dataset must be prepared on this server before experiments can run.'}</LabStatus>
+      {result && <LabStatus>{lab.busy ? 'Checking the dataset or fitting PCA and SVM… Keep this page open. Previous results remain available.'
+        : `${stale ? 'Previous result · ' : ''}${result.parameters.components} components · ${result.train_count} training faces / ${result.test_count} held-out faces.`}</LabStatus>}
       {result ? <>
         {section === 'eigenfaces' && <section><h2>The first 12 eigenfaces</h2><p>Signed component weights: gray is zero, brighter is positive, darker is negative. Each component uses its own symmetric display range; brightness does not compare variance.</p>
           <EigenGallery items={result.eigenfaces} /><h2>The last 3 selected eigenfaces</h2><p>Compare these with components 1–3. The baseline ends at component 150.</p><EigenGallery items={result.tail_eigenfaces} /></section>}
@@ -76,7 +74,10 @@ export default function Lab5() {
         {section === 'failures' && <section><h2>Learn from the misses</h2><p>{result.misclassified_count} of {result.test_count} test faces were misclassified. {result.failures.length > 0 ? `Showing the first ${result.failures.length} in test-split order.` : 'There are no misclassifications in this run.'}</p><PredictionGallery items={result.failures} /></section>}
         <div className="pca-actions lab-downloads"><DownloadLink href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify({ ...result, eigenfaces: undefined, tail_eigenfaces: undefined, predictions: undefined, failures: undefined }, null, 2))}`} download="optiq-lab5-measurements.json">Measurements & predictions JSON</DownloadLink></div>
 
-      </> : <p className="pca-empty">Run an experiment to see eigenfaces, the variance curve, recognition results, and misclassified faces. All four tools inspect the same completed run.</p>}
+      </> : !lab.error && <div className="pca-empty-state">
+        {lab.busy ? <LabStatus>Checking the dataset or fitting PCA and SVM…</LabStatus>
+          : <p className="pca-empty">{lab.dataset?.ready ? 'Run an experiment to see eigenfaces, the variance curve, recognition results, and misclassified faces. All four tools inspect the same completed run.' : 'The dataset must be prepared on this server before experiments can run.'}</p>}
+      </div>}
     </LabWorkspace>
     <LabGuide id="pca-guide" ref={guide} key={section} title={content.heading} concept={learningConcepts[section]} visual={<LearningFigure section={section} />} settingsHelp={<> <p>The component count sets how many variation patterns represent each face. Fewer components retain less information. Start with 150, then compare retained variance, recognition, and failures at a smaller count.</p>        <p>Baseline: 150 · whitened PCA · balanced RBF SVM · fixed split, seed 42.</p>
         <p className="lab-hint">Each run fits fresh models. Leaving the page or losing the connection stops waiting, but the server fit may continue. Wait for it to finish before retrying.</p>
