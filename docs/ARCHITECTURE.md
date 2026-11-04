@@ -39,7 +39,7 @@ Lab 2 has `/api/labs/2/sample`, `/load`, and `/experiment` endpoints. Its servic
 
 Defaults match the activity: Gaussian 3×3, Sobel size 3, Canny 100/200. Canny retains aperture 3 and `L2gradient=False`. Gaussian sizes are odd 1–9; Sobel sizes are 3/5/7; thresholds are whole numbers with `0 ≤ lower < upper ≤ 2048`. Limits are engineering choices for exploration. Sobel magnitude/absolute derivatives are display-scaled independently to 0–255 with zero-safe normalization; signed gradient extrema remain available numerically. Edge-pixel percentage describes output density, not accuracy.
 
-Generated shapes and noisy shapes replace the absent source image, with noise seed 42 and standard deviation 18. Each run resends the original input; changed settings abort pending requests while retaining completed output. The status message identifies previous results when draft settings differ; the run-settings disclosure records the parameters that produced the displayed output. Successful runs replace the output; changing the source clears it. Sidebar sections focus controls without hiding the required three-way comparison.
+Generated shapes and noisy shapes replace the absent source image, with noise seed 42 and standard deviation 18. Each run resends the original input; changed settings abort pending requests while retaining completed output. The status message identifies previous results when draft settings differ; the Run details overlay records the parameters that produced the displayed output. Successful runs replace the output; changing the source clears it. Sidebar sections focus controls without hiding the required three-way comparison.
 
 ## Lab 3 Histograms and Contrast
 
@@ -84,6 +84,13 @@ A Frame contains a PNG data URL, width, height, channels, shape, dtype, color sp
   Footer navigation links to the previous and next labs; Lab 1 has no previous
   link, and Lab 7 returns to the catalogue instead of a next lab.
 - `LabWorkspace.tsx` and `ToolSidebar.tsx`: shared workspace, responsive ordering, and tools.
+  Labs pass optional image/dataset and completed-run detail entries into the workspace;
+  their actions sit below the controls and open fixed right-side overlays without
+  changing workspace height or unmounting controls. `InfoDetails.tsx` reuses
+  `DetailsDrawer.tsx` for these actions and contextual explanations. Escape, outside click, and close actions dismiss the popover and return
+  focus to its trigger. Small screens use the same overlay at full width.
+  `RunMetadata.tsx` renders nested settings/provenance as labeled values with
+  optional raw JSON; specialized Lab 1 and Lab 3 run summaries are retained.
 - `LabButton.tsx`, `Fields.tsx`, and `LabFeedback.tsx`: controls and feedback states.
 - `SourceActions.tsx` and `SamplePicker.tsx`: upload control and configurable dropdown with dismissal and focus restoration.
 - `ImagePanel.tsx`: fit-to-panel viewer, optional pixel/crop overlays, metadata, and metadata help. Lab 1 retains a compatibility re-export; Lab 2's EdgeFigure adapter supplies edge-specific captions.
@@ -101,8 +108,12 @@ A Frame contains a PNG data URL, width, height, channels, shape, dtype, color sp
   shared nonmodal popover for learning content, image details/upload limits,
   and run details. Only one drawer opens at a time; none changes workspace
   height. Run details use readable labels with optional raw JSON. Lab 1's
-  pixel-selection hint lives inside the image viewer, updates after pointer
-  or coordinate-field selection, and resets when a new source is accepted.
+  pixel-selection hint sits below the image, updates after pointer or
+  coordinate-field selection, and resets when a new source is accepted. Crop
+  rectangles support pointer/touch dragging and arrow keys (Shift for ten-pixel
+  steps), using the contained-image scale and clamped original-image coordinates.
+  Moving the rectangle updates X/Y together through the existing selection state;
+  processing still requires Apply crop.
 - `Histogram.tsx` and `Histogram.css`: 256-bin brightness charts with an explicitly shared count scale.
 
 Changes to shared components affect every lab that consumes them. Local styles
@@ -112,7 +123,7 @@ sharing UI does not share experiment state or algorithms.
 
 On wider screens, tools occupy the left sidebar, image comparisons the center, and settings the right. Smaller layouts place settings before image comparisons; mobile tools wrap into two columns. Numerical controls provide keyboard alternatives to clicking pixels. Original-image overlays preview the selected pixel or valid crop region, using the same contained image coordinates as pointer selection.
 
-Lab 1 retains separate settings for each operation. Editing settings or switching tools cancels superseded processing while retaining the last completed result, labeled as previous output with its original operation and parameters. A new source clears results and initializes settings. Result summaries describe the actual returned changes; previews explicitly fit images to their panels and do not imply a shared display scale.
+Lab 1 retains separate settings for each operation. Editing settings cancels superseded processing while retaining the last completed result, labeled as previous output with its original operation and parameters. Switching tools aborts pending processing and clears results, errors, and accumulated rotation while preserving the source image and each tool’s saved settings. A new source clears results and initializes settings. Resize controls display the requested pixel count and validate the 4096px-per-side/four-million-pixel output limits before an API request; backend validation remains authoritative. Result summaries describe the actual returned changes; previews explicitly fit images to their panels and do not imply a shared display scale.
 
 Keep brief prediction prompts near controls. Put deeper theory, Python examples, reflection prompts, and preprocessing explanations in optional learning content (Lab 1's reading panel or the other labs' collapsed guides). No account, progress gate, or scoring is required.
 

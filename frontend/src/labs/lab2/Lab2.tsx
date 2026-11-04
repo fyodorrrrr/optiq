@@ -1,3 +1,4 @@
+import RunMetadata from '../../components/lab/RunMetadata'
 import LearningFigure from './LearningFigure'
 import { learningConcepts } from './learningContent'
 import DownloadLink from '../../components/lab/DownloadLink'
@@ -34,6 +35,10 @@ export default function Lab2() {
           tools={(Object.keys(sections) as Section[]).map(key => ({ id: key, label: sections[key].title,
             icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[key].icon} /></svg>,
           }))} />}
+        details={[
+          lab.source && { id: 'image', title: 'Image details', content: <ImageMetadata frame={lab.source.frame} /> },
+          lab.result && { id: 'run', title: 'Run details', content: <RunMetadata value={{ engine: lab.result.engine, parameters: lab.result.parameters, statistics: lab.result.statistics, measurement_note: 'Edge-pixel percentage measures output density, not accuracy.', display_scaling: lab.result.display_scaling, canny_aperture: 3, canny_L2gradient: false }} /> }
+        ]}
         controls={<><h2>{content.title === 'Compare' ? 'Compare edges' : content.title}</h2>
           <EdgeControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} onOpenHelp={() => guide.current?.querySelector<HTMLButtonElement>('.learning-canvas-link')?.click()} /></>}>
           <div className="lab-image-grid" data-columns={3}>
@@ -41,9 +46,7 @@ export default function Lab2() {
                         <EdgeFigure title="Sobel combined" frame={lab.result?.sobel ?? null} description="Brighter pixels show stronger changes · scaled for display" pending={lab.busy} />
             <EdgeFigure title="Canny edges" frame={lab.result?.canny ?? null} description="White pixels are detected edges · values 0 or 255" pending={lab.busy} />
           </div>
-          {lab.source && <details className="lab-metadata-help"><summary>Image details</summary>
-            <ImageMetadata frame={lab.source.frame} />
-          </details>}
+
           {lab.error && <LabError message={lab.error} title="Could not compare the edges." />}
           <LabStatus>{lab.busy ? 'Working with the image service…'
             : lab.error ? 'The request failed. Check the message above and try again.'
@@ -60,7 +63,7 @@ export default function Lab2() {
                 <EdgeFigure title="Sobel y" frame={lab.result.sobel_y} description="Absolute y derivative · separately scaled" />
               </div>
             </details>
-            <details className="edge-run"><summary>Run settings & measurements</summary>            <p className="edge-scaling">Sobel is scaled to 0–255 for display; raw magnitude max: {Number(lab.result.statistics.sobel_max.toFixed(2))}. Canny edge pixels: {lab.result.statistics.canny_edge_pixels.toLocaleString()} ({lab.result.statistics.canny_edge_percent}%).</p><p>Edge-pixel percentage measures output density, not accuracy.</p><pre>{JSON.stringify({ engine: lab.result.engine, parameters: lab.result.parameters, statistics: lab.result.statistics, display_scaling: lab.result.display_scaling, canny_aperture: 3, canny_L2gradient: false }, null, 2)}</pre></details>
+
           </>}
       </LabWorkspace>
       <LabGuide id="edge-guide" ref={guide} key={section} title={content.heading} concept={learningConcepts[section]} visual={<LearningFigure section={section} />} settingsHelp={<>

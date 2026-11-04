@@ -1,6 +1,6 @@
+import ImageMetadata from '../../components/lab/ImageMetadata'
 import DownloadLink from '../../components/lab/DownloadLink'
-import ControlHelp from '../../components/lab/ControlHelp'
-import { useId, useRef } from 'react'
+import { useRef } from 'react'
 import type { Operation } from './api'
 import { experiments } from './content'
 import Controls from './Controls'
@@ -15,7 +15,6 @@ import LabWorkspace from '../../components/lab/LabWorkspace'
 import ToolSidebar from '../../components/lab/ToolSidebar'
 import LabButton from '../../components/lab/LabButton'
 import LearningCanvas from '../../components/lab/LearningCanvas'
-import DetailsDrawer from '../../components/lab/DetailsDrawer'
 import RunDetails from './RunDetails'
 import LearningFigure from './LearningFigure'
 import { learningContent } from './learningContent'
@@ -26,8 +25,6 @@ import './Lab1.css'
 export default function Lab1() {
   const lab = useLab1()
   const guide = useRef<HTMLElement>(null)
-  const imageDetailsId = useId()
-  const runDetailsId = useId()
   const current = experiments[lab.operation]
   const learning = learningContent[lab.operation]
   const pixelMode = lab.operation === 'inspect' || lab.operation === 'edit'
@@ -46,32 +43,10 @@ export default function Lab1() {
         tools={<ToolSidebar<Operation> value={lab.operation} onChange={lab.select} tools={(Object.keys(experiments) as Operation[]).map(operation => ({
           id: operation, label: experiments[operation].title, icon: <ToolIcon operation={operation} />,
         }))} />}
-        controls={<>
-
-            <div className="lab-control-introduction"><h2>{current.title}</h2><p>{current.description}</p></div>
-
-            {lab.operation === 'rotate' && <p className="lab-rotation-angle">Rotation: {lab.rotationTurns * 90}°{lab.rotationTurns === 0 ? ' · original orientation' : ' clockwise'}</p>}
-            <form onSubmit={event => { event.preventDefault(); void lab.run() }}>
-              <fieldset disabled={lab.busy || !lab.source}>
-                <legend className="sr-only">Experiment settings</legend>
-                {lab.source && <Controls operation={lab.operation} fields={lab.fields} frame={lab.source.frame} change={lab.change} />}
-                <LabButton variant="primary" type="submit">{lab.busy ? 'Processing…' : current.action}</LabButton>
-              </fieldset>
-              <LabButton disabled={!lab.output && !lab.busy} onClick={lab.reset}>{lab.busy ? 'Cancel processing' : 'Clear result'}</LabButton>
-              <p className="lab-hint">{lab.operation === 'rotate' ? 'Each click adds 90°. Clear the result to reset the angle.' : 'Each experiment starts from the original image.'}</p>
-              {(pixelMode || lab.operation === 'crop') && <ControlHelp key={lab.operation} title={lab.operation === 'crop' ? 'How to position the crop' : 'How to select a pixel'}>
-                <p>Coordinates start at (0, 0) in the top-left. X moves right; Y moves down.{lab.operation === 'crop' && ' The outlined crop must fit inside the image.'}</p>
-              </ControlHelp>}
-            </form>
-        </>}>
-            {lab.output && <><p className="lab-result-notice">{lab.resultIsPrevious || lab.busy ? `Previous result · ${experiments[lab.output.operation].title}. Run to apply the current settings.` : `${experiments[lab.output.operation].title} result`}</p>
-              <p className="lab-result-summary">{summary}</p></>}
-            <div className="lab-image-grid">
-              <ImagePanel metadataEssential title="Original" pixelOverlay={pixelMode ? lab.pixelSelected ? 'selected' : 'prompt' : undefined} frame={lab.source?.frame ?? null} onPick={pixelMode && !lab.busy ? lab.pick : undefined} selection={selection} empty={lab.busy ? 'Loading image…' : 'Choose a sample or upload an image.'} />
-              <ImagePanel metadataEssential title="Result" frame={lab.output?.result ?? null} empty={lab.busy ? 'Processing the image…' : 'Run an experiment to see its result.'} />
-            </div>
-            <button className="lab-details-trigger" type="button" popoverTarget={imageDetailsId}>Image details</button>
-            <DetailsDrawer id={imageDetailsId} title="Image details">
+        details={[
+          lab.source && { id: 'image', title: 'Image details', content: <>
+            <section><h3>Original image</h3><ImageMetadata frame={lab.source.frame} /></section>
+            {lab.output && <section><h3>Result image</h3><ImageMetadata frame={lab.output.result} /></section>}
               <section><h3>Shape, channels & values</h3>
               <p>Dimensions list width × height; array shape lists height, width, then channels for color images. OpenCV stores color channels in BGR order: blue, green, red. Grayscale has one channel. These images use uint8 whole-number values from 0 to 255.</p>
               </section>
@@ -85,7 +60,30 @@ export default function Lab1() {
                 <li>Result downloads are lossless PNGs. The displayed shape describes the OpenCV array, not the browser image buffer.</li>
               </ul>
               </section>
-            </DetailsDrawer>
+          </> },
+          lab.output && { id: 'run', title: 'Run details', content: <RunDetails output={lab.output} source={lab.source?.frame} previous={lab.resultIsPrevious || lab.busy} /> },
+        ]}
+        controls={<>
+
+            <div className="lab-control-introduction"><h2>{current.title}</h2><p>{current.description}</p></div>
+
+            {lab.operation === 'rotate' && <p className="lab-rotation-angle">Rotation: {lab.rotationTurns * 90}°{lab.rotationTurns === 0 ? ' · original orientation' : ' clockwise'}</p>}
+            <form onSubmit={event => { event.preventDefault(); void lab.run() }}>
+              <fieldset disabled={lab.busy || !lab.source}>
+                <legend className="sr-only">Experiment settings</legend>
+                {lab.source && <Controls operation={lab.operation} fields={lab.fields} frame={lab.source.frame} change={lab.change} />}
+                <LabButton variant="primary" type="submit">{lab.busy ? 'Processing…' : current.action}</LabButton>
+              </fieldset>
+              <LabButton disabled={!lab.output && !lab.busy} onClick={lab.reset}>{lab.busy ? 'Cancel processing' : 'Clear result'}</LabButton>
+
+            </form>
+        </>}>
+            {lab.output && <><p className="lab-result-notice">{lab.resultIsPrevious || lab.busy ? `Previous result · ${experiments[lab.output.operation].title}. Run to apply the current settings.` : `${experiments[lab.output.operation].title} result`}</p>
+              <p className="lab-result-summary">{summary}</p></>}
+            <div className="lab-image-grid">
+              <ImagePanel showMetadata={false} title="Original" pixelOverlay={pixelMode ? lab.pixelSelected ? 'selected' : 'prompt' : undefined} frame={lab.source?.frame ?? null} onPick={pixelMode && !lab.busy ? lab.pick : undefined} onMoveSelection={lab.operation === 'crop' && !lab.busy ? lab.pick : undefined} selection={selection} empty={lab.busy ? 'Loading image…' : 'Choose a sample or upload an image.'} />
+              <ImagePanel showMetadata={false} title="Result" frame={lab.output?.result ?? null} empty={lab.busy ? 'Processing the image…' : 'Run an experiment to see its result.'} />
+            </div>
             {lab.output?.pixel && <PixelComparison pixel={lab.output.pixel} />}
             {lab.error && <LabError message={lab.error} />}
             {(lab.busy || lab.error || lab.notice || lab.output) && <LabStatus>{lab.busy ? 'Working with the image service…'
@@ -94,8 +92,7 @@ export default function Lab1() {
                   : lab.resultIsPrevious ? 'Settings changed. The previous result is still shown; run the experiment to update it.'
                     : lab.output ? `${experiments[lab.output.operation].title} complete. The original is unchanged.` : null}</LabStatus>}
             {lab.output && <div className="lab-result-actions"><DownloadLink href={lab.output.result.image} download={`optiq-lab1-${lab.output.operation}.png`}>Result PNG</DownloadLink>
-              <button className="lab-details-trigger" type="button" popoverTarget={runDetailsId}>Run details</button>
-              <DetailsDrawer id={runDetailsId} title="Run details"><RunDetails output={lab.output} source={lab.source?.frame} previous={lab.resultIsPrevious || lab.busy} /></DetailsDrawer>
+
             </div>}
       </LabWorkspace>
       <LearningCanvas key={lab.operation} ref={guide} id="lab-explanation" title={learning.title}

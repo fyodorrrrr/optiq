@@ -1,3 +1,4 @@
+import { resizeError } from './resizeLimits'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { getSample, loadImage, runExperiment, sampleFile } from './api'
 import type { ExperimentResult, Frame, Operation } from './api'
@@ -108,7 +109,8 @@ export default function useLab1() {
 
   function select(next: Operation) {
     if (next === operation) return
-    invalidateResult()
+    reset()
+    setNotice('')
     setOperation(next)
   }
 
@@ -149,7 +151,11 @@ export default function useLab1() {
       }
       if (operation === 'inspect' || operation === 'edit' || operation === 'crop') Object.assign(settings, { x: number('x'), y: number('y') })
       if (operation === 'crop' || operation === 'resize') Object.assign(settings, { width: number('width'), height: number('height') })
-      if (operation === 'resize') settings.interpolation = fields.interpolation
+      if (operation === 'resize') {
+        const error = resizeError(Number(settings.width), Number(settings.height))
+        if (error) throw new Error(error)
+        settings.interpolation = fields.interpolation
+      }
       if (operation === 'rotate') settings.quarter_turns = (rotationTurns + 1) % 4
       if (operation === 'edit') {
         if (source.frame.channels === 1) settings.intensity = number('intensity')

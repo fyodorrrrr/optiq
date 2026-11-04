@@ -1,3 +1,6 @@
+import InfoDetails from '../../components/lab/InfoDetails'
+import ImageMetadata from '../../components/lab/ImageMetadata'
+import RunMetadata from '../../components/lab/RunMetadata'
 import LearningFigure from './LearningFigure'
 import { learningConcepts } from './learningContent'
 import DownloadLink from '../../components/lab/DownloadLink'
@@ -45,6 +48,16 @@ export default function Lab4() {
       tools={<ToolSidebar<Section> heading="Methods" value={section} onChange={choose} tools={(Object.keys(sections) as Section[]).map(id => ({ id, label: sections[id].title,
         icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[id].icon} /></svg>,
       }))} />}
+      details={[
+        (lab.sources.first || lab.sources.second) && { id: 'image', title: 'Image details', content: <>
+          {lab.sources.first && <section><h3>Image A</h3><ImageMetadata frame={lab.sources.first.frame} /></section>}
+          {lab.sources.second && <section><h3>Image B</h3><ImageMetadata frame={lab.sources.second.frame} /></section>}
+          {selected?.keypoints_first_image && <section><h3>Keypoints A</h3><ImageMetadata frame={selected.keypoints_first_image} /></section>}
+          {selected?.keypoints_second_image && <section><h3>Keypoints B</h3><ImageMetadata frame={selected.keypoints_second_image} /></section>}
+          {selected?.matches_image && <section><h3>Matches</h3><ImageMetadata frame={selected.matches_image} /></section>}
+        </> },
+        lab.result && { id: 'run', title: 'Run details', content: <RunMetadata value={{ engine: lab.result.engine, parameters: lab.result.parameters, algorithms: lab.result.algorithms.map(({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms }) => ({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms })) }} /> }
+      ]}
       controls={<><h2>{content.title === 'Compare' ? 'Compare features' : content.title}</h2>
         <form onSubmit={event => { event.preventDefault(); void lab.run(field => revealField(field, () => setSection('compare'))) }}>
           <fieldset disabled={lab.busy || !lab.sources.first || !lab.sources.second}><legend className="sr-only">Feature comparison settings</legend>
@@ -61,8 +74,8 @@ export default function Lab4() {
           <SettingsHelpLink guideId="features-guide" onOpen={() => guide.current?.querySelector<HTMLButtonElement>('.learning-canvas-link')?.click()} />
         </form></>}>
       {surf && !surf.available && <LabError title="SURF is unavailable on this server." message={surf.reason ?? 'A SURF-enabled OpenCV build is required. This laboratory is partially available.'} />}
-      <div className="lab-image-grid"><ImagePanel title="Image A" frame={lab.sources.first?.frame ?? null} description={lab.sources.first?.name} />
-        <ImagePanel title="Image B" frame={lab.sources.second?.frame ?? null} description={lab.sources.second?.name} /></div>
+      <div className="lab-image-grid"><ImagePanel showMetadata={false} title="Image A" frame={lab.sources.first?.frame ?? null} description={lab.sources.first?.name} />
+        <ImagePanel showMetadata={false} title="Image B" frame={lab.sources.second?.frame ?? null} description={lab.sources.second?.name} /></div>
       {lab.error && <LabError title="Could not compare the features." message={lab.error} />}
       <LabStatus>{lab.busy ? 'Working with the image service…' : lab.error ? 'Check the message above and try again.'
         : lab.resultIsPrevious ? 'Settings changed. Previous results are shown; run the comparison to update them.'
@@ -81,15 +94,15 @@ export default function Lab4() {
           {selected?.message && <p role="status">{selected.message}</p>}
           {selected?.status === 'ok' && <>
             <p>Circles show keypoint size; spokes show orientation.</p>
-            <details className="lab-metadata-help"><summary>Descriptor details</summary><p>{selected.descriptor_dimensions} {selected.descriptor_dtype === 'uint8' ? 'bytes (256 bits)' : 'floating-point values'} per descriptor · {selected.norm} distance.</p></details>
-            <div className="lab-image-grid"><ImagePanel title={`${algorithm.toUpperCase()} · keypoints A`} frame={selected.keypoints_first_image} /><ImagePanel title={`${algorithm.toUpperCase()} · keypoints B`} frame={selected.keypoints_second_image} /></div>
-            <ImagePanel title={`${algorithm.toUpperCase()} · matches`} frame={selected.matches_image} description={`Showing ${selected.displayed_matches} of ${selected.good_matches} ratio-test matches, ordered by distance. These are candidate correspondences, not verified accuracy.`} />
+            <InfoDetails title="Descriptor details"><p>{selected.descriptor_dimensions} {selected.descriptor_dtype === 'uint8' ? 'bytes (256 bits)' : 'floating-point values'} per descriptor · {selected.norm} distance.</p></InfoDetails>
+            <div className="lab-image-grid"><ImagePanel showMetadata={false} title={`${algorithm.toUpperCase()} · keypoints A`} frame={selected.keypoints_first_image} /><ImagePanel showMetadata={false} title={`${algorithm.toUpperCase()} · keypoints B`} frame={selected.keypoints_second_image} /></div>
+            <ImagePanel showMetadata={false} title={`${algorithm.toUpperCase()} · matches`} frame={selected.matches_image} description={`Showing ${selected.displayed_matches} of ${selected.good_matches} ratio-test matches, ordered by distance. These are candidate correspondences, not verified accuracy.`} />
             <div className="feature-downloads lab-downloads">{selected.keypoints_first_image && <DownloadLink href={selected.keypoints_first_image.image} download={`optiq-${algorithm}-keypoints-a.png`}>Keypoints A PNG</DownloadLink>}
               {selected.keypoints_second_image && <DownloadLink href={selected.keypoints_second_image.image} download={`optiq-${algorithm}-keypoints-b.png`}>Keypoints B PNG</DownloadLink>}
               {selected.matches_image && <DownloadLink href={selected.matches_image.image} download={`optiq-${algorithm}-matches.png`}>Matches PNG</DownloadLink>}</div>
           </>}
         </section>
-        <details className="lab-preprocessing"><summary>Run settings & measurements</summary><pre>{JSON.stringify({ engine: lab.result.engine, parameters: lab.result.parameters, algorithms: lab.result.algorithms.map(({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms }) => ({ algorithm, status, keypoints_first, keypoints_second, good_matches, first_ms, second_ms, match_ms })) }, null, 2)}</pre></details>
+
       </>}
     </LabWorkspace>
     <LabGuide id="features-guide" ref={guide} key={section} title={content.heading} concept={learningConcepts[section]} visual={<LearningFigure section={section} />} settingsHelp={<>

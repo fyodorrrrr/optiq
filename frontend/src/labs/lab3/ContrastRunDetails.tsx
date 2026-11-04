@@ -7,8 +7,7 @@ export default function ContrastRunDetails({ result }: { result: ContrastResult 
     ['CLAHE', result.clahe], ['Linear adjustment', result.linear],
   ] as const
 
-  return <details className="lab-result-disclosure lab-preprocessing">
-    <summary>Run settings & measurements</summary>
+  return <>
     <dl className="lab-run-settings">
       <div><dt>Processing mode</dt><dd>{settings.mode === 'color' ? 'Color · Y brightness' : 'Grayscale'}</dd></div>
       <div><dt>CLAHE clip limit</dt><dd>{settings.clip_limit}</dd></div>
@@ -31,5 +30,5 @@ export default function ContrastRunDetails({ result }: { result: ContrastResult 
       engine: result.engine, parameters: settings, linear_transform: result.linear_transform, channel: result.channel,
       statistics: Object.fromEntries(views.map(([label, view]) => [label, view.statistics])),
     }, null, 2)}</pre></details>
-  </details>
+  </>
 }

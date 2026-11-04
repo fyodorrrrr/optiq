@@ -12,3 +12,5 @@
 .feature-inspection > p { color: var(--ink-soft); line-height: 1.7; }
 .feature-inspection > .lab-image-grid { margin: 24px 0; }
 .feature-downloads { display: flex; flex-wrap: wrap; gap: 20px; padding: 20px 0; }
+
+.feature-table button { min-width: 44px; min-height: 44px; }

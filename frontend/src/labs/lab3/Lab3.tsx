@@ -1,3 +1,4 @@
+import InfoDetails from '../../components/lab/InfoDetails'
 import LearningFigure from './LearningFigure'
 import { learningConcepts } from './learningContent'
 import DownloadLink from '../../components/lab/DownloadLink'
@@ -48,6 +49,13 @@ export default function Lab3() {
           id: key, label: sections[key].title,
           icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[key].icon} /></svg>,
         }))} />}
+        details={[
+          lab.source && { id: 'image', title: 'Image details', content: <>
+            {!lab.result && <p>The selected processing mode is applied when you run the comparison.</p>}
+            <ImageMetadata frame={lab.result?.original.frame ?? lab.source.frame} />
+          </> },
+          lab.result && { id: 'run', title: 'Run details', content: <ContrastRunDetails result={lab.result} /> },
+        ]}
         controls={<><h2>{content.title === 'Compare' ? 'Compare contrast' : content.title}</h2><ContrastControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} onOpenHelp={() => guide.current?.querySelector<HTMLButtonElement>('.learning-canvas-link')?.click()} /></>}>
         <div className="lab-image-grid" data-columns={3}>
           <ContrastPanel title="Original" view={lab.result?.original ?? null} original={lab.source?.frame} pending={lab.busy} maxCount={maxCount} channel={channel}
@@ -55,10 +63,10 @@ export default function Lab3() {
                     <ContrastPanel title="Global equalization" view={lab.result?.equalized ?? null} pending={lab.busy} maxCount={maxCount} channel={channel} description="One brightness mapping for the whole image" />
           <ContrastPanel title="CLAHE" view={lab.result?.clahe ?? null} pending={lab.busy} maxCount={maxCount} channel={channel} description="Local enhancement with a contrast limit" />
         </div>
-        {lab.result && <details className="lab-metadata-help"><summary>How to read these histograms</summary>
+        {lab.result && <InfoDetails title="How to read these histograms">
           <p>The horizontal axis shows brightness from 0 (black) to 255 (white). Bar height counts pixels at each brightness. All four charts share the same count scale, so their heights can be compared.</p>
           <p>{lab.result.channel === 'Grayscale intensity' ? 'These histograms measure grayscale intensity.' : 'These histograms measure Y brightness from each final color image, not separate red, green, and blue channels.'} A wider brightness distribution can indicate greater contrast; also compare detail visibility and noise in the images.</p>
-        </details>}
+        </InfoDetails>}
         {lab.error && <LabError title="Could not compare the contrast." message={lab.error} />}
 
         {lab.result && <section className="contrast-linear" aria-labelledby="linear-result-title">
@@ -86,11 +94,7 @@ export default function Lab3() {
               <DownloadLink href={`data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`} download="optiq-lab3-histograms.csv">Histograms CSV</DownloadLink>
             </div>
           </section>}
-          {lab.source && <details className="lab-result-disclosure lab-metadata-help"><summary>{lab.result ? 'Shared image properties' : 'Input image properties'}</summary>
-            {!lab.result && <p>The selected processing mode is applied when you run the comparison.</p>}
-            <ImageMetadata wide frame={lab.result?.original.frame ?? lab.source.frame} />
-          </details>}
-          {lab.result && <ContrastRunDetails result={lab.result} />}
+
         </div>
       </LabWorkspace>
       <LabGuide id="contrast-guide" ref={guide} key={section} title={content.heading} concept={learningConcepts[section]} visual={<LearningFigure section={section} />} settingsHelp={<>

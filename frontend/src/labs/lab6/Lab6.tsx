@@ -1,3 +1,5 @@
+import RunMetadata from '../../components/lab/RunMetadata'
+import ImageMetadata from '../../components/lab/ImageMetadata'
 import LearningFigure from './LearningFigure'
 import { learningConcepts } from './learningContent'
 import DownloadLink from '../../components/lab/DownloadLink'
@@ -37,6 +39,10 @@ export default function Lab6() {
       tools={<ToolSidebar<Section> value={section} onChange={setSection} tools={(Object.keys(sections) as Section[]).map(id => ({ id, label: sections[id].title,
         icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[id].icon} /></svg>,
       }))} />}
+      details={[
+        lab.source && { id: 'image', title: 'Image details', content: <ImageMetadata frame={lab.source.frame} /> },
+        lab.result && { id: 'run', title: 'Run details', content: <RunMetadata value={{ parameters: lab.result.parameters, provenance: lab.result.provenance, stages_ms: lab.result.stages_ms }} /> }
+      ]}
       controls={<><h2>{content.title}</h2>
         {section === 'detect' && <form onSubmit={event => { event.preventDefault(); void lab.run() }}><SelectField label="Detection model" value={lab.model} onChange={value => lab.changeModel(value as Model)} options={(lab.status?.models ?? [{ id: 'pretrained', title: 'YOLO11n · pretrained COCO', available: false }]).map(model => ({ value: model.id, label: `${model.id === 'pretrained' ? 'YOLO11n · COCO' : 'Custom model'}${model.available ? '' : ' · unavailable'}`, disabled: !model.available }))} />
           <NumberField label="Confidence threshold" value={lab.confidence} min={0.01} max={1} step="any" onChange={lab.changeConfidence} disabled={cameraRunning} />
@@ -56,7 +62,7 @@ export default function Lab6() {
         {lab.result && <>
           {lab.result.detections.length === 0 ? <p>No objects met this threshold. Try a lower confidence or an image containing the model’s supported classes.</p> : <details><summary>Detection details ({lab.result.detections.length})</summary><div className="detection-table" tabIndex={0} role="region" aria-label="Detected objects"><table><caption>Boxes in original input pixels · x1, y1, x2, y2</caption><thead><tr><th>Object</th><th>Confidence</th><th>Box coordinates</th></tr></thead><tbody>{lab.result.detections.map((item, index) => <tr key={index}><th scope="row">{item.label}</th><td>{(item.confidence * 100).toFixed(1)}%</td><td>{item.xyxy.map(value => value.toFixed(1)).join(', ')}</td></tr>)}</tbody></table></div></details>}
           <div className="detection-actions lab-downloads"><DownloadLink href={lab.result.output.image} download="optiq-lab6-detections.png">Detection PNG</DownloadLink><DownloadLink href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify({ ...lab.result, output: undefined }, null, 2))}`} download="optiq-lab6-detections.json">Detection JSON</DownloadLink></div>
-          <details className="lab-preprocessing"><summary>Inference settings & provenance</summary><pre>{JSON.stringify({ parameters: lab.result.parameters, provenance: lab.result.provenance, stages_ms: lab.result.stages_ms }, null, 2)}</pre></details>
+
         </>}
       </>}
       {section === 'dataset' && <DatasetView dataset={lab.status?.dataset} />}

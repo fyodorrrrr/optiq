@@ -1,3 +1,5 @@
+import RunMetadata from '../../components/lab/RunMetadata'
+import ImageMetadata from '../../components/lab/ImageMetadata'
 import LearningFigure from './LearningFigure'
 import { learningConcepts } from './learningContent'
 import DownloadLink from '../../components/lab/DownloadLink'
@@ -32,6 +34,10 @@ export default function Lab7() {
       tools={<ToolSidebar<Method> value={lab.method} onChange={lab.choose} tools={(Object.keys(sections) as Method[]).map(id => ({ id, label: sections[id].title,
         icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={sections[id].icon} /></svg>,
       }))} />}
+      details={[
+        lab.source && { id: 'image', title: 'Image details', content: <ImageMetadata frame={lab.source.frame} /> },
+        result && { id: 'run', title: 'Run details', content: <RunMetadata value={{ parameters: result.parameters, measurements: result.measurements, provenance: result.provenance, notes: result.notes }} /> }
+      ]}
       controls={<><h2>{content.title}</h2><SegmentationControls lab={lab} /></>}>
       <ImagePanel title="Input image" frame={lab.source?.frame ?? null} showMetadata={false} description={lab.method === 'region' ? `${lab.source?.name ?? ''} · click to select a seed, or enter x/y coordinates.` : lab.source?.name}
         onPick={lab.method === 'region' ? lab.seed : undefined} selection={lab.method === 'region' ? { x: Number(lab.draft.seed_x), y: Number(lab.draft.seed_y) } : undefined} />
@@ -44,7 +50,7 @@ export default function Lab7() {
         <div className="segmentation-actions lab-downloads">{result.views.map((view, index) => <DownloadLink key={view.title} href={view.frame.image} download={`optiq-lab7-${result.parameters.method}-${index + 1}.png`}>{view.title} PNG</DownloadLink>)}
           {result.labels_png && <DownloadLink href={result.labels_png} download={`optiq-lab7-${result.parameters.method}-labels.png`}>Raw label IDs PNG</DownloadLink>}
           <DownloadLink href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify({ ...result, views: undefined, labels_png: undefined }, null, 2))}`} download="optiq-lab7-measurements.json">Measurements JSON</DownloadLink></div>
-        <details className="lab-preprocessing"><summary>Run settings, measurements & provenance</summary><pre>{JSON.stringify({ parameters: result.parameters, measurements: result.measurements, provenance: result.provenance, notes: result.notes }, null, 2)}</pre></details>
+
       </section>}
     </LabWorkspace>
     <LabGuide id="segmentation-guide" ref={guide} key={lab.method} title={content.heading} concept={learningConcepts[lab.method]} visual={<LearningFigure section={lab.method} />}><div className="lab-canvas-reading"><article><h3>{content.heading}</h3><p>{content.explanation}</p><section><h3>Connect it to Python</h3><pre tabIndex={0} aria-label="Python implementation"><code>{pythonExample}</code></pre></section></article><article><h3>Processing tradeoffs</h3><p>{content.cost}</p><p>Try the same image with different method families. Compare boundaries and failure cases rather than assuming every foreground region is a semantic object.</p></article></div>
