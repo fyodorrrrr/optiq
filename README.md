@@ -122,10 +122,15 @@ curl http://127.0.0.1:8000/api/health
 A running backend returns `{"status":"ok","message":"Optiq backend is connected"}`.
 The homepage does not include a connection-check control.
 
-Vite forwards `/api` requests to port 8000 during development. Production hosting
-must also route `/api` to FastAPI; the development proxy is not included in the build.
-Production hosting must serve `frontend/dist` and fall back to `index.html` for
-application routes such as `/labs/1`, while forwarding `/api` to the backend.
+Vite forwards `/api` to port 8000 during development. Production uses a Vercel
+static frontend and an Oracle Linux API behind Caddy. Set `VITE_API_BASE_URL` to
+the API's HTTPS origin before building, and configure exact backend CORS origins.
+`frontend/vercel.json` supplies SPA fallback for direct lab URLs. The API exposes
+`/api/ready` (200/503) separately from lightweight `/api/health`.
+
+See [the deployment runbook](docs/DEPLOYMENT.md) for Linux dependencies, reviewed
+model transfer, service/HTTPS/monitoring templates, smoke checks and rollback.
+These files prepare deployment; public hosting has not yet been verified.
 
 ## Checks
 

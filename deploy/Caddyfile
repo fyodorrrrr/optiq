@@ -1,0 +1,53 @@
+{
+	email {$ACME_EMAIL}
+	servers {
+		timeouts {
+			read_header 10s
+			read_body 35s
+			write 130s
+			idle 60s
+		}
+		max_header_size 32KB
+	}
+}
+
+{$API_DOMAIN} {
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer
+		-Server
+	}
+	@pair path /api/labs/4/experiment
+	request_body @pair {
+		max_size 11534336
+	}
+	@single {
+		path /api/labs/*
+		not path /api/labs/4/experiment
+	}
+	request_body @single {
+		max_size 6291456
+	}
+	handle /api/* {
+		reverse_proxy 127.0.0.1:8000 {
+			# Browser -> Caddy directly. Discard any caller-supplied forwarding chain.
+			header_up X-Forwarded-For {remote_host}
+			header_up -Forwarded
+			header_up -X-Real-IP
+			transport http {
+				dial_timeout 5s
+				response_header_timeout 115s
+			}
+		}
+	}
+	handle {
+		respond 404
+	}
+	handle_errors {
+		header Content-Type application/json
+		header Cache-Control no-store
+		header Access-Control-Allow-Origin {$FRONTEND_ORIGIN}
+		header Vary Origin
+		respond `{"detail":"The API could not complete this request. Check the upload size or try again."}` {err.status_code}
+	}
+}

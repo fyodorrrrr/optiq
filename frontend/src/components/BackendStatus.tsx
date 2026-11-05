@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { apiUrl } from '../api/transport'
 
 export default function BackendStatus() {
   const [status, setStatus] = useState('Check the connection to the Optiq backend.')
@@ -9,7 +10,7 @@ export default function BackendStatus() {
     setStatus('Connecting…')
 
     try {
-      const response = await fetch('/api/health', {
+      const response = await fetch(apiUrl('/api/health'), {
         signal: AbortSignal.timeout(10000),
       })
       if (!response.ok) throw new Error('Backend request failed')

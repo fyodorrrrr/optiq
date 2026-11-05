@@ -1,0 +1,34 @@
+[Unit]
+Description=Optiq laboratory API
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=optiq
+Group=optiq
+WorkingDirectory=/opt/optiq/backend
+EnvironmentFile=/etc/optiq/backend.env
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/optiq/backend/.venv/bin/python -m uvicorn main:app --host 127.0.0.1 --port 8000 --workers 1 --limit-concurrency 16 --backlog 64 --proxy-headers --forwarded-allow-ips 127.0.0.1 --timeout-keep-alive 5 --timeout-graceful-shutdown 150 --no-access-log
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=160
+KillSignal=SIGTERM
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/optiq/backend/.cache
+UMask=0077
+MemoryMax=4G
+TasksMax=128
+LogNamespace=optiq
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

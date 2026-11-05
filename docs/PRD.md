@@ -73,9 +73,12 @@ Use React, TypeScript, Vite, and Tailwind CSS for the frontend; Python/FastAPI f
 The current development proxy connects frontend `/api` requests to FastAPI.
 Image experiments use bounded, stateless requests; PCA uses bounded request-time
 fitting, and custom YOLO training runs through trusted local scripts. Production
-hosting, deployment resource/concurrency limits, and any future persistent
-storage or background-job infrastructure remain undecided. Current execution
-choices are documented in [ARCHITECTURE.md](ARCHITECTURE.md).
+hosting targets Vercel for static frontend delivery and one Oracle Linux VM for
+the API, using direct HTTPS requests with exact CORS origins. Application
+processing/rate/upload/time limits and deployment templates are implemented;
+actual target capacity and live deployment still require verification. Persistent
+storage/background jobs remain outside scope. Current execution choices are
+documented in [ARCHITECTURE.md](ARCHITECTURE.md) and [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## Acceptance and Success
 
@@ -110,8 +113,9 @@ Product acceptance means students can perform and explain the intended compariso
   choice; these interpretations do not remove the source discrepancies.
 - Verify SURF builds, model execution, and resource/concurrency limits on the
   deployment target; existing verification is local.
-- Select production hosting and API/SPA routing. Revisit persistence or job
-  infrastructure only if the product explicitly requires it.
+- Verify the prepared Vercel/Oracle configuration, public HTTPS, client-IP trust,
+  restarts and monitoring on the target. Revisit persistence or job infrastructure
+  only if the product explicitly requires it.
 
 The detailed decision register and completion evidence remain in
 [LAB_REQUIREMENTS.md](LAB_REQUIREMENTS.md).

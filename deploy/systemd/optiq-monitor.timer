@@ -1,0 +1,10 @@
+[Unit]
+Description=Check Optiq every five minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+Unit=optiq-monitor.service
+
+[Install]
+WantedBy=timers.target

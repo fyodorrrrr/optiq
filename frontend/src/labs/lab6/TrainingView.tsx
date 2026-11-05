@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { apiUrl } from '../../api/transport'
 import DownloadLink from '../../components/lab/DownloadLink'
 import InfoDetails from '../../components/lab/InfoDetails'
 import RunMetadata from '../../components/lab/RunMetadata'
@@ -57,7 +58,7 @@ export default function TrainingView({ status, loading, unavailable, actions }: 
           dataset_sha256: evaluation.dataset_sha256, weight_sha256: evaluation.weight_sha256,
         } }} /></InfoDetails>}
         {training.status !== 'running' && <InfoDetails title="Local commands"><ol><li>Collect and annotate objects in YOLO format.</li><li>Validate the dataset.</li><li>Train locally, then refresh status.</li></ol><pre tabIndex={0} aria-label="Local training commands"><code>{`# Replace the dataset path. Run from the repository root.\nbackend/.venv/bin/python backend/scripts/train_yolo.py \\\n  --data /path/to/dataset/data.yaml --validate-only\n\n# Source baseline: 100 epochs at 640px\nbackend/.venv/bin/python backend/scripts/train_yolo.py \\\n  --data /path/to/dataset/data.yaml --epochs 100 --batch 4 --name baseline`}</code></pre><p>CPU is the default. Use --split test only with a separate test split.</p></InfoDetails>}
-        {status?.training_log_available && <DownloadLink href="/api/labs/6/artifacts/log" download>Training log</DownloadLink>}
+        {status?.training_log_available && <DownloadLink href={apiUrl('/api/labs/6/artifacts/log')} download>Training log</DownloadLink>}
         {evaluation && <DownloadLink href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(evaluation, null, 2))}`} download="optiq-lab6-test.json">Test JSON</DownloadLink>}
         {completed && <DownloadLink href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(training, null, 2))}`} download="optiq-lab6-training.json">Training JSON</DownloadLink>}
       </div>

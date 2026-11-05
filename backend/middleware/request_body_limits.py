@@ -31,8 +31,9 @@ async def _file_io(function, *args):
 
 
 class RequestBodyLimitMiddleware:
-    def __init__(self, app, max_bytes=6 * MIB, pair_max_bytes=11 * MIB):
+    def __init__(self, app, max_bytes=6 * MIB, pair_max_bytes=11 * MIB, read_seconds=30):
         self.app = app
+        self.read_seconds = read_seconds
         self.max_bytes = max_bytes
         self.pair_max_bytes = pair_max_bytes
 
@@ -59,8 +60,14 @@ class RequestBodyLimitMiddleware:
         body = SpooledTemporaryFile(max_size=MIB, mode='w+b')
         try:
             total = 0
+            receive_deadline = asyncio.get_running_loop().time() + self.read_seconds
             while True:
-                message = await receive()
+                try:
+                    async with asyncio.timeout_at(receive_deadline):
+                        message = await receive()
+                except TimeoutError:
+                    await self.reject(scope, receive, send, 408, 'The upload took too long. Try again.')
+                    return
                 if message['type'] == 'http.disconnect':
                     return
                 chunk = message.get('body', b'')

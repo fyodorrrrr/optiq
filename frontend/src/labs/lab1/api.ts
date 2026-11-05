@@ -1,3 +1,5 @@
+import { apiFetch } from '../../api/transport'
+
 export interface Frame {
   image: string
   width: number
@@ -33,24 +35,9 @@ export interface ExperimentResult {
 export type Operation = 'inspect' | 'edit' | 'grayscale' | 'crop' | 'resize' | 'rotate'
 
 async function request<T>(path: string, signal: AbortSignal, body?: FormData): Promise<T> {
-  // Let superseded effect/request cancellation settle before opening a connection.
-  await Promise.resolve()
-  signal.throwIfAborted()
-  let response: Response
-  try {
-    response = await fetch(`/api/labs/1/${path}`, {
-      method: body ? 'POST' : 'GET', body,
-      signal: AbortSignal.any([signal, AbortSignal.timeout(30000)]),
-    })
-  } catch (error) {
-    if (signal.aborted) throw error
-    throw new Error('The image service is unavailable. Please try again in a moment.', { cause: error })
-  }
-  if (!response.ok) {
-    const data = await response.json().catch(() => null)
-    throw new Error(typeof data?.detail === 'string' ? data.detail : 'Image processing failed. Check your input and try again.')
-  }
-  return response.json()
+  return await apiFetch(`/api/labs/1/${path}`, signal, {
+    method: body ? 'POST' : 'GET', body,
+  }) as T
 }
 
 export function getSample(kind: 'color' | 'grayscale', signal: AbortSignal) {

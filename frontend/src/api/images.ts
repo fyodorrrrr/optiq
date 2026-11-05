@@ -1,3 +1,5 @@
+import { apiFetch } from './transport'
+
 export interface ImageFrame {
   image: string
   width: number
@@ -10,24 +12,9 @@ export interface ImageFrame {
 }
 
 export async function imageRequest<T>(lab: number, path: string, signal: AbortSignal, body?: FormData): Promise<T> {
-  // Let superseded effect/request cancellation settle before opening a connection.
-  await Promise.resolve()
-  signal.throwIfAborted()
-  let response: Response
-  try {
-    response = await fetch(`/api/labs/${lab}/${path}`, {
-      method: body ? 'POST' : 'GET', body,
-      signal: AbortSignal.any([signal, AbortSignal.timeout(30000)]),
-    })
-  } catch (error) {
-    if (signal.aborted) throw error
-    throw new Error('The image service is unavailable. Please try again in a moment.', { cause: error })
-  }
-  if (!response.ok) {
-    const data = await response.json().catch(() => null)
-    throw new Error(typeof data?.detail === 'string' ? data.detail : 'Image processing failed. Check the input and try again.')
-  }
-  return response.json()
+  return await apiFetch(`/api/labs/${lab}/${path}`, signal, {
+    method: body ? 'POST' : 'GET', body,
+  }) as T
 }
 
 export function frameFile(frame: ImageFrame, name: string) {

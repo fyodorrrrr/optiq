@@ -9,8 +9,10 @@ of lab experiment code. Homepage lab links use client-side navigation. Labs 1–
 implemented. Lab 6 provides pretrained detection and local training/artifact
 review, with a completed 100-epoch custom bottle run and validation evaluation. FastAPI provides
 `/api/health` and per-lab endpoints. Vite proxies `/api` to port 8000 in
-development. Production hosting is undecided and must support API forwarding
-and SPA route fallback.
+development. Production targets a Vercel static frontend and one Oracle Linux VM running
+Caddy plus a single Uvicorn worker. `VITE_API_BASE_URL` selects direct browser-to-API
+HTTPS; exact CORS origins authorize browser access. Templates and the runbook live
+in [DEPLOYMENT.md](DEPLOYMENT.md); cloud deployment is not yet verified.
 
 ## Shared processing budget
 
@@ -40,7 +42,7 @@ precedes processing admission. Frontend request helpers yield one microtask and
 check cancellation before fetch, preventing superseded initialization requests
 from consuming a slot during development effect replay. This does not retry busy
 requests. Request-body admission is a separate middleware layer below; readiness
-and timeout changes remain separate production-preparation steps.
+and timeout checks are described below.
 
 ## API rate limiting
 
@@ -78,8 +80,8 @@ headers and trust only known proxy addresses; do not use unrestricted
 `--forwarded-allow-ips '*'`. Verify distinct client identities through the real
 Vercel/backend proxy path before launch. Incorrect configuration can pool users
 under a proxy IP or permit forged identities. That deployment check remains open.
-This application limiter does not replace edge/network abuse protection or
-request-body size/time limits.
+This application limiter complements the request-body size/time limits below;
+it does not replace edge/network abuse protection.
 
 `main.create_app` creates the normal global `app` and allows tests to inject an
 isolated limiter. Algorithm/API tests use a fresh, generous finite allowance;
@@ -120,10 +122,44 @@ multipart parser from creating temporary upload files for an oversized body.
 It adds IO and temporary storage for accepted uploads; the spool threshold does
 not bound server-received chunk buffers or total process memory.
 
-This is a per-request bound, not an aggregate upload limit or a slow-upload
-timeout. Configure matching ingress size/time/concurrency protections at the
-production reverse proxy and provide a writable temporary directory with
-adequate disk space. No such production proxy has been deployed or validated.
+Body receipt is bounded to 30 seconds; stalled uploads return JSON 408 and the
+spool is cleaned up. This is a per-request size/time bound, not an aggregate
+connection limit. The deployment template uses Caddy ingress limits and Uvicorn
+connection admission. Provide a writable temporary directory with adequate disk
+space; actual production capacity still requires target verification.
+
+## Readiness, timeouts and production transport
+
+`/api/health` remains lightweight liveness. `/api/ready` runs cached, thread-pool
+resource inspection in `services/readiness.py` (60-second TTL), independently of
+the experiment slot. It checks actual feature capabilities, offline LFW loading,
+optional runtime imports, detector checkpoint/training/evaluation relationships,
+semantic manifest/hash, prepared samples and writable temp/settings storage.
+It returns only named boolean checks with HTTP 200 or 503 and no-store. It never
+fits models, downloads data or runs inference. The separate trusted CLI
+`backend/scripts/verify_deployment.py --inference` verifies real model loading.
+
+Middleware order: CORS → rate allowance → 110-second lab HTTP deadline →
+30-second body receipt and size staging → FastAPI validation → processing slot.
+`RequestDeadlineMiddleware` returns JSON 504 before a response starts and does
+not replace partial responses. Thread work cannot be forcibly cancelled; it
+retains its processing slot until completion. Health/ready/preflight are exempt
+from experiment deadlines. Exact origins come from `OPTIQ_ALLOWED_ORIGINS`;
+production disables docs/OpenAPI. CORS is browser policy, not authentication.
+
+`frontend/src/api/transport.ts` centralizes URL construction, cancellation and
+JSON/error handling for all lab requests. `VITE_API_BASE_URL` is an HTTPS origin
+in production, empty for the local Vite proxy. Metadata waits 30 seconds; POSTs
+wait 120 seconds including response-body reading. Superseded effect cancellation
+still settles before fetch; no retries are introduced. Training-log downloads
+and the development health check use the same API origin.
+
+The deployment templates provide Caddy TLS/size/deadline/trusted-IP handling,
+one Uvicorn process (16 admitted connections/tasks), a restartable/hardened
+systemd service and a five-minute readiness/storage timer with bounded journal
+retention. The timer logs failures; external alert delivery still needs account
+configuration. See the deployment runbook for Linux dependency/asset preparation,
+Vercel SPA fallback, rollback, actual verification and remaining cloud checks.
 
 ## Lab 1 Request Flow
 
