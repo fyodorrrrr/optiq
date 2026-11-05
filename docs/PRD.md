@@ -100,9 +100,11 @@ Product acceptance means students can perform and explain the intended compariso
 
 ## Remaining Work and Open Decisions
 
-- Supply and review Lab 6's custom dataset, then complete actual training and
-  evaluation. Record the actual evaluation split; an independent test split
-  must be supplied before claiming test-set performance.
+- Preserve the recorded approval and evidence for Lab 6's held-out test labels. The approved 38-image custom
+  baseline completed training and validation; separate frozen-model test metrics
+  on 18 new images are recorded with user-approved labels in `LAB6_TEST_EVALUATION.md`.
+  Confirm instructor acceptance of curated public photos and existing annotations
+  if personally captured/newly annotated data is required.
 - Preserve source numbering/version discrepancies in `LAB_REQUIREMENTS.md`.
   Implementation follows filename-based lab order and the Lab 6 body's YOLO11
   choice; these interpretations do not remove the source discrepancies.

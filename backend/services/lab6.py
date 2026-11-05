@@ -10,7 +10,7 @@ from time import perf_counter
 import cv2
 import numpy as np
 
-from schemas.lab6 import DatasetArtifact, Detection, ModelInfo, Result, Settings, Status, TrainingArtifact
+from schemas.lab6 import DatasetArtifact, Detection, ModelInfo, Result, Settings, Status, TestEvaluation, TrainingArtifact
 from pydantic import ValidationError
 from services.images import ImageError, decode_image, frame
 from services.public_metadata import public_message, public_training
@@ -77,12 +77,20 @@ def status():
     custom_ready = False
     if runtime and training.get('status') == 'completed' and custom.is_file():
         custom_ready = training.get('weight_sha256') == weight_hash(custom)
+    evaluation = None
+    try:
+        candidate = TestEvaluation.model_validate(read_artifact('evaluation.json', {}))
+        if (custom_ready and candidate.weight_sha256 == training.get('weight_sha256')
+                and candidate.training_dataset_sha256 == training.get('dataset_sha256')):
+            evaluation = candidate
+    except ValidationError:
+        pass  # Missing, stale, or incomplete evaluation never becomes a test result.
     return Status(models=[
         ModelInfo(id='pretrained', title='YOLO11n · pretrained COCO', available=runtime and model_path('pretrained').is_file(),
                   message='Detects COCO classes using pretrained weights.' if runtime and model_path('pretrained').is_file() else 'Pretrained model setup is required on this server.'),
         ModelInfo(id='custom', title='Your custom model', available=custom_ready,
                   message='Custom weights match the completed training artifact.' if custom_ready else 'No verified custom model is available yet.'),
-    ], training_log_available=(ROOT / 'training.log').is_file(), bottle_sample_split=bottle_split, bottle_sample_available=(ROOT / 'bottle.jpg').is_file(), sample_available=(ROOT / 'bus.jpg').is_file(), dataset=dataset, training=public_training(training))
+    ], training_log_available=(ROOT / 'training.log').is_file(), bottle_sample_split=bottle_split, bottle_sample_available=(ROOT / 'bottle.jpg').is_file(), sample_available=(ROOT / 'bus.jpg').is_file(), dataset=dataset, training=public_training(training), evaluation=evaluation)
 
 
 def get_model(kind):

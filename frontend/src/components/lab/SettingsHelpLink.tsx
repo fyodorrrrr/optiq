@@ -1,3 +1,5 @@
-export default function SettingsHelpLink({ guideId, onOpen }: { guideId: string; onOpen: () => void }) {
-  return <a className="lab-settings-help-link" href={`#${guideId}-settings`} onClick={event => { event.preventDefault(); onOpen() }}>Help with settings</a>
+export default function SettingsHelpLink({ guideId }: { guideId: string }) {
+  return <a className="lab-settings-help-link" href={`#${guideId}`} onClick={() => {
+    document.getElementById(guideId)?.focus({ preventScroll: true })
+  }}>Help with settings</a>
 }

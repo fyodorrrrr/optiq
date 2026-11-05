@@ -47,9 +47,14 @@ available only after its local file is prepared. Prediction requests do not down
 weights. The first inference loads the model; later requests reuse it. Inference
 uses CPU, imgsz640, confidence0.25, IoU0.7, and at most100 detections. Uploaded
 images use the existing 5MiB/4096px-side/4M-pixel limits and are not retained.
+In Detect, choose the visible **Camera** tab, then **Start camera**. Live input
+and detection output appear in the experiment column. Start/Stop camera replaces
+Detect objects in the settings sidebar, beside model and confidence settings. Image uploads and samples are in the **Image** tab.
 Camera frames are JPEG, at most640px per side, sequential, capped at2 requests
 per second; this is not a guaranteed video frame rate. Stop/leave/hide the view
-to release camera tracks. Use localhost or HTTPS for browser camera permission.
+to release camera tracks; returning to Image also releases them and clears the
+old camera result. Stop remains available while streaming, and Cancel is available
+while permission is pending. Use localhost or HTTPS for browser camera permission.
 
 ## Prepare your dataset
 
@@ -145,3 +150,12 @@ separate and can compete for machine resources if you run both simultaneously.
 References: [YOLO11](https://docs.ultralytics.com/models/yolo11/),
 [YOLO dataset format](https://docs.ultralytics.com/datasets/detect/),
 [installation](https://docs.ultralytics.com/quickstart/).
+
+
+## Separate held-out evaluation
+
+The frozen 100-epoch model now has a separate 18-image/27-box local test
+run. New labels are assistant-checked and user-approved. Validation and
+test metrics remain separate in the UI and artifacts. See
+[held-out evaluation](LAB6_TEST_EVALUATION.md) for preparation/evaluation commands,
+review location, leakage checks, actual results, and remaining source limitations.

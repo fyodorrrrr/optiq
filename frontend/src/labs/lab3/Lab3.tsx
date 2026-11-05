@@ -59,7 +59,7 @@ export default function Lab3() {
           </> },
           lab.result && { id: 'run', title: 'Run details', content: <ContrastRunDetails result={lab.result} /> },
         ]}
-        controls={<><h2>{content.title === 'Compare' ? 'Compare contrast' : content.title}</h2><ContrastControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} onOpenHelp={() => guide.current?.querySelector<HTMLButtonElement>('.learning-canvas-link')?.click()} /></>}>
+        controls={<><h2>{content.title === 'Compare' ? 'Compare contrast' : content.title}</h2><ContrastControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} /></>}>
         <div className="lab-image-grid" data-columns={3}>
           <ContrastPanel title="Original" view={lab.result?.original ?? null} original={lab.source?.frame} pending={lab.busy} maxCount={maxCount} channel={channel}
             description={lab.result ? `Working original · ${channel}` : 'Input preview · run to apply the selected mode'} />

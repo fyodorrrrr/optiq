@@ -173,7 +173,7 @@ CPU inference, browser camera capture, bounded uploads, and explicit local
 training. See [LAB6_SETUP.md](LAB6_SETUP.md) for setup and limits. Preserve the
 source discrepancy. The approved public-data bottle subset completed 100 epochs locally. The source
 says test-set validation but provides train/val paths only: record the actual
-evaluation split and obtain a separate test split before claiming test results.
+evaluation split and keep independent test results separate from validation. A new local held-out test set has been evaluated; its labels are now user-approved.
 
 **Approved scope decision (2026-11-03):** custom training is required by the lab,
 while general-purpose training infrastructure is outside the initial product
@@ -181,7 +181,7 @@ scope. The approved local/offline training workflow and UI artifact/custom
 inference integration are implemented. On 2026-11-05 the user approved all 38
 images in the curated Open Images bottle subset; the 100-epoch local baseline
 completed and was evaluated on its eight-image validation split. This is public
-data, not user-captured photos; independent test evaluation remains unavailable.
+data, not user-captured photos; a new 18-image/27-box held-out test evaluation has now completed with frozen weights. Its labels are now user-approved; see `LAB6_TEST_EVALUATION.md`.
 
 ## Lab 7 — Segmentation Techniques
 
@@ -217,7 +217,7 @@ computing IoU; semantic model training is optional in the source.
 | --- | --- |
 | Lab numbering and YOLO mismatch | Implementation uses filename-based lab order and the Lab 6 body's YOLO11 choice. Preserve the original numbering/version discrepancies in the source register. |
 | SURF capability | Local custom build verified; standard wheels explicitly expose partial capability. Verify builds on each deployment target; see `SURF_SETUP.md`. |
-| Training delivery | Lab 5 fits fresh PCA/SVM models in a bounded request. Lab 6 trains through trusted local scripts and reviews artifacts in the UI. Supply/review the custom dataset and complete actual YOLO training/evaluation. |
+| Training delivery | Lab 5 fits fresh PCA/SVM models in a bounded request. Lab 6 trains through trusted local scripts and reviews artifacts in the UI. The approved 38-image baseline completed 100 epochs. A separate 18-image held-out test evaluation completed with user-approved labels. |
 | Sample inputs | Generated samples serve the classical image labs; Lab 5 uses LFW; detection and semantic segmentation use the explicitly prepared bus photo. Lab 2's assigned `input.jpg` remains unavailable; its generated replacements are labeled. See setup guides for asset sources. |
 | Datasets/models | LFW, YOLO11n, and DeepLab weights, versions/class mappings, preparation scripts, and provenance are documented in the setup guides. Keep caches, personal datasets, and generated weights out of Git. |
 | Media and compute limits | Local formats, dimensions, pixel limits, timeouts, and process-level guards are implemented and documented in `ARCHITECTURE.md` and setup guides. Validate production capacity, concurrency, and target hardware separately. |
@@ -232,7 +232,7 @@ computing IoU; semantic model training is optional in the source.
 | Lab 3 | Implemented and locally verified | `backend/tests/test_lab3.py`: histogram counts, exact equalization/CLAHE output, linear clipping/stretching, constant/color inputs, final brightness-channel measurements, deterministic samples, and validation. Browser checks covered real methods/parameters, four histogram charts with common scales, color/grayscale switching, PNG/CSV downloads, uploads, reset, errors/retry, cancellation, and 320–1440px layouts. |
 | Lab 4 | Implemented and locally verified with SURF setup | `backend/tests/test_lab4.py` and recorded local browser checks cover SURF/SIFT/ORB features, matches, unavailable capabilities, and validation. See the Lab 4 evidence below and `SURF_SETUP.md`; standard wheels do not provide full SURF functionality. |
 | Lab 5 | Implemented and locally verified with dataset setup | `backend/tests/test_lab5.py` and recorded local browser checks cover training-only PCA/SVM, variance, predictions/failures, provenance, missing data, concurrency, and recovery. See the Lab 5 evidence below and `LAB5_SETUP.md`. |
-| Lab 6 | Implemented locally | Pretrained inference plus approved custom bottle baseline (100 epochs), validation metrics, and verified custom inference; no independent test set. |
+| Lab 6 | Implemented locally | Pretrained inference plus approved custom bottle baseline (100 epochs), validation metrics, and verified custom inference; new 18-image/27-box held-out test metrics use user-approved labels. |
 | Lab 7 | Implemented | Classical and pretrained semantic segmentation; IoU unavailable without ground truth. |
 
 Lab 1 code: `frontend/src/labs/lab1/`, `backend/routers/lab1.py`, `backend/schemas/lab1.py`, and `backend/services/`. Local verification is not evidence of production deployment or measured learning effectiveness. No source-required Lab 1 operation is intentionally deferred. Optional enhancements such as drag-to-crop, progress storage, and scored practice are not completion criteria.
@@ -288,7 +288,10 @@ subsequently completed 100 epochs on CPU with 30 training images (44 boxes),
 8 validation images (12 boxes), seed42, imgsz640, and batch4. Validation metrics:
 precision0.7963, recall0.7500, mAP50 0.7432, mAP50–95 0.6556. Published weight
 hash, completed artifacts, and real custom API inference were verified. These
-are small-sample validation results, not independent test results. See
+are small-sample validation results. A separate frozen-model test run on 18 new
+photos/27 boxes obtained precision0.8357, recall0.7037, mAP50 0.8007, and
+mAP50–95 0.5967. The user approved all test labels; a fresh evaluation confirmed identical metrics. See
+`LAB6_TEST_EVALUATION.md`,
 `LAB6_SETUP.md` and `LAB6_DATASET_REVIEW.md`.
 
 

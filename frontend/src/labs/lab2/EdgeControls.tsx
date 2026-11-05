@@ -5,7 +5,7 @@ import { revealField } from '../../components/lab/validation'
 import LabButton from '../../components/lab/LabButton'
 import { NumberField, SelectField } from '../../components/lab/Fields'
 
-export default function EdgeControls({ lab, section, onRevealSettings, onOpenHelp }: { lab: ReturnType<typeof useEdgeExperiment>; section: Section; onRevealSettings: () => void; onOpenHelp: () => void }) {
+export default function EdgeControls({ lab, section, onRevealSettings }: { lab: ReturnType<typeof useEdgeExperiment>; section: Section; onRevealSettings: () => void }) {
   return <form onSubmit={event => { event.preventDefault(); void lab.run(field => revealField(field, onRevealSettings)) }}>
     <fieldset disabled={lab.busy || !lab.source}>
       <legend className="sr-only">Edge detection settings</legend>
@@ -21,6 +21,6 @@ export default function EdgeControls({ lab, section, onRevealSettings, onOpenHel
       <LabButton variant="primary" type="submit" aria-busy={lab.busy}>Run both detectors</LabButton>
     </fieldset>
     {lab.canReset && <LabButton disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>}
-      <SettingsHelpLink guideId="edge-guide" onOpen={onOpenHelp} />
+      <SettingsHelpLink guideId="edge-guide" />
   </form>
 }

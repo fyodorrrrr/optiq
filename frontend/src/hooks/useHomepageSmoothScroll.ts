@@ -19,7 +19,7 @@ export default function useHomepageSmoothScroll(root: RefObject<HTMLElement | nu
       if (preference.matches) return
       lenis = new Lenis({
         autoRaf: true,
-        lerp: .085,
+        lerp: .095,
         smoothWheel: true,
         syncTouch: false,
         anchors: false,

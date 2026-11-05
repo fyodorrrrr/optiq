@@ -78,7 +78,7 @@ export default function Lab4() {
           <div className="feature-actions"><LabButton variant="primary" type="submit" aria-busy={lab.busy} disabled={lab.busy || !lab.sources.first || !lab.sources.second}>Compare features</LabButton>
           </div></fieldset>
           {lab.canReset && <LabButton type="button" disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>}
-          <SettingsHelpLink guideId="features-guide" onOpen={() => guide.current?.querySelector<HTMLButtonElement>('.learning-canvas-link')?.click()} />
+          <SettingsHelpLink guideId="features-guide" />
         </form></>}>
       {surf && !surf.available && <LabError title="SURF is unavailable on this server." message={surf.reason ?? 'A SURF-enabled OpenCV build is required. This laboratory is partially available.'} />}
       <div className="lab-image-grid"><ImagePanel showMetadata={false} title="Image A" frame={lab.sources.first?.frame ?? null} description={lab.sources.first?.name} />

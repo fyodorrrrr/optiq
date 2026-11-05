@@ -9,7 +9,8 @@ and the selected source IDs/curation notes are versioned.
 The review pack contains 38 images and 56 published Open Images bottle boxes
 converted to normalized YOLO class 0. Local splits contain 30 training images and
 8 validation images, with one photograph per photographer. It has no independent
-test set or background-only examples. These are public photos, not user-captured
+test set or background-only examples in this original training pack. A separate
+18-image test pack is now available; see `LAB6_TEST_EVALUATION.md`. These are public photos, not user-captured
 photos. Existing annotation labels were not presented as newly hand-drawn work.
 
 Fifty initial candidates were inspected in contact sheets; twelve ambiguous or
@@ -43,7 +44,8 @@ and completed the 100-epoch CPU baseline (640 px, batch 4, seed 42). Training
 completion and evaluation are recorded separately in `.cache/lab6/training.json`.
 The best checkpoint achieved precision 0.7963, recall 0.7500, mAP50 0.7432, and
 mAP50–95 0.6556 on 8 validation images / 12 boxes. There is no independent test
-set. The published model is `.cache/lab6/custom/best.pt`; the retained run is
+set in this original pack. A separate held-out evaluation is recorded in
+`LAB6_TEST_EVALUATION.md`. The published model is `.cache/lab6/custom/best.pt`; the retained run is
 `.cache/lab6/runs/bottle-baseline2/`.
 
 ## Reproduction

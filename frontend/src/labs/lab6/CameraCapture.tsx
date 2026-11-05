@@ -1,21 +1,26 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import LabButton from '../../components/lab/LabButton'
+import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import type { Ref } from 'react'
 import { LabError } from '../../components/lab/LabFeedback'
 
-export default function CameraCapture({ available, onFrame, onStop, onRunning }: {
-  available: boolean; onFrame: (file: File) => Promise<boolean>; onStop: () => void; onRunning: (running: boolean) => void
+export type CameraState = 'idle' | 'pending' | 'running'
+export interface CameraCaptureHandle { start: () => Promise<void>; stop: () => void }
+
+export default function CameraCapture({ available, onFrame, onStop, onState, ref }: {
+  available: boolean; onFrame: (file: File) => Promise<boolean>; onStop: () => void
+  onState: (state: CameraState) => void; ref?: Ref<CameraCaptureHandle>
 }) {
   const video = useRef<HTMLVideoElement>(null)
   const stream = useRef<MediaStream | null>(null)
   const generation = useRef(0)
+  const active = useRef(false)
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null)
   const frameCallback = useRef(onFrame)
   const stopCallback = useRef(onStop)
-  const runningCallback = useRef(onRunning)
+  const activeCallback = useRef(onState)
   const [running, setRunning] = useState(false)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
-  useEffect(() => { frameCallback.current = onFrame; stopCallback.current = onStop; runningCallback.current = onRunning })
+  useEffect(() => { frameCallback.current = onFrame; stopCallback.current = onStop; activeCallback.current = onState })
   const release = useCallback(() => {
     generation.current += 1
     if (timeout.current) clearTimeout(timeout.current)
@@ -25,27 +30,32 @@ export default function CameraCapture({ available, onFrame, onStop, onRunning }:
   }, [])
   const stop = useCallback(() => {
     release()
+    active.current = false
     setRunning(false)
     setPending(false)
-    runningCallback.current(false)
+    activeCallback.current('idle')
     stopCallback.current()
   }, [release])
   useEffect(() => {
-    function hidden() { if (document.hidden) stop() }
+    function hidden() { if (document.hidden && active.current) stop() }
     document.addEventListener('visibilitychange', hidden)
     return () => {
       document.removeEventListener('visibilitychange', hidden)
       release()
-      runningCallback.current(false)
-      stopCallback.current()
+      activeCallback.current('idle')
+      if (active.current) stopCallback.current()
+      active.current = false
     }
   }, [release, stop])
   async function start() {
+    if (active.current || !available) return
     setError('')
     if (!navigator.mediaDevices?.getUserMedia) { setError('Camera access requires localhost or HTTPS and a supported browser. You can upload an image instead.'); return }
     release()
     const session = generation.current
     setPending(true)
+    active.current = true
+    activeCallback.current('pending')
     try {
       const media = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 640 }, height: { ideal: 480 } }, audio: false })
       if (session !== generation.current) { media.getTracks().forEach(track => track.stop()); return }
@@ -56,7 +66,7 @@ export default function CameraCapture({ available, onFrame, onStop, onRunning }:
       if (session !== generation.current) return
       setPending(false)
       setRunning(true)
-      runningCallback.current(true)
+      activeCallback.current('running')
       const canvas = document.createElement('canvas')
       async function next() {
         if (session !== generation.current || !video.current) return
@@ -69,7 +79,9 @@ export default function CameraCapture({ available, onFrame, onStop, onRunning }:
         canvas.getContext('2d')?.drawImage(view, 0, 0, canvas.width, canvas.height)
         const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/jpeg', .85))
         if (session !== generation.current) return
-        if (!blob || !await frameCallback.current(new File([blob], 'camera.jpg', { type: 'image/jpeg' }))) { stop(); return }
+        const succeeded = blob && await frameCallback.current(new File([blob], 'camera.jpg', { type: 'image/jpeg' }))
+        if (session !== generation.current) return
+        if (!succeeded) { stop(); return }
         if (session === generation.current) timeout.current = setTimeout(() => void next(), Math.max(0, 500 - (performance.now() - started)))
       }
       void next()
@@ -81,14 +93,15 @@ export default function CameraCapture({ available, onFrame, onStop, onRunning }:
       stop()
     }
   }
-  return <details className="detection-camera" onToggle={event => {
-    if (event.newState === 'closed' && (running || pending)) stop()
-  }}><summary>Camera input</summary><div className="detection-actions">
-    <LabButton disabled={!available || running || pending} onClick={() => void start()}>Start camera</LabButton>
-    <LabButton disabled={!running && !pending} onClick={stop}>Stop camera</LabButton></div>
-    <p>Frames are sent to the detection server only while running. Up to 2 requests per second, one at a time. Stop the camera before using an uploaded image.</p>
-    <video ref={video} muted playsInline aria-label="Live camera preview" hidden={!running} />
-    <span role="status">{running ? 'Camera running · sending frames for detection.' : pending ? 'Waiting for camera permission…' : 'Camera stopped.'}</span>
+  useImperativeHandle(ref, () => ({ start, stop }))
+  return <figure className="lab-image-panel detection-camera">
+    <figcaption>Live camera</figcaption>
+    <div className="lab-image-stage">
+      <video ref={video} muted playsInline aria-label="Live camera preview" hidden={!running} />
+      {!running && <svg className="detection-camera-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="M14 8l6-3v14l-6-3M4 6h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z" /></svg>}
+    </div>
+    <p role="status">{running ? 'Camera running · up to 2 frames/s.' : pending ? 'Waiting for camera permission…' : 'Camera stopped.'}</p>
+    <p>Frames are sent for detection only while the camera is running.</p>
     {error && <LabError title="Camera unavailable." message={error} />}
-  </details>
+  </figure>
 }

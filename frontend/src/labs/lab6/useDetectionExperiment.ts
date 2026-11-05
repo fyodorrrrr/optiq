@@ -46,13 +46,20 @@ export default function useDetectionExperiment() {
     active.current = controller
     setBusy(true)
     setError('')
-    if (clear) setResult(null)
+    if (clear) { setResult(null); setResultCamera(false); setRoundtrip(null) }
     return controller
   }
   function cancel() {
     active.current?.abort()
     setStatusBusy(false)
     setBusy(false)
+  }
+  function clearResult() {
+    cancel()
+    setResult(null)
+    setResultCamera(false)
+    setRoundtrip(null)
+    setError('')
   }
   async function refresh() {
     const controller = begin()
@@ -97,5 +104,5 @@ export default function useDetectionExperiment() {
   }
   function changeConfidence(value: string) { cancel(); setConfidence(value) }
   function changeModel(value: Model) { cancel(); setModel(value) }
-  return { status, statusBusy, statusError, source, result, resultCamera, confidence, model, busy, error, roundtrip, refresh, sample, upload, run, cancel, changeConfidence, changeModel }
+  return { status, statusBusy, statusError, source, result, resultCamera, confidence, model, busy, error, roundtrip, refresh, sample, upload, run, cancel, clearResult, changeConfidence, changeModel }
 }

@@ -31,7 +31,7 @@ export default function LabMap() {
   const [trail, setTrail] = useState<{ width: number; height: number; path: string; segments: { path: string; fraction: number }[] } | null>(null)
   const map = useRef<HTMLDivElement>(null)
   const anchor = useRef<{ element: HTMLButtonElement; top: number } | null>(null)
-  const nextPreviewAnchor = useRef<number | null>(null)
+  const revealNextNode = useRef(false)
   const selected = labs.find((lab) => lab.id === selectedId) ?? labs[0]
   const activeId = hoveredId ?? focusedId ?? selectedId
 
@@ -73,15 +73,24 @@ export default function LabMap() {
   }, [compact, selectedId])
 
   useLayoutEffect(() => {
-    if (nextPreviewAnchor.current !== null) {
-      const preview = map.current?.closest('.lab-browser')?.querySelector<HTMLElement>('#lab-details')
-      const nextButton = preview?.querySelector<HTMLButtonElement>('.preview-next')
-      const previousTop = nextPreviewAnchor.current
-      if (compact && nextButton) {
-        window.scrollBy({ top: nextButton.getBoundingClientRect().top - previousTop, behavior: 'instant' })
-      }
+    if (revealNextNode.current) {
+      revealNextNode.current = false
+      anchor.current = null
+      const nextButton = map.current?.closest('.lab-browser')?.querySelector<HTMLButtonElement>('.preview-next')
       nextButton?.focus({ preventScroll: true })
-      nextPreviewAnchor.current = null
+      const node = map.current?.querySelector<HTMLButtonElement>('.node-item[aria-pressed="true"]')
+      if (node) {
+        const bounds = node.getBoundingClientRect()
+        const bottom = window.innerHeight - 24
+        const offset = compact || bounds.top < 24
+          ? bounds.top - 24
+          : Math.max(0, bounds.bottom - bottom)
+        if (offset !== 0) window.scrollBy({
+          top: offset,
+          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+        })
+      }
+      return
     }
     const previous = anchor.current
     anchor.current = null
@@ -91,8 +100,7 @@ export default function LabMap() {
   }, [compact, selectedId])
 
   function showNextPreview() {
-    const preview = map.current?.closest('.lab-browser')?.querySelector('#lab-details')
-    nextPreviewAnchor.current = preview?.querySelector('.preview-next')?.getBoundingClientRect().top ?? 0
+    revealNextNode.current = true
     const index = labs.findIndex(lab => lab.id === selectedId)
     setSelectedId(labs[(index + 1) % labs.length].id)
   }

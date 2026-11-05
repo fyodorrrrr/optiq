@@ -1,7 +1,6 @@
 .detection-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin: 20px 0; }
-.detection-camera { margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
-.detection-camera p, .detection-camera > span, .detection-training p { color: var(--ink-soft); font-size: 14px; line-height: 1.7; }
-.detection-camera video { display: block; width: 100%; max-height: 360px; object-fit: contain; background: var(--paper); border-radius: var(--radius-control); margin: 16px 0; }
+.detection-camera p, .detection-training p { color: var(--ink-soft); font-size: 14px; line-height: 1.7; }
+.detection-camera video { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: var(--radius-sm); }
 .detection-camera video[hidden] { display: none; }
 .detection-notice { padding: 16px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-control); line-height: 1.7; }
 .detection-table { overflow: auto; margin: 20px 0; border: 1px solid var(--line); border-radius: var(--radius-panel); }
@@ -17,9 +16,6 @@
 .detection-chart svg { display: block; width: 100%; min-width: 500px; color: var(--ink-soft); }
 .detection-chart text { font-size: 12px; fill: currentColor; }
 
-.detection-camera { margin: 24px 0 0; padding: 12px 0 0; border-bottom: 0; border-top: 1px solid var(--line); }
-.detection-camera > summary { color: var(--accent); font-size: 14px; }
-.detection-camera .detection-actions { margin-block: 12px; }
 .detection-reference, .detection-training { max-width: 68ch; }
 .detection-reference h2, .detection-training h2 { margin: 0 0 12px; font-size: 20px; line-height: 1.4; }
 .detection-reference p, .detection-training p { margin: 12px 0; line-height: 1.7; color: var(--ink-soft); }
@@ -59,3 +55,13 @@
   .detection-section-heading h2 { font-size: 19px; }
   .detection-reference-actions { gap: 8px 16px; }
 }
+
+.detection-input-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; min-height: 44px; }
+.detection-input-tabs { display: inline-flex; flex-shrink: 0; padding: 4px; gap: 4px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-control); }
+.detection-input-tabs button { min-height: 44px; padding: 8px 16px; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--ink-soft); font-size: 14px; font-weight: 500; }
+.detection-input-tabs button[aria-selected='true'] { background: var(--accent-soft); color: var(--accent-deep); font-weight: 650; }
+.detection-input-tabs button:hover { color: var(--accent-deep); }
+.detection-source-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.detection-model-settings { min-width: 0; padding: 0; margin: 0; border: 0; }
+.detection-camera-placeholder { width: 48px; height: 48px; color: var(--ink-soft); }
+.detection-camera > p { margin: 10px 0 0; font-size: 12px; }

@@ -130,7 +130,7 @@ contrast as the application evolves. Product scope remains governed by
 [PRD.md](PRD.md).
 
 
-Homepage wheel scrolling uses Lenis with a gentle interpolation factor of .085.
+Homepage wheel scrolling uses Lenis with a gentle interpolation factor of .095.
 Touch and keyboard scrolling retain native behavior; Lenis is destroyed when a lab
 opens or reduced motion is enabled. Anchor navigation synchronizes native focus
 scrolling before calculating its destination. Content remains sharp and immediately

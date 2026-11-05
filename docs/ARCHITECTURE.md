@@ -264,15 +264,34 @@ setup and known limits. The user approved all 38 Open Images bottle images on 20
 100-epoch run completed with 30 training and 8 validation images; custom weight
 hashes and API inference were verified. See `LAB6_DATASET_REVIEW.md`.
 
+`prepare_bottle_test.py` prepares 18 separate test photos with attribution,
+photographer/content separation checks and review HTML. `evaluate_yolo.py`
+verifies original train/val and checkpoint hashes, calls only held-out validation,
+and atomically publishes `evaluation.json` without replacing `training.json` or
+weights. Test metrics and annotation-review state are exposed only when their
+training/checkpoint hashes match the current model. Pydantic filters evaluation
+settings to known scalar fields. The original validation results remain intact.
+See `LAB6_TEST_EVALUATION.md`; all 18 test labels were reviewed and approved by the user.
 
-The Lab 6 detection view leads with image comparison. Camera controls are in a
-collapsed section after results; closing it stops a pending/running stream and
-releases media tracks. Dataset/training instructions use a bounded reading width.
+
+
+The Lab 6 detection view has keyboard-accessible Image/Camera tabs in the middle
+experiment column. Image uploads/sample selection sit beside the tabs. Camera
+mode shows a live feed and detected-frame output. In the right settings rail,
+Start/Stop camera replaces Detect objects; Cancel is available during permission.
+`CameraCapture` owns the stream and exposes typed start/stop methods to its parent,
+while reporting idle/pending/running state for the sidebar action.
+Model/confidence settings remain in that rail and are locked while permission
+is pending or capture is active. Switching input modes clears stale results while
+preserving the selected image. Camera unmount, hiding the document, cancellation,
+and late permission responses release tracks and invalidate the frame session.
+A late frame response cannot stop a newer image request. Dataset/training
+instructions use a bounded reading width.
 
 Lab 6 Dataset and Training views omit the settings rail through the shared
 workspace’s optional-controls layout; Detect keeps its existing controls.
 Section-specific actions open the shared metadata drawers. Completed runs lead
-with the model summary and four evaluation metrics; the full epoch history is
+with the model summary and a validation/test metric comparison; the full epoch history is
 retained in the Training JSON download, with readable provenance in Training
 details. The loss chart uses numeric axes, responsive plotting, and solid/dashed/
 dotted series with a text legend and screen-reader summary. Dataset validation

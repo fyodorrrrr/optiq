@@ -53,7 +53,7 @@ export default function Lab5() {
         <NumberField required label="PCA components" value={lab.components} min={12} max={lab.dataset?.max_components || 300} step={1} disabled={lab.busy} onChange={lab.setComponents} />
         <div className="pca-actions"><LabButton variant="primary" type="submit" aria-busy={lab.busy} disabled={lab.busy || !lab.dataset?.ready}>Run experiment</LabButton>
           {lab.components !== '150' && <LabButton disabled={lab.busy} onClick={() => lab.setComponents('150')}>Reset baseline</LabButton>}</div>
-        <SettingsHelpLink guideId="pca-guide" onOpen={() => guide.current?.querySelector<HTMLButtonElement>('.learning-canvas-link')?.click()} />
+        <SettingsHelpLink guideId="pca-guide" />
       </form></>}>
 
       {lab.error && <LabError title="Could not run the experiment." message={lab.error} />}

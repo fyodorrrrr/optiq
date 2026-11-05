@@ -14,9 +14,15 @@ export interface Training {
   started_utc?: string; completed_utc?: string; ultralytics?: string; torch?: string
   weight_sha256?: string; dataset_sha256?: string
 }
+export interface TestEvaluation {
+  status: 'completed'; evaluation_split: 'test'; review_status: 'pending_user_review' | 'user_approved'
+  images: number; objects: number; metrics: NonNullable<Training['metrics']>
+  training_dataset_sha256: string; dataset_sha256: string; weight_sha256: string
+  parameters: Record<string, string | number>; completed_utc?: string; ultralytics?: string; torch?: string
+}
 export interface Status {
   models: { id: Model; title: string; available: boolean; message: string }[]
-  training_log_available?: boolean; sample_available: boolean; bottle_sample_available: boolean; bottle_sample_split?: 'train' | 'val' | 'test' | null; dataset: Dataset; training: Training
+  training_log_available?: boolean; sample_available: boolean; bottle_sample_available: boolean; bottle_sample_split?: 'train' | 'val' | 'test' | null; dataset: Dataset; training: Training; evaluation?: TestEvaluation | null
 }
 export interface Detection { class_id: number; label: string; confidence: number; xyxy: number[] }
 export interface Result {

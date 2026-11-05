@@ -16,16 +16,6 @@ class ModelInfo(BaseModel):
     message: str
 
 
-class Status(BaseModel):
-    models: list[ModelInfo]
-    bottle_sample_available: bool = False
-    bottle_sample_split: Literal['train', 'val', 'test'] | None = None
-    training_log_available: bool = False
-    sample_available: bool
-    dataset: dict
-    training: dict
-
-
 class Detection(BaseModel):
     class_id: int
     label: str
@@ -84,3 +74,39 @@ class TrainingArtifact(BaseModel):
     torch: str | None = None
     run_directory: str | None = None
     initial_weight_sha256: str | None = None
+
+
+class EvaluationParameters(BaseModel):
+    imgsz: int = Field(default=640, ge=1)
+    batch: int = Field(default=4, ge=1)
+    device: Literal['cpu', 'mps'] = 'cpu'
+    conf: float = Field(default=.001, ge=0, le=1)
+    iou: float = Field(default=.7, ge=0, le=1)
+    seed: int = 42
+
+
+class TestEvaluation(BaseModel):
+    status: Literal['completed']
+    evaluation_split: Literal['test']
+    review_status: Literal['pending_user_review', 'user_approved']
+    training_dataset_sha256: str
+    dataset_sha256: str
+    weight_sha256: str
+    images: int = Field(gt=0)
+    objects: int = Field(ge=0)
+    metrics: EvaluationMetrics
+    parameters: EvaluationParameters = Field(default_factory=EvaluationParameters)
+    completed_utc: str | None = None
+    ultralytics: str | None = None
+    torch: str | None = None
+
+
+class Status(BaseModel):
+    models: list[ModelInfo]
+    bottle_sample_available: bool = False
+    bottle_sample_split: Literal['train', 'val', 'test'] | None = None
+    training_log_available: bool = False
+    sample_available: bool
+    dataset: dict
+    training: dict
+    evaluation: TestEvaluation | None = None

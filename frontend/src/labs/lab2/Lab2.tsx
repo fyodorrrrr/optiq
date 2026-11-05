@@ -43,7 +43,7 @@ export default function Lab2() {
           lab.result && { id: 'run', title: 'Run details', content: <RunMetadata value={{ engine: lab.result.engine, parameters: lab.result.parameters, statistics: lab.result.statistics, measurement_note: 'Edge-pixel percentage measures output density, not accuracy.', display_scaling: lab.result.display_scaling, canny_aperture: 3, canny_L2gradient: false }} /> }
         ]}
         controls={<><h2>{content.title === 'Compare' ? 'Compare edges' : content.title}</h2>
-          <EdgeControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} onOpenHelp={() => guide.current?.querySelector<HTMLButtonElement>('.learning-canvas-link')?.click()} /></>}>
+          <EdgeControls lab={lab} section={section} onRevealSettings={() => setSection('compare')} /></>}>
           <div className="lab-image-grid" data-columns={3}>
             <EdgeFigure title="Original (grayscale)" frame={lab.source?.frame ?? null} description="Input before Gaussian smoothing" pending={lab.busy} />
                         <EdgeFigure title="Sobel combined" frame={lab.result?.sobel ?? null} description="Brighter pixels show stronger changes · scaled for display" pending={lab.busy} />

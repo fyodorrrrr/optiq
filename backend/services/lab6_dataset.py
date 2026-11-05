@@ -8,7 +8,7 @@ from PIL import Image
 import yaml
 
 
-def validate_dataset(config_path):
+def validate_dataset(config_path, *, include_test=True):
     config_path = Path(config_path).resolve()
     config = yaml.safe_load(config_path.read_text())
     if not isinstance(config, dict):
@@ -31,7 +31,7 @@ def validate_dataset(config_path):
     train_classes = set()
     image_splits = {}
     file_pairs = set()
-    for split in ['train', 'val', 'test']:
+    for split in (['train', 'val', 'test'] if include_test else ['train', 'val']):
         value = config.get(split)
         if not value and split == 'test':
             continue

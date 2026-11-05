@@ -1,0 +1,71 @@
+{
+  "source": "Open Images validation pool, new local held-out test subset",
+  "seed": 20261105,
+  "review_policy": "Assistant checked contact sheets before any frozen-model inference. User approval pending. Exclusions concern annotation completeness/class boundaries only. No model-based selection.",
+  "image_ids": [
+    "7290c66c57edfdc5",
+    "5d6db82b8eeb448f",
+    "58b50dce36e63205",
+    "2db0a13fe42bd957",
+    "3f68d660d5fd07e5",
+    "a119ed96a3eb26da",
+    "d90df9e98df1fc17",
+    "dbfd3450deea8b7a",
+    "26d71e58792aa12c",
+    "6a5086b8152cc904",
+    "53397678dd980397",
+    "487815c82c579830",
+    "219f6b4afc238049",
+    "525ea7e8ed9c752d",
+    "14f3cf0bf538d81c",
+    "202487fc0ba87722",
+    "7e2afdc21926bd14",
+    "b465df5c6ae982bf"
+  ],
+  "notes": {
+    "7290c66c57edfdc5": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "5d6db82b8eeb448f": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "58b50dce36e63205": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "2db0a13fe42bd957": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "3f68d660d5fd07e5": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "a119ed96a3eb26da": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "d90df9e98df1fc17": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "dbfd3450deea8b7a": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "26d71e58792aa12c": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "6a5086b8152cc904": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "53397678dd980397": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "487815c82c579830": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "219f6b4afc238049": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "525ea7e8ed9c752d": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "14f3cf0bf538d81c": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "202487fc0ba87722": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "7e2afdc21926bd14": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending.",
+    "b465df5c6ae982bf": "Assistant visual check: visible bottle instances and source YOLO boxes checked before evaluation; user review pending."
+  },
+  "excluded": [
+    {
+      "id": "e03db3c78623522b",
+      "reason": "Incomplete extents on several occluded background bottles; annotation ambiguity."
+    },
+    {
+      "id": "a2364c31de73114d",
+      "reason": "Ambiguous additional bottle behind hamper packaging; incomplete source labels."
+    },
+    {
+      "id": "dd42197939e82d8c",
+      "reason": "Rendered perfume artwork, not a natural photograph."
+    },
+    {
+      "id": "474d3e195dade8ad",
+      "reason": "Jar/glass rather than the defined bottle class."
+    },
+    {
+      "id": "e6728c1380bd50fb",
+      "reason": "Aerosol cans and mixed container classes; source class ambiguity."
+    },
+    {
+      "id": "02deba0102b5ce2a",
+      "reason": "Partial aerosol container incorrectly labeled as a bottle."
+    }
+  ]
+}

@@ -5,7 +5,7 @@ import { NumberField, SelectField } from '../../components/lab/Fields'
 import type { Section } from './content'
 import type useContrastExperiment from './useContrastExperiment'
 
-export default function ContrastControls({ lab, section, onRevealSettings, onOpenHelp }: { lab: ReturnType<typeof useContrastExperiment>; section: Section; onRevealSettings: () => void; onOpenHelp: () => void }) {
+export default function ContrastControls({ lab, section, onRevealSettings }: { lab: ReturnType<typeof useContrastExperiment>; section: Section; onRevealSettings: () => void }) {
   return <form onSubmit={event => { event.preventDefault(); void lab.run(field => revealField(field, onRevealSettings)) }}>
     <fieldset disabled={lab.busy || !lab.source}>
       <legend className="sr-only">Contrast settings</legend>
@@ -34,6 +34,6 @@ export default function ContrastControls({ lab, section, onRevealSettings, onOpe
       <LabButton variant="primary" type="submit" aria-busy={lab.busy}>Compare contrast</LabButton>
     </fieldset>
     {lab.canReset && <LabButton disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>}
-      <SettingsHelpLink guideId="contrast-guide" onOpen={onOpenHelp} />
+      <SettingsHelpLink guideId="contrast-guide" />
   </form>
 }
