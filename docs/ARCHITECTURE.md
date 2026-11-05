@@ -381,6 +381,23 @@ dataset summary after a run, and local classification-metric definitions. These
 changes do not alter computation, activity requirements, or returned measurements.
 
 
+## Lab 5 precomputed demonstration
+
+On `feat/lab5-demo`, `/labs/5` uses `usePcaDemo` and static recorded runs. The old
+`/labs/5/demo` preview route redirects to the canonical page. There is no live-fit
+button or backend call from this Lab 5 UI. The full live application source is
+preserved in the GitHub `full-local` branch at `729d587`; local model/dataset
+caches are still separate ignored resources, not part of that Git backup.
+
+The page fetches only same-origin assets under `/demos/lab5/`, checks manifest/run
+SHA-256 and provenance, and caches validated runs. Superseded loads are aborted.
+Recorded 25/75/150-component results come from the actual existing service through
+`export_lab5_demo.py`; metrics, galleries, split information and recorded compute
+timings remain real outputs. All four views and the existing Learning Canvas are
+retained. Backend fitting/export code remains for local regeneration. This UI
+change does not yet create a lightweight deployment backend or alter other labs.
+See [LAB5_SETUP.md](LAB5_SETUP.md) for branch recovery and regeneration.
+
 ## Lab 6 inference and offline training
 
 `/labs/6` uses the shared lab shell, controls, feedback, uploads and image viewers.

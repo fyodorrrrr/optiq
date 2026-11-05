@@ -3,8 +3,10 @@
 Interactive computer vision learning and experimentation platform for Labs 1–7.
 Includes a homepage with a pixel character and introduction,
 three illustrated **How learning works** cards, a selectable seven-lab map,
-and working workspaces for Labs 1–5 and 7. Lab 5 uses
-scikit-learn for PCA and recognition. Lab 6 has pretrained detection and local
+and working workspaces for Labs 1–5 and 7. On this branch, Lab 5 displays real
+saved PCA/SVM runs without a backend request. The full live application source is
+preserved in the [full-local branch](https://github.com/fyodorrrrr/optiq/tree/full-local).
+See [Lab 5 setup](docs/LAB5_SETUP.md) for recovery and saved-run regeneration. Lab 6 has pretrained detection and local
 training support; actual custom-dataset training remains pending.
 
 ## Requirements

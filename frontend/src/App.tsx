@@ -3,7 +3,7 @@ import HeroPixel from './components/HeroPixel'
 import LearningCards from './components/LearningCards'
 import Wordmark from './components/Wordmark'
 import { lazy, Suspense, useEffect, useRef } from 'react'
-import { Link, Route, Routes, useLocation } from 'react-router'
+import { Link, Navigate, Route, Routes, useLocation } from 'react-router'
 import useHomepageSmoothScroll from './hooks/useHomepageSmoothScroll'
 import './App.css'
 
@@ -55,7 +55,7 @@ export default function App() {
   useEffect(() => {
     document.title = pathname === '/labs/1' ? 'Lab 1 · Image fundamentals — Optiq'
       : pathname === '/labs/2' ? 'Lab 2 · Edge detection — Optiq'
-        : pathname === '/labs/3' ? 'Lab 3 · Histograms & contrast — Optiq' : pathname === '/labs/4' ? 'Lab 4 · Features & matching — Optiq' : pathname === '/labs/5' ? 'Lab 5 · PCA & eigenfaces — Optiq' : pathname === '/labs/6' ? 'Lab 6 · Object detection — Optiq' : pathname === '/labs/7' ? 'Lab 7 · Segmentation — Optiq' : 'Optiq — Computer vision through experimentation'
+        : pathname === '/labs/3' ? 'Lab 3 · Histograms & contrast — Optiq' : pathname === '/labs/4' ? 'Lab 4 · Features & matching — Optiq' : pathname.startsWith('/labs/5') ? 'Lab 5 · Precomputed demonstration — Optiq' : pathname === '/labs/6' ? 'Lab 6 · Object detection — Optiq' : pathname === '/labs/7' ? 'Lab 7 · Segmentation — Optiq' : 'Optiq — Computer vision through experimentation'
     const frame = requestAnimationFrame(() => {
       if (hash) document.getElementById(hash.slice(1))?.scrollIntoView()
       else window.scrollTo({ top: 0, behavior: 'instant' })
@@ -70,6 +70,7 @@ export default function App() {
     <Route path="/labs/3" element={<Lab3 />} />
     <Route path="/labs/4" element={<Lab4 />} />
     <Route path="/labs/5" element={<Lab5 />} />
+    <Route path="/labs/5/demo" element={<Navigate to="/labs/5" replace />} />
     <Route path="/labs/6" element={<Lab6 />} />
     <Route path="/labs/7" element={<Lab7 />} />
     <Route path="*" element={<main className="lab-main"><h1>Page not found</h1><p>This page is not available.</p><Link to="/">Return to Optiq</Link></main>} />

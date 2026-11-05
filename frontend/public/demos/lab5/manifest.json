@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "execution": "precomputed",
+  "recorded_utc": "2026-11-05T15:06:26.284147+00:00",
+  "source_service_sha256": "380264a5776c932c13d8b95e334110b96eef1b28faa3e81b17a583b25cbb2e06",
+  "dataset_sha256": "df8f221771152ce1b66ad2b78f7d54ebdb300fe33cc5e5ca9ac0f9ec5e203e32",
+  "dataset": {
+    "ready": true,
+    "message": "LFW \u00b7 minimum 70 faces per person \u00b7 resize 0.4",
+    "samples": 1288,
+    "height": 50,
+    "width": 37,
+    "features": 1850,
+    "names": [
+      "Ariel Sharon",
+      "Colin Powell",
+      "Donald Rumsfeld",
+      "George W Bush",
+      "Gerhard Schroeder",
+      "Hugo Chavez",
+      "Tony Blair"
+    ],
+    "max_components": 300
+  },
+  "runs": [
+    {
+      "components": 25,
+      "file": "components-25.json",
+      "sha256": "2542044a23bc5a73ee7e6afb07e98abff2a368a9ceb97b23a06fb3350d448194"
+    },
+    {
+      "components": 75,
+      "file": "components-75.json",
+      "sha256": "849b1abd94e3512fb39350c2d6056d781499c06289a5877fd3349aa15195199a"
+    },
+    {
+      "components": 150,
+      "file": "components-150.json",
+      "sha256": "21c3584546f8495d294f039ab7b34a1270c5d1d978946f45e6b943bd1fe60e9b"
+    }
+  ]
+}

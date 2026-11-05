@@ -148,6 +148,13 @@ For completion, verify source requirements, representative outputs, meaningful n
 
 **Dependencies/open items:** scikit-learn and NumPy; explicit dataset setup, bounded fresh fitting, and local verification are documented in `LAB5_SETUP.md`. Deployment resource validation remains pending. Do not replace LFW with arbitrary uploaded faces without identifying the changed experiment. A cached fitted model must retain its training provenance and does not alone demonstrate the training procedure.
 
+**Approved hosted-style presentation (2026-11-05):** on `feat/lab5-demo`, the
+Lab 5 page now displays actual recorded runs at 25, 75 and 150 components. It is
+explicitly labeled precomputed and does not perform fresh fitting. The complete
+live local source is preserved in GitHub branch `full-local`, commit `729d587`.
+This preserves the actual implementation for local review; it does not establish
+instructor acceptance of saved demonstrations as a substitute for execution.
+
 ## Lab 6 — YOLO Object Detection
 
 **Objective:** perform pretrained detection, prepare a custom dataset, train a detector, and evaluate/use its outputs.

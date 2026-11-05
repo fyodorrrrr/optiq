@@ -48,3 +48,40 @@ by this implementation.
 
 References: [scikit-learn eigenfaces example](https://scikit-learn.org/stable/auto_examples/applications/plot_face_recognition.html),
 [PCA documentation](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html).
+
+## Demonstration page and full local copy
+
+On `feat/lab5-demo`, `/labs/5` is the precomputed demonstration. The former
+`/labs/5/demo` preview URL redirects to it. It opens the 150-component baseline
+and switches among real recorded 25/75/150-component runs without contacting
+FastAPI. The four views, dataset/run details and measurement downloads remain.
+There is no Run experiment button and no fresh model fitting in this page.
+Recorded compute timings describe the original local runs, not browser latency.
+
+The complete live application source is preserved on GitHub in
+[`full-local`](https://github.com/fyodorrrrr/optiq/tree/full-local), commit
+`729d587`. To keep a separate runnable local checkout:
+
+```sh
+git clone --branch full-local https://github.com/fyodorrrrr/optiq.git optiq-full-local
+```
+
+Follow the setup instructions in that branch. Dependencies, datasets and model
+weights remain ignored by Git; prepare/copy those resources separately as already
+documented. The GitHub branch preserves source and setup, not the local cache.
+The Lab 5 backend/service and export script remain available as trusted local
+tools in the demo branch as well, but the page does not invoke them.
+
+To deliberately regenerate the static bundle with the prepared local dataset:
+
+```sh
+backend/.venv/bin/python backend/scripts/export_lab5_demo.py
+```
+
+The script calls the existing Lab 5 service for all three actual PCA/SVM fits,
+retains split/seed/library/data provenance, and records execution time and source
+SHA-256. `frontend/public/demos/lab5/manifest.json` binds each saved JSON to its
+SHA-256; the page checks the hash and run identity before display. Missing/corrupt
+artifacts show an error with reload, never invented results. No model or dataset
+archive is downloaded at runtime. This changes Lab 5 presentation only; a complete
+lightweight Render backend profile is separate work and other labs are unchanged.
