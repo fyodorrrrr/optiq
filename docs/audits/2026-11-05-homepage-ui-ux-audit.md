@@ -98,3 +98,17 @@ No Safari, Firefox, physical touchscreen, screen-reader session, production perf
 4. `polish` — finish spacing and alignment after the structural changes.
 
 These findings can be addressed individually or together, then re-audited against the same viewport set.
+
+## Follow-up implementation
+
+The approved improvements were implemented after this audit: shorter phone illustrations,
+side-by-side tablet cards, 44 px secondary link targets, wrapping map titles,
+static thumbnails in compact previews, lazy-loaded lab routes, and client-side lab links.
+The map dividers remain unchanged pending the user's design choice.
+
+Lint and production build passed. Browser checks at the same five widths found zero
+axe violations after transitions settled, no page errors, and no horizontal overflow
+at normal or doubled text sizes. All seven lab routes opened and internal navigation
+preserved the document. At 390 px, the learning section dropped from 1,305 to 1,033 px;
+at 760 px, from 1,496 to 832 px. Main JavaScript decreased from approximately 501 kB
+(173 kB gzip) to 323 kB (125 kB gzip). These are build sizes, not measured load times.

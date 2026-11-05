@@ -66,15 +66,16 @@
 
 @media (max-width: 900px) {
   .learning-cards { grid-template-columns: minmax(0, 1fr); gap: 20px; max-width: 540px; margin-inline: auto; }
-  .learning-card { padding: 28px 28px 0; }
+  .learning-cards-section { padding: 48px 0 64px; }
+  .learning-card { padding: 24px; display: grid; grid-template-columns: minmax(0, 1fr) 140px; gap: 20px; align-items: center; }
   .learning-card h3 { font-size: 25px; }
-  .learning-card-illustration { width: calc(100% + 56px); margin-inline: -28px; height: 280px; }
+  .learning-card-illustration { width: 100%; margin: 0; height: 160px; padding: 0; }
 }
 
 @media (max-width: 480px) {
-  .learning-cards-section { padding: 48px 0 72px; }
-  .learning-card { padding: 24px 24px 0; }
+  .learning-cards-section { padding: 40px 0 48px; }
+  .learning-card { display: flex; gap: 0; padding: 24px 24px 0; }
   .learning-card h3 { font-size: 23px; }
   .learning-card p { margin-top: 16px; }
-  .learning-card-illustration { width: calc(100% + 48px); margin-inline: -24px; height: 240px; }
+  .learning-card-illustration { width: calc(100% + 48px); margin-inline: -24px; height: 160px; }
 }

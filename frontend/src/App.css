@@ -901,3 +901,25 @@ h2 {
   .preview-comparison .comparison-divider span { transition: none; }
   .preview-comparison[data-dragging='true'] .comparison-divider span { transform: translate(-50%, -50%); }
 }
+
+/* Keep navigation targets generous without changing their visual hierarchy. */
+.home-header nav a, .intro-links .quiet-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px;
+}
+
+.page-content { overflow-wrap: anywhere; }
+.lab-browser .node-copy { min-width: 0; overflow-wrap: anywhere; }
+.lab-browser .lab-detail { min-width: 0; }
+.lab-browser .lab-preview-figure .lab-preview-thumbnail {
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+}
+.route-loading { min-height: 60svh; padding-block: 64px; }
+
+@media (max-width: 760px) {
+  .lab-browser .lab-preview-figure .lab-preview-thumbnail { max-height: 180px; }
+}

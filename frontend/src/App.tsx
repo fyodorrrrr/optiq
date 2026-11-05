@@ -2,16 +2,17 @@ import LabMap from './components/LabMap'
 import HeroPixel from './components/HeroPixel'
 import LearningCards from './components/LearningCards'
 import Wordmark from './components/Wordmark'
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Link, Route, Routes, useLocation } from 'react-router'
-import Lab1 from './labs/lab1/Lab1'
-import Lab2 from './labs/lab2/Lab2'
-import Lab3 from './labs/lab3/Lab3'
-import Lab4 from './labs/lab4/Lab4'
-import Lab5 from './labs/lab5/Lab5'
-import Lab6 from './labs/lab6/Lab6'
-import Lab7 from './labs/lab7/Lab7'
 import './App.css'
+
+const Lab1 = lazy(() => import('./labs/lab1/Lab1'))
+const Lab2 = lazy(() => import('./labs/lab2/Lab2'))
+const Lab3 = lazy(() => import('./labs/lab3/Lab3'))
+const Lab4 = lazy(() => import('./labs/lab4/Lab4'))
+const Lab5 = lazy(() => import('./labs/lab5/Lab5'))
+const Lab6 = lazy(() => import('./labs/lab6/Lab6'))
+const Lab7 = lazy(() => import('./labs/lab7/Lab7'))
 
 function Home() {
   return <>
@@ -31,7 +32,7 @@ function Home() {
             <p>Get hands-on with computer vision. Explore an image, change the parameters, and discover why the result changes.</p>
             <div className="intro-links">
               <a className="button" href="#labs">Explore the labs <span aria-hidden="true">→</span></a>
-              <a className="quiet-link" href="/labs/1">Open Lab 1</a>
+              <Link className="quiet-link" to="/labs/1">Open Lab 1</Link>
             </div>
           </div>
         </div>
@@ -59,7 +60,7 @@ export default function App() {
     return () => cancelAnimationFrame(frame)
   }, [pathname, hash])
 
-  return <Routes>
+  return <Suspense fallback={<main className="lab-main route-loading" aria-busy="true"><p role="status">Loading lab…</p></main>}><Routes>
     <Route path="/" element={<Home />} />
     <Route path="/labs/1" element={<Lab1 />} />
     <Route path="/labs/2" element={<Lab2 />} />
@@ -69,5 +70,5 @@ export default function App() {
     <Route path="/labs/6" element={<Lab6 />} />
     <Route path="/labs/7" element={<Lab7 />} />
     <Route path="*" element={<main className="lab-main"><h1>Page not found</h1><p>This page is not available.</p><Link to="/">Return to Optiq</Link></main>} />
-  </Routes>
+  </Routes></Suspense>
 }

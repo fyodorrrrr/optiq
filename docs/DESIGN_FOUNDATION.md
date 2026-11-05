@@ -107,14 +107,15 @@ Each learning card contains only a tagline, a short supporting sentence, and
 a static pixel-art illustration of the existing magnifying-glass mascot
 acting out the tagline. The cards describe starting with an input,
 experimenting/comparing, and connecting results to explanations/Python. They
-form three columns on larger screens and stack on smaller screens; text stays
+form three columns on larger screens, use compact side-by-side copy and artwork on tablets,
+and stack with shorter illustrations on phones; text stays
 in HTML and illustrations are decorative. Source assets and generation prompts
 live in `frontend/src/assets/learning/`.
 
 The lab browser has a vertical winding seven-lab map on the
 left and selected-lab information on the right. The information panel stays
 visible while scrolling on wider screens and includes saved sample outputs from
-the lab algorithms. On smaller screens, a compact text preview opens immediately
+the lab algorithms. On smaller screens, a compact preview with a static thumbnail opens immediately
 below the selected node, pushing later nodes down and adjusting the connecting path.
 Selection preserves the node’s viewport position. Tighter stops are grouped into
 Foundations, Features & recognition, and Detection & segmentation. Group names use the locally bundled Gaegu font in the open

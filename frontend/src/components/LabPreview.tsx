@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import before6 from '../assets/lab-previews/lab-6-before.webp'
 import after6 from '../assets/lab-previews/lab-6-after.webp'
 import before7 from '../assets/lab-previews/lab-7-before.webp'
@@ -39,19 +40,19 @@ export default function LabPreview({ lab, compact = false }: { lab: (typeof labs
       {labs.map(item => <span className="detail-heading preview-measure" aria-hidden="true" key={item.id}>Lab {item.id} · {item.title}</span>)}
       <h3 className="detail-heading" id="lab-preview-title">Lab {lab.id} · {lab.title}</h3>
     </div>
-    {!compact && <figure className="lab-preview-figure" data-lab={lab.id}>
-      {comparisons[lab.id]
+    <figure className="lab-preview-figure" data-lab={lab.id}>
+      {compact ? <img className="lab-preview-thumbnail" src={preview.image} alt={preview.alt} width="640" height="480" loading="lazy" decoding="async" /> : comparisons[lab.id]
         ? <PreviewComparison key={lab.id} before={comparisons[lab.id][0]} after={comparisons[lab.id][1]} description={preview.alt} />
         : <div className="lab-preview-static-stage"><div className="lab-preview-static-card">
           <img src={preview.image} alt={preview.alt} width="640" height={lab.id === 4 ? 240 : 350} loading="lazy" decoding="async" />
         </div></div>}
       <figcaption>{preview.caption}</figcaption>
-    </figure>}
+    </figure>
     <div className="preview-copy-slot">
       {labs.map(item => <p className="detail-copy preview-measure" aria-hidden="true" key={item.id}>{item.description}</p>)}
       <p className="detail-copy">{lab.description}</p>
     </div>
-    <div className="detail-action"><a className="button" href={lab.href}>Open lab <span aria-hidden="true">→</span></a></div>
+    <div className="detail-action"><Link className="button" to={lab.href}>Open lab <span aria-hidden="true">→</span></Link></div>
     </div>
   </section>
 }

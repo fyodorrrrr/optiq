@@ -3,7 +3,9 @@
 ## Current Boundaries
 
 React/TypeScript renders the homepage and all seven lab routes, `/labs/1`
-through `/labs/7`; React Router handles navigation. Labs 1–5 and 7 are
+through `/labs/7`; React Router handles navigation. Lab route components are
+lazy-loaded behind a shared Suspense loading state; the homepage loads independently
+of lab experiment code. Homepage lab links use client-side navigation. Labs 1–5 and 7 are
 implemented. Lab 6 provides pretrained detection and local training/artifact
 review, with a completed 100-epoch custom bottle run and validation evaluation. FastAPI provides
 `/api/health` and per-lab endpoints. Vite proxies `/api` to port 8000 in
