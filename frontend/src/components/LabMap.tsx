@@ -31,6 +31,7 @@ export default function LabMap() {
   const [trail, setTrail] = useState<{ width: number; height: number; path: string; segments: { path: string; fraction: number }[] } | null>(null)
   const map = useRef<HTMLDivElement>(null)
   const anchor = useRef<{ element: HTMLButtonElement; top: number } | null>(null)
+  const nextPreviewAnchor = useRef<number | null>(null)
   const selected = labs.find((lab) => lab.id === selectedId) ?? labs[0]
   const activeId = hoveredId ?? focusedId ?? selectedId
 
@@ -72,12 +73,29 @@ export default function LabMap() {
   }, [compact, selectedId])
 
   useLayoutEffect(() => {
+    if (nextPreviewAnchor.current !== null) {
+      const preview = map.current?.closest('.lab-browser')?.querySelector<HTMLElement>('#lab-details')
+      const nextButton = preview?.querySelector<HTMLButtonElement>('.preview-next')
+      const previousTop = nextPreviewAnchor.current
+      if (compact && nextButton) {
+        window.scrollBy({ top: nextButton.getBoundingClientRect().top - previousTop, behavior: 'instant' })
+      }
+      nextButton?.focus({ preventScroll: true })
+      nextPreviewAnchor.current = null
+    }
     const previous = anchor.current
     anchor.current = null
     if (compact && previous?.element.isConnected) {
       window.scrollBy({ top: previous.element.getBoundingClientRect().top - previous.top, behavior: 'instant' })
     }
   }, [compact, selectedId])
+
+  function showNextPreview() {
+    const preview = map.current?.closest('.lab-browser')?.querySelector('#lab-details')
+    nextPreviewAnchor.current = preview?.querySelector('.preview-next')?.getBoundingClientRect().top ?? 0
+    const index = labs.findIndex(lab => lab.id === selectedId)
+    setSelectedId(labs[(index + 1) % labs.length].id)
+  }
 
   function selectLab(id: number, element: HTMLButtonElement) {
     if (id === selectedId) return
@@ -98,7 +116,7 @@ export default function LabMap() {
           </g>)}
         </svg>
         {labs.map((lab, index) => (
-          <div className="map-stop" key={lab.id} data-group-start={Boolean(groups[lab.id])} data-divider={Boolean(groups[lab.id] && index > 0)} style={{ '--mx': `${mobilePositions[index]}%`, '--my': `${index * 104 + Object.keys(groups).filter(id => Number(id) > 1 && Number(id) <= lab.id).length * 32}px` } as CSSProperties}>
+          <div className="map-stop" key={lab.id} data-group-start={Boolean(groups[lab.id])} style={{ '--mx': `${mobilePositions[index]}%`, '--my': `${index * 104 + Object.keys(groups).filter(id => Number(id) > 1 && Number(id) <= lab.id).length * 32}px` } as CSSProperties}>
           {groups[lab.id] && index > 0 && <svg className="map-group-divider" viewBox="0 0 400 28" preserveAspectRatio="none" aria-hidden="true" focusable="false">
             <path d={lab.id === 4 ? 'M4 18C80 2 120 25 200 14S320 4 396 14' : 'M4 10C90 25 145 2 215 13S330 24 396 9'} />
           </svg>}
@@ -114,7 +132,7 @@ export default function LabMap() {
               Lab {lab.id}
             </span></span>
           </button>
-          {compact && selectedId === lab.id && <LabPreview lab={lab} compact />}
+          {compact && selectedId === lab.id && <LabPreview lab={lab} compact onNext={showNextPreview} />}
           {groupEnds[lab.id] && <h3 className="map-group-heading" aria-label={groups[groupEnds[lab.id]]} data-group={groupEnds[lab.id]} data-align={lab.id === 5 ? 'right' : 'left'}>
             {(groups[groupEnds[lab.id]].includes(' & ')
               ? groups[groupEnds[lab.id]].replace(' & ', ' &|').split('|')
@@ -123,7 +141,7 @@ export default function LabMap() {
           </div>
         ))}
       </div>
-      {!compact && <LabPreview lab={selected} />}
+      {!compact && <LabPreview lab={selected} onNext={showNextPreview} />}
       </div>
     </section>
   )

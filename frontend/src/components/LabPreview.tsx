@@ -31,7 +31,7 @@ const previews: Record<number, { image: string; caption: string; alt: string }> 
 
 const comparisons: Record<number, [string, string]> = { 1: [before1, after1], 2: [before2, after2], 3: [before3, after3], 6: [before6, after6], 7: [before7, after7] }
 
-export default function LabPreview({ lab, compact = false }: { lab: (typeof labs)[number]; compact?: boolean }) {
+export default function LabPreview({ lab, compact = false, onNext }: { lab: (typeof labs)[number]; compact?: boolean; onNext: () => void }) {
   const preview = previews[lab.id]
 
   return <section className="lab-detail" id="lab-details" aria-labelledby="lab-preview-title" aria-live="polite" aria-atomic="true">
@@ -52,7 +52,7 @@ export default function LabPreview({ lab, compact = false }: { lab: (typeof labs
       {labs.map(item => <p className="detail-copy preview-measure" aria-hidden="true" key={item.id}>{item.description}</p>)}
       <p className="detail-copy">{lab.description}</p>
     </div>
-    <div className="detail-action"><Link className="button" to={lab.href}>Open lab <span aria-hidden="true">→</span></Link></div>
     </div>
+    <div className="detail-action"><Link className="button" to={lab.href}>Open lab <span aria-hidden="true">→</span></Link><button className="preview-next" type="button" onClick={onNext} aria-label="Show next lab preview">Next preview <span aria-hidden="true">→</span></button></div>
   </section>
 }

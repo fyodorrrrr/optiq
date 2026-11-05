@@ -117,9 +117,10 @@ left and selected-lab information on the right. The information panel stays
 visible while scrolling on wider screens and includes saved sample outputs from
 the lab algorithms. On smaller screens, a compact preview with a static thumbnail opens immediately
 below the selected node, pushing later nodes down and adjusting the connecting path.
-Selection preserves the node’s viewport position. Tighter stops are grouped into
+Selection preserves the node’s viewport position. An outlined “Next preview” button
+advances the same selection, wrapping from Lab 7 to Lab 1 without opening a lab. Tighter stops are grouped into
 Foundations, Features & recognition, and Detection & segmentation. Group names use the locally bundled Gaegu font in the open
-lower corner of each group (below the last node on mobile), with varied static rotations and light warm-gray lettering. Gently curved dashed separators remain only between groups; there is no top divider.
+lower corner of each group (below the last node on mobile), with varied static rotations and light warm-gray lettering at 85% opacity. Group spacing and handwritten captions are supported by curved dashed separators between groups: 1.3 px strokes at 85% opacity with the original dash spacing; there is no top divider.
 Highlighted path segments use muted sage to complement the pale hovered node. The selected
 label uses stronger weight and an underline. Preview text reserves the largest
 content footprint and previews share a 4:3 stage, keeping panel dimensions
