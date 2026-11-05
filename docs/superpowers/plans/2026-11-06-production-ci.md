@@ -12,9 +12,9 @@ passes. No deployment tokens are committed or supplied to workflows.
 frontend lint/build and backend tests, and switching both hosts to main.
 
 - [x] Verify and commit approved mascot loading feedback separately.
-- [ ] Add least-privilege CI with immutable action references and cached SURF wheel.
-- [ ] Update Render Blueprint and deployment documentation to main/checksPass.
-- [ ] Run local checks, create and push the PR, inspect actual Linux CI results.
+- [x] Add least-privilege CI with immutable action references and cached SURF wheel.
+- [x] Update Render Blueprint and deployment documentation to main/checksPass.
+- [x] Run local checks, create and push the PR, inspect actual Linux CI results.
 - [ ] Merge only after checks pass; synchronize local main without overwriting full-local.
 - [ ] Report hosting dashboard changes that require owner access.
 
@@ -25,3 +25,12 @@ specifies. Do not download checkpoints, datasets or train models on CI. Render
 profile tests still prove no heavy dependency imports and exercise real SURF.
 Ruling: Existing hosting services cannot be mutated without account connections.
 The Blueprint records intended settings; dashboard edits remain explicit owner work.
+
+GitHub PR #1 is open with auto-merge enabled. Main requires both CI checks and a
+PR, including for administrators; force pushes/deletion are disabled. First Linux
+SURF build and verification succeeded. The suite found one fixture that assumed
+camera/display APIs were installed; reproduced locally by removing those cv2
+attributes. The fixture now explicitly mocks its complete local runtime. Cache
+save moved before tests so subsequent failures preserve the verified wheel.
+Merge remains pending until the rerun passes. Existing hosting settings are not
+changed by editing the Blueprint; owner must switch both services after merging.

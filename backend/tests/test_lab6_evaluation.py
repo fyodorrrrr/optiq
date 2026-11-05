@@ -131,7 +131,12 @@ class EvaluationStatusTests(unittest.TestCase):
                           'metrics': dict(precision=.7, recall=.6, map50=.65, map50_95=.5),
                           'parameters': {'imgsz': 640, 'data': '/private/internal/data.yaml'}}
             (root / 'evaluation.json').write_text(json.dumps(evaluation))
-            with patch.object(lab6, 'ROOT', root), patch.object(lab6.importlib.util, 'find_spec', return_value=object()):
+            # This fixture represents a prepared full local runtime, regardless
+            # of whether CI's minimal OpenCV build includes camera/display APIs.
+            with (patch.object(lab6, 'ROOT', root),
+                  patch.object(lab6.importlib.util, 'find_spec', return_value=object()),
+                  patch.object(lab6.cv2, 'imshow', create=True),
+                  patch.object(lab6.cv2, 'VideoCapture', create=True)):
                 status = lab6.status().model_dump()
                 self.assertEqual(status['evaluation']['images'], 18)
                 self.assertEqual(status['training']['evaluation_split'], 'val')
