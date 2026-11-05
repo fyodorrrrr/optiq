@@ -4,6 +4,7 @@ import LearningFigure from './LearningFigure'
 import { learningConcepts } from './learningContent'
 import DownloadLink from '../../components/lab/DownloadLink'
 import SettingsHelpLink from '../../components/lab/SettingsHelpLink'
+import LabEmptyState from '../../components/lab/LabEmptyState'
 import { useRef, useState } from 'react'
 import LabPage from '../../components/lab/LabPage'
 import LabWorkspace from '../../components/lab/LabWorkspace'
@@ -74,10 +75,14 @@ export default function Lab5() {
         {section === 'failures' && <section><h2>Learn from the misses</h2><p>{result.misclassified_count} of {result.test_count} test faces were misclassified. {result.failures.length > 0 ? `Showing the first ${result.failures.length} in test-split order.` : 'There are no misclassifications in this run.'}</p><PredictionGallery items={result.failures} /></section>}
         <div className="pca-actions lab-downloads"><DownloadLink href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify({ ...result, eigenfaces: undefined, tail_eigenfaces: undefined, predictions: undefined, failures: undefined }, null, 2))}`} download="optiq-lab5-measurements.json">Measurements & predictions JSON</DownloadLink></div>
 
-      </> : !lab.error && <div className="pca-empty-state">
+      </> : !lab.error && (lab.dataset?.ready && !lab.busy
+        ? <LabEmptyState>
+          <p>Run an experiment to see eigenfaces, the variance curve, recognition results, and misclassified faces. All four tools inspect the same completed run.</p>
+        </LabEmptyState>
+        : <div className="pca-empty-state">
         {lab.busy ? <LabStatus>Checking the dataset or fitting PCA and SVM…</LabStatus>
           : <p className="pca-empty">{lab.dataset?.ready ? 'Run an experiment to see eigenfaces, the variance curve, recognition results, and misclassified faces. All four tools inspect the same completed run.' : 'The dataset must be prepared on this server before experiments can run.'}</p>}
-      </div>}
+      </div>)}
     </LabWorkspace>
     <LabGuide id="pca-guide" ref={guide} key={section} title={content.heading} concept={learningConcepts[section]} visual={<LearningFigure section={section} />} settingsHelp={<> <p>The component count sets how many variation patterns represent each face. Fewer components retain less information. Start with 150, then compare retained variance, recognition, and failures at a smaller count.</p>        <p>Baseline: 150 · whitened PCA · balanced RBF SVM · fixed split, seed 42.</p>
         <p className="lab-hint">Each run fits fresh models. Leaving the page or losing the connection stops waiting, but the server fit may continue. Wait for it to finish before retrying.</p>

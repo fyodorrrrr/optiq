@@ -3,6 +3,7 @@ import type { KeyboardEvent, MouseEvent, PointerEvent } from 'react'
 import type { ImageFrame as Frame } from '../../api/images'
 import ImageMetadata from './ImageMetadata'
 import InfoDetails from './InfoDetails'
+import LabEmptyState from './LabEmptyState'
 
 export default function ImagePanel({ title, frame, onPick, empty, selection, description, showMetadata = true, metadataEssential = false, compact = false, imageAlt, pixelOverlay, onMoveSelection }: {
   onMoveSelection?: (x: number, y: number) => void
@@ -90,7 +91,7 @@ export default function ImagePanel({ title, frame, onPick, empty, selection, des
         </svg>}
 
       </>
-        : <p>{empty ?? 'Choose an image to begin.'}</p>}
+        : <LabEmptyState><p>{empty ?? 'Choose an image to begin.'}</p></LabEmptyState>}
     </div>
     {frame && pixelOverlay && <span className="lab-pixel-hint" role="status">{!validSelection
       ? 'Check pixel coordinates'

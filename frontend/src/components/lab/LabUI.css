@@ -406,3 +406,11 @@
 @media (prefers-reduced-motion: reduce) {
   .lab-shell .lab-primary, .lab-shell .lab-button { transition: none; }
 }
+.lab-empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; padding: 40px 24px; text-align: center; }
+.lab-empty-description { max-width: 48ch; color: var(--ink-soft); line-height: 1.7; }
+.lab-empty-description p { margin: 0; }
+@media (max-width: 640px) { .lab-empty-state { min-height: 200px; padding: 32px 12px; } }
+.lab-empty-icon { width: 48px; height: 48px; margin-bottom: 24px; color: var(--ink-soft); }
+.lab-image-stage .lab-empty-state { width: 100%; min-height: 0; padding: 12px; }
+.lab-image-stage .lab-empty-icon { flex-shrink: 0; width: 36px; height: 36px; margin-bottom: 16px; }
+.lab-image-stage .lab-empty-description p { margin: 0; padding: 0; }
