@@ -132,7 +132,15 @@ contrast as the application evolves. Product scope remains governed by
 
 Homepage depth uses a short trailing glide on the hero mascot, a smaller headline
 shift, and different upward travel distances for the three card illustrations.
-The motion follows native scrolling without intercepting wheel, touch, or keyboard
-input. Mobile travel is reduced, reduced-motion preferences keep layers static,
+Homepage wheel scrolling uses Lenis with a gentle interpolation factor of .085.
+Touch and keyboard scrolling retain native behavior; Lenis is destroyed when a lab
+opens or reduced motion is enabled. Anchor navigation synchronizes native focus
+scrolling before calculating its destination. Mobile travel is reduced, reduced-motion preferences keep layers static,
 and the animation loop stops when settled or when the document is hidden. Map
 nodes, preview controls, and learning-card text stay stationary in their layout.
+
+Cards, section headings, and the lab browser receive one 520 ms entrance rise and
+fade when first entering the viewport. Initially visible content is not delayed;
+keyboard focus immediately reveals a pending element. A separate CSS view timeline
+sharpens a light 2 px blur through the entry range, with sharp static fallbacks for
+reduced motion and browsers without scroll-timeline support.
