@@ -10,6 +10,9 @@ export interface ImageFrame {
 }
 
 export async function imageRequest<T>(lab: number, path: string, signal: AbortSignal, body?: FormData): Promise<T> {
+  // Let superseded effect/request cancellation settle before opening a connection.
+  await Promise.resolve()
+  signal.throwIfAborted()
   let response: Response
   try {
     response = await fetch(`/api/labs/${lab}/${path}`, {

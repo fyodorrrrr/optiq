@@ -13,7 +13,8 @@ router = APIRouter(prefix="/api/labs/4", tags=["Lab 4"])
 
 @router.get("/capabilities", response_model=Capabilities)
 async def available_algorithms():
-    return await process(capabilities)
+    # This small capability probe does not decode images or run an experiment.
+    return await process(capabilities, limited=False)
 
 
 @router.get("/sample", response_model=SamplePair)

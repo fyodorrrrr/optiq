@@ -33,6 +33,9 @@ export interface ExperimentResult {
 export type Operation = 'inspect' | 'edit' | 'grayscale' | 'crop' | 'resize' | 'rotate'
 
 async function request<T>(path: string, signal: AbortSignal, body?: FormData): Promise<T> {
+  // Let superseded effect/request cancellation settle before opening a connection.
+  await Promise.resolve()
+  signal.throwIfAborted()
   let response: Response
   try {
     response = await fetch(`/api/labs/1/${path}`, {

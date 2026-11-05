@@ -14,6 +14,9 @@ export interface Result {
   timings: Record<string, number>; provenance: Record<string, string | number | boolean>
 }
 async function request<T>(path: string, signal: AbortSignal, components?: number): Promise<T> {
+  // Let superseded effect/request cancellation settle before opening a connection.
+  await Promise.resolve()
+  signal.throwIfAborted()
   let response: Response
   const timeout = AbortSignal.timeout(120000)
   try {

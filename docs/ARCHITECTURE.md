@@ -12,6 +12,36 @@ review, with a completed 100-epoch custom bottle run and validation evaluation. 
 development. Production hosting is undecided and must support API forwarding
 and SPA route fallback.
 
+## Shared processing budget
+
+All labs submit blocking work through `routers/image_io.process`. Before dispatch,
+`services/processing_limits.py` reserves one shared processing slot. The default
+`OPTIQ_MAX_CONCURRENT_JOBS=1` allows one protected job per backend process; set a
+positive integer before starting the server to change this after load testing.
+Invalid values fail startup explicitly. Start the initial production deployment
+with one worker: multiple workers each have their own budget and model caches.
+
+When all slots are occupied, the API returns HTTP 503 with a short busy message
+and `Retry-After: 2`; it does not enqueue processing requests or automatically
+retry them. Image loading/decoding, generated samples, experiment execution, and
+heavier dataset/status operations share this budget. The small Lab 4 capability
+and Lab 7 model-availability probes opt out, preserving parallel initial page
+loads. `/api/health` stays independent. Existing per-lab locks remain in place.
+
+A reservation is acquired before thread-pool dispatch. The worker releases it in
+`finally`, including failures. Cancellation before dispatch releases an unused
+reservation; cancellation after work begins leaves it occupied until the worker
+actually finishes. Cancelling an HTTP request does not terminate CPU algorithms.
+This prevents both leaked reservations and premature replacement jobs.
+
+The budget bounds protected work inside a process, not total RAM/CPU, request
+rate, multipart parsing, or response serialization. Request/form validation still
+precedes processing admission. Frontend request helpers yield one microtask and
+check cancellation before fetch, preventing superseded initialization requests
+from consuming a slot during development effect replay. This does not retry busy
+requests. Ingress upload limits, rate limiting, readiness,
+and timeout changes are separate production-preparation steps.
+
 ## Lab 1 Request Flow
 
 1. `frontend/src/labs/lab1/useLab1.ts` requests a generated sample or submits an uploaded file. It retains the original file and decoded metadata in page memory.

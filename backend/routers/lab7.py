@@ -12,7 +12,8 @@ router=APIRouter(prefix='/api/labs/7',tags=['Lab 7'])
 
 @router.get('/status')
 async def model_status():
-    return await process(status)
+    # This probe checks availability without loading the semantic model.
+    return await process(status, limited=False)
 
 
 @router.get('/sample',response_model=Frame)

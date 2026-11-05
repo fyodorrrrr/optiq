@@ -3,6 +3,7 @@ from starlette.concurrency import run_in_threadpool
 
 from services.images import MAX_BYTES, ImageError, decode_image, frame
 from services.public_metadata import public_message
+from services.processing_limits import ProcessingBusy, processing_limiter
 
 
 async def read_upload(file):
@@ -17,11 +18,21 @@ async def read_upload(file):
         await file.close()
 
 
-async def process(function, *args):
+async def process(function, *args, limited=True):
     try:
-        return await run_in_threadpool(function, *args)
+        slot = processing_limiter.reserve() if limited else None
+    except ProcessingBusy as error:
+        raise HTTPException(503, str(error), headers={'Retry-After': '2'}) from None
+    try:
+        if slot is None:
+            return await run_in_threadpool(function, *args)
+        return await run_in_threadpool(slot.run, function, *args)
     except ImageError as error:
         raise HTTPException(error.status, public_message(str(error))) from None
+    finally:
+        # Queued cancellation releases immediately; running work releases in its worker.
+        if slot is not None:
+            slot.cancel_if_pending()
 
 
 def load_image(content):
