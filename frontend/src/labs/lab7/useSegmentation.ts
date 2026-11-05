@@ -1,15 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { frameFile } from '../../api/images'
 import type { ImageFrame } from '../../api/images'
-import { experiment, getSample, getStatus, loadImage } from './api'
-import type { Method, Result, Sample, SemanticStatus, Settings } from './api'
+import { experiment, getSample, loadImage } from './api'
+import type { Method, Result, Sample, Settings } from './api'
 const baseline = { invert: false, adaptive_block: '31', adaptive_c: '5', seed_x: '170', seed_y: '180', tolerance: '20', watershed_fraction: '0.7', canny_low: '60', canny_high: '150', closing_size: '3', min_area: '50', opacity: '0.5' }
 export type Draft = typeof baseline
 export default function useSegmentation() {
   const [source, setSource] = useState<{ file: File; frame: ImageFrame; name: string } | null>(null)
   const [method, setMethod] = useState<Method>('threshold')
   const [draft, setDraft] = useState(baseline)
-  const [status, setStatus] = useState<SemanticStatus | null>(null)
   const [result, setResult] = useState<Result | null>(null)
   const [busy, setBusy] = useState(true)
   const [error, setError] = useState('')
@@ -22,8 +21,8 @@ export default function useSegmentation() {
   useEffect(() => {
     const controller = new AbortController()
     active.current = controller
-    Promise.all([getSample('touching', controller.signal), getStatus(controller.signal)]).then(([frame, state]) => {
-      if (!controller.signal.aborted) { accept(frame, frameFile(frame, 'touching.png'), 'Touching objects'); setStatus(state) }
+    getSample('touching', controller.signal).then(frame => {
+      if (!controller.signal.aborted) { accept(frame, frameFile(frame, 'touching.png'), 'Touching objects') }
     }).catch(error => { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not load the sample.') })
       .finally(() => { if (!controller.signal.aborted) setBusy(false) })
     return () => active.current?.abort()
@@ -55,7 +54,13 @@ export default function useSegmentation() {
     finally { if (!controller.signal.aborted) setBusy(false) }
   }
   function change(key: keyof Draft, value: string | boolean) { cancel(); setDraft(previous => ({ ...previous, [key]: value })) }
-  function choose(value: Method) { if (value === method) return; cancel(); setResult(null); setMethod(value) }
+  function choose(value: Method) {
+    if (value === method) return
+    cancel()
+    setResult(null)
+    setMethod(value)
+    if (value !== 'semantic' && !source) void sample('touching')
+  }
   function seed(x: number, y: number) { cancel(); setDraft(previous => ({ ...previous, seed_x: String(x), seed_y: String(y) })) }
   const defaults = { ...baseline, seed_x: String(Math.min(170, (source?.frame.width ?? 171) - 1)), seed_y: String(Math.min(180, (source?.frame.height ?? 181) - 1)) }
   const canReset = (Object.keys(defaults) as (keyof Draft)[]).some(key => draft[key] !== defaults[key])
@@ -68,20 +73,14 @@ export default function useSegmentation() {
     return { ...numeric, method, invert: draft.invert }
   }
   async function run() {
-    if (!source || busy) return
+    if (!source || busy || method === 'semantic') return
     const controller = begin()
     try { const response = await experiment(source.file, settings(), controller.signal); if (!controller.signal.aborted) setResult(response) }
     catch (error) { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Segmentation failed.') }
     finally { if (!controller.signal.aborted) setBusy(false) }
   }
-  async function refresh() {
-    const controller = begin()
-    try { const response = await getStatus(controller.signal); if (!controller.signal.aborted) setStatus(response) }
-    catch (error) { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not check semantic setup.') }
-    finally { if (!controller.signal.aborted) setBusy(false) }
-  }
   let stale = false
   // Compare by fields because backend serialization order can differ.
   if (result) { try { const current = settings(); stale = (Object.keys(current) as (keyof Settings)[]).some(key => current[key] !== result.parameters[key]) } catch { stale = true } }
-  return { canReset, cancel, source, method, draft, status, result, busy, error, stale, sample, upload, change, choose, seed, reset, run, refresh }
+  return { canReset, cancel, source, method, draft, result, busy, error, stale, sample, upload, change, choose, seed, reset, run }
 }

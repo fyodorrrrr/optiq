@@ -52,7 +52,7 @@ export default function Lab5() {
         result && { id: 'run', title: 'Run details', content: <RunMetadata previous={Boolean(stale || lab.busy)} value={{ parameters: result.parameters, provenance: result.provenance, recorded_timings: result.timings }} /> }
       ]}
       controls={<><h2>{content.title}</h2>
-        <SelectField label="PCA components" value={lab.components}
+        <SelectField disabled={!lab.options.length} label="PCA components" value={lab.components}
           options={options.length ? options : [{ value: 150, label: 'Loading saved runs…' }]} onChange={lab.setComponents} />
         {lab.components !== '150' && <div className="pca-actions"><LabButton onClick={() => lab.setComponents('150')}>Reset baseline</LabButton></div>}
         {lab.error && <div className="pca-actions"><LabButton disabled={lab.busy} onClick={() => void lab.refresh()}>Reload saved runs</LabButton></div>}

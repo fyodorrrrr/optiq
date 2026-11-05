@@ -10,7 +10,9 @@ On `feat/lab5-demo`, the Lab 5 page displays precomputed real 25/75/150-componen
 PCA/SVM runs instead of fitting on request. This hosted-style presentation is an
 approved scope adaptation, not a claim of live execution. The full live local
 application source is retained on GitHub's `full-local` branch at `729d587`;
-other lab presentations are unchanged.
+Lab 6 now also presents recorded detector runs and actual dataset/training/test
+snapshots. Lab 7 semantic is recorded; its classical methods remain live. These
+changes do not yet establish a slim Render backend or measured hosting capacity.
 
 Initial visual constraints and the selected map-node treatment are recorded in [DESIGN_FOUNDATION.md](DESIGN_FOUNDATION.md). The homepage direction is a short introduction and a winding seven-lab map with shallow dimensional nodes; implemented labs remain freely accessible.
 

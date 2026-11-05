@@ -13,6 +13,7 @@ import LabGuide from '../../components/lab/LabGuide'
 import { LabError, LabStatus } from '../../components/lab/LabFeedback'
 import SegmentationControls from './SegmentationControls'
 import useSegmentation from './useSegmentation'
+import SemanticDemo from './SemanticDemo'
 import { sections, pythonExample } from './content'
 import type { Method } from './api'
 import './Lab7.css'
@@ -28,6 +29,7 @@ export default function Lab7() {
   const guide = useRef<HTMLElement>(null)
   const content = sections[lab.method]
   const result = lab.result
+  if (lab.method === 'semantic') return <SemanticDemo onChoose={lab.choose} />
   return <LabPage labNumber={7} title="Give each pixel a place."
     description="Lab 7 — Segmentation. Compare brightness, connected regions, boundaries, and learned pixel classes."
     guideId="segmentation-guide" onOpenGuide={() => guide.current?.focus({ preventScroll: true })} wide

@@ -4,13 +4,13 @@ import RunMetadata from '../../components/lab/RunMetadata'
 import { LabStatus } from '../../components/lab/LabFeedback'
 import type { Dataset } from './api'
 
-export default function DatasetView({ dataset, loading, unavailable, actions }: {
-  dataset?: Dataset; loading: boolean; unavailable: boolean; actions: ReactNode
+export default function DatasetView({ dataset, loading, unavailable, actions, recorded = false }: {
+  dataset?: Dataset; loading: boolean; unavailable: boolean; actions: ReactNode; recorded?: boolean
 }) {
   const count = Object.values(dataset?.splits ?? {}).reduce((sum, split) => sum + split.images, 0)
   return <section className="detection-reference">
     <div className="detection-section-heading"><h2>Dataset</h2>{actions}</div>
-    {!dataset && loading && <LabStatus>Checking dataset…</LabStatus>}
+    {!dataset && loading && <LabStatus>{recorded ? 'Loading recorded dataset…' : 'Checking dataset…'}</LabStatus>}
     {!dataset && unavailable ? null : dataset?.ready ? <>
       <p>{dataset.names?.join(' · ')} · {count} {dataset.reviewed_images === count ? 'reviewed photos' : 'photos'}</p>
       <div className="detection-table detection-dataset-counts"><table><caption className="sr-only">Dataset split counts</caption><thead><tr><th scope="col">Split</th><th scope="col">Images</th><th scope="col">Objects</th><th scope="col">Backgrounds</th></tr></thead><tbody>

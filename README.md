@@ -3,11 +3,15 @@
 Interactive computer vision learning and experimentation platform for Labs 1–7.
 Includes a homepage with a pixel character and introduction,
 three illustrated **How learning works** cards, a selectable seven-lab map,
-and working workspaces for Labs 1–5 and 7. On this branch, Lab 5 displays real
-saved PCA/SVM runs without a backend request. The full live application source is
-preserved in the [full-local branch](https://github.com/fyodorrrrr/optiq/tree/full-local).
-See [Lab 5 setup](docs/LAB5_SETUP.md) for recovery and saved-run regeneration. Lab 6 has pretrained detection and local
-training support; actual custom-dataset training remains pending.
+and seven laboratory workspaces. On this branch, Lab 5, Lab 6 and Lab 7's
+semantic view display real recorded results. Labs 1–4 and Lab 7's classical
+methods retain live backend processing. Dataset/training views retain the actual
+completed custom bottle model's reviewed artifacts.
+
+The full live application source is preserved in the
+[full-local branch](https://github.com/fyodorrrrr/optiq/tree/full-local).
+See the per-lab setup docs for recovery and recorded-run regeneration. Local
+model/dataset caches remain separate ignored resources.
 
 ## Requirements
 

@@ -330,6 +330,9 @@ measurements without repeating generic metadata beneath every comparison.
 
 ## Lab 5 dataset-driven PCA
 
+This describes the retained local fitting implementation; the current demo UI
+uses recorded outputs as documented below.
+
 `GET /api/labs/5/dataset` reads the local LFW subset; it never downloads from a
 request. `scripts/prepare_lfw.py` explicitly prepares ignored `.cache/lfw` data.
 `POST /api/labs/5/experiment` validates typed component settings and dispatches
@@ -398,7 +401,33 @@ retained. Backend fitting/export code remains for local regeneration. This UI
 change does not yet create a lightweight deployment backend or alter other labs.
 See [LAB5_SETUP.md](LAB5_SETUP.md) for branch recovery and regeneration.
 
+## Recorded detection and semantic views
+
+On `feat/lab5-demo`, Lab 6 uses `useRecordedRuns` with the existing workspace,
+image metadata, dataset/training views and downloads. It provides 12 real saved
+YOLO runs (two samples × two models × three thresholds); uploads/camera are
+available in the preserved `full-local` source instead. Training/dataset/test
+information and the sanitized log are static snapshots. No Lab 6 API is called.
+
+Lab 7's `SemanticDemo` provides six recorded DeepLab runs (two samples × three
+overlay opacities). The classical hook remains mounted to preserve input state;
+it clears/aborts pending work on method switches and never executes semantic
+inference. Classical threshold/region/edge methods still use the API. Semantic
+source/results are separate from the classical upload, preventing saved results
+from being presented as predictions for arbitrary input.
+
+Shared `api/recorded.ts` and `hooks/useRecordedRuns.ts` verify manifest/result
+hashes and input/parameter/source identity. Loaded inputs/results update together;
+superseded loads are aborted, prior pairs remain correctly labeled, and missing
+or corrupt files expose reload. Lab 5 reuses the same static JSON reader.
+`export_heavy_demos.py` executes actual existing services on 480px samples,
+retains credits/provenance and never trains or fabricates results. Static bundles
+are frontend assets; backend deployment slimming/resource testing is separate.
+
 ## Lab 6 inference and offline training
+
+The live camera/upload UI described in this section belongs to `full-local`.
+The current branch retains the services/export tools but uses recorded UI above.
 
 `/labs/6` uses the shared lab shell, controls, feedback, uploads and image viewers.
 Dedicated state and camera lifecycle live in `labs/lab6/`; the camera sends
@@ -477,6 +506,9 @@ the same message guard. Numeric metrics, history, model/dataset hashes, and
 intentional public dataset labels remain available.
 
 ## Lab 7 segmentation
+
+Classical methods remain live. Semantic execution below describes the retained
+local service; the current semantic UI uses recorded results as documented above.
 
 `labs/lab7/` reuses the shared shell, prediction prompts, fields, sample/upload
 controls and image viewers. Its own state/transport controls four method families.

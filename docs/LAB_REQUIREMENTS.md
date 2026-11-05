@@ -190,6 +190,12 @@ images in the curated Open Images bottle subset; the 100-epoch local baseline
 completed and was evaluated on its eight-image validation split. This is public
 data, not user-captured photos; a new 18-image/27-box held-out test evaluation has now completed with frozen weights. Its labels are now user-approved; see `LAB6_TEST_EVALUATION.md`.
 
+**Approved hosted-style presentation (2026-11-05):** on the demo branch, Lab 6
+shows actual saved detections and reviewed dataset/training/evaluation snapshots.
+It does not run webcam/upload inference or train a model from the page. All full
+live source remains in GitHub `full-local` at `729d587`; this presentation does
+not independently satisfy the source's real-time execution requirements.
+
 ## Lab 7 — Segmentation Techniques
 
 **Objective:** compare thresholding, region-based, edge-based, and semantic segmentation and explain suitable applications and limitations.
@@ -217,6 +223,11 @@ to 520 pixels. Generated geometry and the explicitly prepared bus photo supply
 sample inputs. See [LAB7_SETUP.md](LAB7_SETUP.md) for dependencies, model setup,
 label exports, and limits. Compatible ground truth is still required before
 computing IoU; semantic model training is optional in the source.
+
+**Approved hosted-style presentation (2026-11-05):** Lab 7 semantic classes
+uses real recorded predictions on fixed samples. It is labeled precomputed;
+classical methods remain live. Arbitrary-upload semantic inference is retained
+in `full-local`, not represented as execution of a saved result on a new input.
 
 ## Implemented Decisions and Remaining Work
 
