@@ -15,13 +15,15 @@ model/dataset caches remain separate ignored resources.
 
 ## Render Free deployment
 
-The demo branch includes an explicit `render-free` backend profile for live
+The main branch includes an explicit `render-free` backend profile for live
 Labs1–4 and classical Lab7, with no neural/PCA runtime requirements. Use the
 [root render.yaml](render.yaml), [Docker configuration](deploy/render/Dockerfile)
 and [Render deployment guide](docs/RENDER_DEPLOYMENT.md). Set backend
 `OPTIQ_PROFILE=render-free` and frontend `VITE_API_PROFILE=render-free` together.
-The full local profile remains the default. Actual Render deployment/resource
-verification is still required; these files do not provision a cloud account.
+The full local profile remains the default. The owner has reported a successful deployment; verify production resource
+metrics in the hosting dashboards. These files do not provision a cloud account.
+GitHub Actions checks pull requests and main pushes; see the deployment guide
+for switching existing Vercel/Render services to main and requiring CI checks.
 
 ## Requirements
 

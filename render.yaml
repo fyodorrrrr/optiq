@@ -3,11 +3,11 @@ services:
     name: optiq-api
     runtime: docker
     plan: free
-    branch: feat/lab5-demo
+    branch: main
     dockerfilePath: deploy/render/Dockerfile
     dockerContext: .
     healthCheckPath: /api/ready
-    autoDeployTrigger: off
+    autoDeployTrigger: checksPass
     envVars:
       - key: OPTIQ_ENV
         value: production
