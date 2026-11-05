@@ -39,8 +39,8 @@ rate, multipart parsing, or response serialization. Request/form validation stil
 precedes processing admission. Frontend request helpers yield one microtask and
 check cancellation before fetch, preventing superseded initialization requests
 from consuming a slot during development effect replay. This does not retry busy
-requests. Ingress upload limits, readiness, and timeout changes are separate
-production-preparation steps.
+requests. Request-body admission is a separate middleware layer below; readiness
+and timeout changes remain separate production-preparation steps.
 
 ## API rate limiting
 
@@ -84,6 +84,46 @@ request-body size/time limits.
 `main.create_app` creates the normal global `app` and allows tests to inject an
 isolated limiter. Algorithm/API tests use a fresh, generous finite allowance;
 dedicated limiter tests cover the production policy with a controlled clock.
+
+## Request-body admission
+
+Request order is rate admission → whole-body size check/staging → FastAPI
+multipart/schema validation → processing-slot admission → image algorithms.
+`middleware/request_body_limits.py` bounds the entire received body of lab API
+requests before multipart parsing:
+
+| Request | Whole-body limit |
+| --- | --- |
+| `/api/labs/4/experiment` (two images) | 11 MiB |
+| Other `/api/labs/` requests | 6 MiB |
+
+These totals include multipart boundaries, part headers and settings. Existing
+5 MiB **per image**, image-format, decoded-dimension and camera-specific checks
+remain authoritative and unchanged. A body within the total limit can still be
+rejected by those checks. The limits are defined in the middleware, with the
+Lab 4 allowance selected by its two-upload endpoint.
+
+An oversized Content-Length returns JSON HTTP 413 without reading the body.
+Actual bytes are always counted as well, so absent or falsely small length
+headers cannot bypass the limit. Ambiguous/invalid length headers receive 400.
+Error responses use the existing JSON `detail` format and `Cache-Control:
+no-store`. Health/non-lab requests and OPTIONS pass through untouched. The rate
+limiter runs first, so a rate-rejected upload is never staged.
+
+Accepted-size bodies are staged in `SpooledTemporaryFile`, keeping at most a
+1 MiB spool threshold in memory before spilling to the OS temporary directory.
+Temporary-file reads/writes use the thread pool; replay to FastAPI uses 64 KiB
+chunks. The temporary file closes on success, rejection, disconnection,
+cancellation or downstream exceptions. Cancellation waits for active file IO to
+finish before cleanup; cleanup is also offloaded. Staging before parsing prevents the
+multipart parser from creating temporary upload files for an oversized body.
+It adds IO and temporary storage for accepted uploads; the spool threshold does
+not bound server-received chunk buffers or total process memory.
+
+This is a per-request bound, not an aggregate upload limit or a slow-upload
+timeout. Configure matching ingress size/time/concurrency protections at the
+production reverse proxy and provide a writable temporary directory with
+adequate disk space. No such production proxy has been deployed or validated.
 
 ## Lab 1 Request Flow
 

@@ -11,11 +11,14 @@ from routers.lab6 import router as lab6_router
 from routers.lab7 import router as lab7_router
 
 from middleware.rate_limits import RateLimitMiddleware
+from middleware.request_body_limits import RequestBodyLimitMiddleware
 from services.rate_limits import RateLimiter
 
 
 def create_app(rate_limiter=None):
     app = FastAPI(title="Optiq API")
+    # Last added runs first: rate admission precedes request-body staging.
+    app.add_middleware(RequestBodyLimitMiddleware)
     app.add_middleware(
         RateLimitMiddleware,
         limiter=rate_limiter if rate_limiter is not None else RateLimiter.from_environment(),
