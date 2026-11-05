@@ -13,7 +13,7 @@ const cards = [
   {
     id: 'compare',
     title: 'Change it. Compare it.',
-    description: 'Adjust a setting, run the experiment, and see what changes.',
+    description: 'Change a setting and compare live or recorded results.',
     illustration: compareIllustration,
   },
   {

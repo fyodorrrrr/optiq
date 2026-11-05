@@ -32,7 +32,7 @@ class HeavyDemoTests(unittest.TestCase):
         for sample in samples.values():
             data = base64.b64decode(sample['frame']['image'].split(',', 1)[1])
             self.assertEqual(hashlib.sha256(data).hexdigest(), sample['input_sha256'])
-            self.assertLessEqual(max(sample['frame']['width'], sample['frame']['height']), 480)
+            self.assertLessEqual(max(sample['frame']['width'], sample['frame']['height']), 640 if lab == 6 else 480)
         for run in index['runs']:
             content = (root / run['file']).read_bytes()
             self.assertEqual(hashlib.sha256(content).hexdigest(), run['sha256'])
@@ -67,6 +67,14 @@ class HeavyDemoTests(unittest.TestCase):
         for private_prefix in ('/Users/', '/home/', '/opt/optiq/'):
             self.assertNotIn(private_prefix, log.read_text())
             self.assertNotIn(private_prefix, json.dumps(index['context']))
+
+    def test_bottle_default_uses_640px_input_and_shows_real_detection(self):
+        root = ROOT / 'lab6'
+        index = json.loads((root / 'manifest.json').read_text())
+        self.assertEqual(index['default_run'], 'bottle-custom-25')
+        result = DetectionResult.model_validate_json((root / 'bottle-custom-25.json').read_text())
+        self.assertTrue(any(item.label == 'bottle' for item in result.detections))
+        self.assertEqual((result.output.width, result.output.height), (640, 640))
 
     def test_semantic_labels_and_legend_counts_match(self):
         results = list(self.bundle(7))

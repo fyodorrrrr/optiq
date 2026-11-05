@@ -29,8 +29,7 @@ export default function SemanticDemo({ onChoose }: { onChoose: (method: Method) 
     if (run) void lab.select(run.id)
   }
   return <LabPage labNumber={7} title="Give each pixel a place."
-    description="Lab 7 — Segmentation. Compare brightness, connected regions, boundaries, and learned pixel classes."
-    inputNote="Precomputed demonstration · Semantic results recorded from real DeepLab inference."
+    description="Lab 7 — Segmentation. Inspect saved class maps and overlays on fixed samples."
     guideId="segmentation-guide" onOpenGuide={() => guide.current?.focus({ preventScroll: true })} wide actions={null}>
     <LabWorkspace label="Segmentation workspace" resultsId="segmentation-results" busy={lab.busy}
       tools={<ToolSidebar<Method> value="semantic" onChange={onChoose} tools={(Object.keys(sections) as Method[]).map(id => ({ id, label: sections[id].title,
@@ -69,7 +68,7 @@ export default function SemanticDemo({ onChoose }: { onChoose: (method: Method) 
       </section>}
     </LabWorkspace>
     <LabGuide id="segmentation-guide" ref={guide} title={content.heading} concept={learningConcepts.semantic} visual={<LearningFigure section="semantic" />}>
-      <div className="lab-canvas-reading"><article><h3>{content.heading}</h3><p>{content.explanation}</p><section><h3>Connect it to Python</h3><pre tabIndex={0} aria-label="Python implementation"><code>{pythonExample}</code></pre></section></article><article><h3>Processing tradeoffs</h3><p>{content.cost}</p></article></div>
+      <div className="lab-canvas-reading"><article><h3>{content.heading}</h3><p>{content.explanation}</p><section><h3>Python workflow (local)</h3><pre tabIndex={0} aria-label="Python implementation"><code>{pythonExample}</code></pre></section></article><article><h3>Processing tradeoffs</h3><p>{content.cost}</p></article></div>
       <details className="lab-preprocessing"><summary>Recording & reproducibility</summary><ul>
         <li>Real DeepLab predictions were recorded locally on fixed samples resized to longest side 480. Selecting a sample or opacity loads its saved result.</li>
         <li>The checkpoint, input and source hashes, recording time, preprocessing and original compute measurements are retained in Run details and downloads.</li>

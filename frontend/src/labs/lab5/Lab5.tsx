@@ -35,9 +35,8 @@ export default function Lab5() {
   const result = lab.result
   const stale = result && result.parameters.components !== Number(lab.components)
   return <LabPage labNumber={5} title="Find the patterns behind a face."
-    description="Lab 5 — PCA & eigenfaces. Reduce dimensions, inspect variation, and test recognition on held-out faces."
+    description="Lab 5 — PCA & eigenfaces. Compare saved variation patterns and recognition results on held-out faces."
     guideId="pca-guide" onOpenGuide={() => guide.current?.focus({ preventScroll: true })} wide
-    inputNote="Precomputed demonstration · Results recorded from real PCA/SVM runs."
     actions={null}>
     <LabWorkspace label="PCA and eigenfaces workspace" resultsId="pca-results" busy={lab.busy}
       tools={<ToolSidebar<Section> heading="Explore" value={section} onChange={setSection} tools={(Object.keys(sections) as Section[]).map(id => ({ id, label: sections[id].title,
@@ -66,7 +65,7 @@ export default function Lab5() {
       {result ? <>
         {section === 'eigenfaces' && <section><h2>The first 12 eigenfaces</h2><p>Signed component weights: gray is zero, brighter is positive, darker is negative. Each component uses its own symmetric display range; brightness does not compare variance.</p>
           <EigenGallery items={result.eigenfaces} /><h2>The last 3 selected eigenfaces</h2><p>Compare these with components 1–3. The baseline ends at component 150.</p><EigenGallery items={result.tail_eigenfaces} /></section>}
-        {section === 'variance' && <section><h2>How much variation remains?</h2><p><strong>{result.components_90} components</strong> retain at least 90% of training variance. Your {result.parameters.components}-component randomized PCA retains {(result.selected_variance * 100).toFixed(2)}%.</p>
+        {section === 'variance' && <section><h2>How much variation remains?</h2><p><strong>{result.components_90} components</strong> retain at least 90% of training variance. The saved {result.parameters.components}-component randomized PCA retains {(result.selected_variance * 100).toFixed(2)}%.</p>
           <VarianceChart values={result.cumulative_variance} threshold={result.components_90} selected={result.parameters.components} />
           <details><summary>Exact cumulative variance values</summary><div className="pca-table"><table><thead><tr><th>Components</th><th>Cumulative variance</th></tr></thead><tbody>{result.cumulative_variance.map((value, index) => <tr key={index}><td>{index + 1}</td><td>{(value * 100).toFixed(4)}%</td></tr>)}</tbody></table></div></details></section>}
         {section === 'recognition' && <section><h2>Recognition on held-out faces</h2><p><strong>{(result.accuracy * 100).toFixed(1)}% accuracy</strong> on {result.test_count} test faces. These fixed-split results apply to the included identities.</p>
@@ -84,7 +83,7 @@ export default function Lab5() {
         <p className="lab-hint">Selecting a component count displays a real saved run. The code below shows how those results were generated locally.</p>
  </>}><div className="lab-canvas-reading"><article><h3>{content.heading}</h3><p>{content.explanation}</p></article>
       <article><h3>What to compare</h3><p>Start with 150 components, then try a smaller count. Compare retained variance, classification metrics, and the actual failures. More components do not guarantee better recognition.</p></article></div>
-      <section><h3>Connect it to Python</h3><pre tabIndex={0} aria-label="Python implementation"><code>{pythonExample}</code></pre></section>
+      <section><h3>Python workflow (local)</h3><pre tabIndex={0} aria-label="Python implementation"><code>{pythonExample}</code></pre></section>
       <details className="lab-preprocessing"><summary>Reproducibility & limitations</summary><ul>
         <li>LFW uses min_faces_per_person=70 and resize=0.4. The source's unstratified 80/20 split uses random_state=42.</li>
         <li>Both PCA fits use training data only. The classifier sees training projections only. Test labels are used for evaluation, never fitting.</li>

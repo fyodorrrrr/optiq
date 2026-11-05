@@ -21,7 +21,7 @@ def write_json(root, filename, value):
     return {'file': filename, 'sha256': digest(content)}
 
 
-def export(destination):
+def export(destination, labs=(6, 7)):
     import cv2
     from schemas.lab6 import Settings as DetectionSettings
     from schemas.lab7 import Settings as SemanticSettings
@@ -30,23 +30,23 @@ def export(destination):
     from services.public_metadata import public_log
 
     recorded = datetime.now(timezone.utc).isoformat()
-    samples = []
-    contents = {}
-    for name in ('bottle', 'bus'):
-        original = (lab6.ROOT / f'{name}.jpg').read_bytes()
-        image, _ = decode_image(original)
-        notes = lab6.sample(name).notes
-        scale = min(1, 480 / max(image.shape[:2]))
-        image = cv2.resize(image, (round(image.shape[1] * scale), round(image.shape[0] * scale)), interpolation=cv2.INTER_AREA)
-        displayed = frame(image, [*notes, 'Recorded sample resized to longest side 480 before inference.',
-                                 'Bottle: reviewed validation sample.' if name == 'bottle' else 'Ultralytics bus demonstration photo.'])
-        content = base64.b64decode(displayed.image.split(',', 1)[1])
-        contents[name] = content
-        samples.append({'id': name, 'title': 'Bottle' if name == 'bottle' else 'Bus',
-                        'frame': displayed.model_dump(), 'input_sha256': digest(content),
-                        'original_sample_sha256': digest(original)})
-
-    for lab in (6, 7):
+    for lab in labs:
+        longest = 640 if lab == 6 else 480
+        samples = []
+        contents = {}
+        for name in ('bottle', 'bus'):
+            original = (lab6.ROOT / f'{name}.jpg').read_bytes()
+            image, _ = decode_image(original)
+            notes = lab6.sample(name).notes
+            scale = min(1, longest / max(image.shape[:2]))
+            image = cv2.resize(image, (round(image.shape[1] * scale), round(image.shape[0] * scale)), interpolation=cv2.INTER_AREA)
+            displayed = frame(image, [*notes, f'Recorded sample resized to longest side {longest} before inference.',
+                                     'Bottle: reviewed validation sample.' if name == 'bottle' else 'Ultralytics bus demonstration photo.'])
+            content = base64.b64decode(displayed.image.split(',', 1)[1])
+            contents[name] = content
+            samples.append({'id': name, 'title': 'Bottle' if name == 'bottle' else 'Bus',
+                            'frame': displayed.model_dump(), 'input_sha256': digest(content),
+                            'original_sample_sha256': digest(original)})
         root = destination / f'lab{lab}'
         root.mkdir(parents=True, exist_ok=True)
         source_hash = digest((BACKEND / f'services/lab{lab}.py').read_bytes())
@@ -82,4 +82,6 @@ def export(destination):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, default=BACKEND.parent / 'frontend/public/demos')
-    export(parser.parse_args().output)
+    parser.add_argument('--lab', type=int, choices=(6, 7), help='Regenerate one lab only; default exports both.')
+    args = parser.parse_args()
+    export(args.output, (args.lab,) if args.lab else (6, 7))

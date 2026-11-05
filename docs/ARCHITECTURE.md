@@ -420,7 +420,7 @@ Shared `api/recorded.ts` and `hooks/useRecordedRuns.ts` verify manifest/result
 hashes and input/parameter/source identity. Loaded inputs/results update together;
 superseded loads are aborted, prior pairs remain correctly labeled, and missing
 or corrupt files expose reload. Lab 5 reuses the same static JSON reader.
-`export_heavy_demos.py` executes actual existing services on 480px samples,
+`export_heavy_demos.py` executes actual existing services on 640px detection and 480px semantic samples,
 retains credits/provenance and never trains or fabricates results. Static bundles
 are frontend assets; backend deployment slimming/resource testing is separate.
 

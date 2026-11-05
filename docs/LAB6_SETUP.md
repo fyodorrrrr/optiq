@@ -172,7 +172,7 @@ Dataset, training history, validation/test metrics and the sanitized training lo
 are snapshots of the completed reviewed run, not checks of the hosting runtime.
 Original compute times are labeled recorded. PNG/JSON exports retain input,
 checkpoint and source hashes and recording time. Samples were resized to longest
-side 480 before real inference; source credits are retained in image metadata.
+side 640 before real inference; source credits are retained in image metadata.
 
 Regenerate deliberately with the prepared local resources:
 
