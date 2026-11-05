@@ -52,7 +52,7 @@ export default function Lab6() {
       controls={section === 'detect' ? <><h2>{content.title}</h2>
         {section === 'detect' && <form onSubmit={event => { event.preventDefault(); void lab.run() }}><SelectField label="Detection model" value={lab.model} onChange={value => lab.changeModel(value as Model)} options={(lab.status?.models ?? [{ id: 'pretrained', title: 'YOLO11n · pretrained COCO', available: false }]).map(model => ({ value: model.id, label: `${model.id === 'pretrained' ? 'YOLO11n · COCO' : 'Custom model'}${model.available ? '' : ' · unavailable'}`, disabled: !model.available }))} />
           <NumberField label="Confidence threshold" value={lab.confidence} min={0.01} max={1} step="any" onChange={lab.changeConfidence} disabled={cameraRunning} />
-          <div className="detection-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || cameraRunning || !lab.source || !available}>Detect objects</LabButton></div></form>}
+          <div className="detection-actions"><LabButton variant="primary" type="submit" aria-busy={lab.busy} disabled={lab.busy || cameraRunning || !lab.source || !available}>Detect objects</LabButton></div></form>}
         <LabButton variant="quiet" disabled={lab.busy || cameraRunning} onClick={() => void lab.refresh()}>Refresh status</LabButton>
         <SettingsHelpLink guideId="detection-guide" onOpen={() => guide.current?.querySelector<HTMLButtonElement>('.learning-canvas-link')?.click()} />
 </> : null}>

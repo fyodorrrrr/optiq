@@ -18,9 +18,9 @@ export default function EdgeControls({ lab, section, onRevealSettings, onOpenHel
         <NumberField name="high_threshold" error={lab.invalidField === 'high_threshold' ? lab.error : undefined} label="Upper threshold" required min="1" max="2048" step="1" value={lab.draft.high_threshold} onChange={value => lab.change('high_threshold', value)} />
       </div>}
       {(section === 'compare' || section === 'canny') && <p className="lab-hint">Lower must be below upper.</p>}
-      <LabButton variant="primary" type="submit">{lab.busy ? 'Processing…' : 'Run both detectors'}</LabButton>
+      <LabButton variant="primary" type="submit" aria-busy={lab.busy}>Run both detectors</LabButton>
     </fieldset>
-    <LabButton disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>
+    {lab.canReset && <LabButton disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>}
       <SettingsHelpLink guideId="edge-guide" onOpen={onOpenHelp} />
   </form>
 }

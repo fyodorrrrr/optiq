@@ -99,8 +99,10 @@ export default function useFeatureExperiment() {
     } finally { if (!controller.signal.aborted) setBusy(false) }
   }
 
+  const canReset = (Object.keys(baseline) as (keyof Draft)[]).some(key => draft[key] !== baseline[key])
+
   const resultIsPrevious = result !== null && (Object.keys(baseline) as (keyof Draft)[]).some(key =>
     typeof draft[key] === 'boolean' ? draft[key] !== result.parameters[key] : String(draft[key]).trim() === '' || Number(draft[key]) !== result.parameters[key])
 
-  return { invalidField, resultIsPrevious, sources, sampleNotes, capabilities, draft, result, busy, error, sample, upload, change, resetBaseline, clear, run }
+  return { canReset, invalidField, resultIsPrevious, sources, sampleNotes, capabilities, draft, result, busy, error, sample, upload, change, resetBaseline, clear, run }
 }

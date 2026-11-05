@@ -56,7 +56,7 @@ come from `frontend/src/index.css`.
 
 **Chosen:** shallow dimensional nodes, following the side-by-side browser comparison. The flat-node alternative was not selected.
 
-Give each node a top face and a shallow solid darker base. The depth should make it feel selectable without glow, elaborate textures, or heavy shadows. Hover and press feedback may reinforce this treatment; preserve visible keyboard focus and respect reduced-motion preferences.
+Give each node a top face and a shallow solid darker base. The depth should make it feel selectable without glow, elaborate textures, or heavy shadows. Hover and keyboard focus raise the node face slightly and highlight a short adjacent path segment; the selected node retains this treatment afterward. Press feedback remains shallow, and reduced-motion mode retains the highlight without movement.
 
 Keep navigation, text, and laboratory workspaces flat. The node treatment is a focused exception to the surface principles, not a reason to make every control dimensional.
 
@@ -115,6 +115,14 @@ The lab browser has a vertical winding seven-lab map on the
 left and selected-lab information on the right. The information panel stays
 visible while scrolling on wider screens and includes saved sample outputs from
 the lab algorithms. On smaller screens, a compact text preview opens immediately
-below the selected node, pushing later nodes down and adjusting the connecting path. Continue validating readability, navigation, responsive behavior, and
+below the selected node, pushing later nodes down and adjusting the connecting path.
+Selection preserves the node’s viewport position. Tighter stops are grouped into
+Foundations, Features & recognition, and Detection & segmentation. Group names use the locally bundled Gaegu font in the open
+lower corner of each group (below the last node on mobile), with varied static rotations and light warm-gray lettering. Gently curved dashed separators remain only between groups; there is no top divider.
+Highlighted path segments use muted sage to complement the pale hovered node. The selected
+label uses stronger weight and an underline. Preview text reserves the largest
+content footprint and previews share a 4:3 stage, keeping panel dimensions
+stable as lab content fades in. Labs 4–5 use evenly padded natural-ratio image
+cards; Lab 6 fills its slider with identical centered crops on both sides; reduced-motion mode omits the fade. Continue validating readability, navigation, responsive behavior, and
 contrast as the application evolves. Product scope remains governed by
 [PRD.md](PRD.md).

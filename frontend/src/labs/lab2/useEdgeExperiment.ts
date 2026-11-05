@@ -115,8 +115,10 @@ export default function useEdgeExperiment() {
     }
   }
 
+  const canReset = (Object.keys(baseline) as (keyof Draft)[]).some(key => draft[key] !== baseline[key])
+
   const resultIsPrevious = result !== null && (Object.keys(baseline) as (keyof Draft)[]).some(key =>
     draft[key].trim() === '' || Number(draft[key]) !== result.parameters[key])
 
-  return { invalidField, source, draft, result, resultIsPrevious, busy, error, sample, upload, change, resetBaseline, resetResult, run }
+  return { canReset, invalidField, source, draft, result, resultIsPrevious, busy, error, sample, upload, change, resetBaseline, resetResult, run }
 }

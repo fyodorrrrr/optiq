@@ -119,9 +119,11 @@ export default function useContrastExperiment() {
     }
   }
 
+  const canReset = (Object.keys(baseline) as (keyof Draft)[]).some(key => draft[key] !== baseline[key])
+
   const resultIsPrevious = result !== null && (Object.keys(baseline) as (keyof Draft)[]).some(key =>
     result.parameters.linear_method === 'stretch' && draft.linear_method === 'stretch' && ['alpha', 'beta'].includes(key) ? false
       : ['mode', 'linear_method'].includes(key) ? draft[key] !== result.parameters[key] : draft[key].trim() === '' || Number(draft[key]) !== result.parameters[key])
 
-  return { invalidField, resultIsPrevious, source, draft, result, busy, error, sample, upload, change, resetBaseline, clear, run }
+  return { canReset, invalidField, resultIsPrevious, source, draft, result, busy, error, sample, upload, change, resetBaseline, clear, run }
 }

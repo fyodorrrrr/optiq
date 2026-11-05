@@ -34,7 +34,7 @@ export default function Controls({ operation, fields, frame, change }: {
         {validDimensions && <>Output: {(width * height).toLocaleString()} pixels. </>}
         Maximum {maxResizeSide} px per side and {maxResizePixels.toLocaleString()} pixels total.
       </p>
-      <label className="lab-check"><input type="checkbox" checked={fields.keepRatio} onChange={event => change('keepRatio', event.target.checked)} />Keep aspect ratio (avoid stretching)</label>
+      <label className="lab-check"><input type="checkbox" checked={fields.keepRatio} onChange={event => change('keepRatio', event.target.checked)} />Keep aspect ratio</label>
       <SelectField hint={fields.interpolation === 'nearest' ? 'Copies nearby pixels, keeping hard edges.' : fields.interpolation === 'area' ? 'Averages pixel areas; useful for shrinking.' : 'Blends neighboring pixels for smoother transitions.'} label="Interpolation" value={fields.interpolation} onChange={value => change('interpolation', value)} options={[
         { value: 'linear', label: 'Linear' }, { value: 'nearest', label: 'Nearest neighbor' }, { value: 'area', label: 'Area' },
       ]} />

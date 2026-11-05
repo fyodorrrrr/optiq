@@ -57,7 +57,9 @@ export default function useSegmentation() {
   function change(key: keyof Draft, value: string | boolean) { cancel(); setDraft(previous => ({ ...previous, [key]: value })) }
   function choose(value: Method) { if (value === method) return; cancel(); setResult(null); setMethod(value) }
   function seed(x: number, y: number) { cancel(); setDraft(previous => ({ ...previous, seed_x: String(x), seed_y: String(y) })) }
-  function reset() { cancel(); setDraft({ ...baseline, seed_x: String(Math.min(170, (source?.frame.width ?? 171) - 1)), seed_y: String(Math.min(180, (source?.frame.height ?? 181) - 1)) }) }
+  const defaults = { ...baseline, seed_x: String(Math.min(170, (source?.frame.width ?? 171) - 1)), seed_y: String(Math.min(180, (source?.frame.height ?? 181) - 1)) }
+  const canReset = (Object.keys(defaults) as (keyof Draft)[]).some(key => draft[key] !== defaults[key])
+  function reset() { cancel(); setDraft(defaults) }
   function settings(): Settings {
     const numeric = Object.fromEntries(Object.entries(draft).filter(([key]) => key !== 'invert').map(([key, value]) => {
       if (typeof value !== 'string' || value.trim() === '' || !Number.isFinite(Number(value))) throw new Error('Enter finite values for the segmentation settings.')
@@ -81,5 +83,5 @@ export default function useSegmentation() {
   let stale = false
   // Compare by fields because backend serialization order can differ.
   if (result) { try { const current = settings(); stale = (Object.keys(current) as (keyof Settings)[]).some(key => current[key] !== result.parameters[key]) } catch { stale = true } }
-  return { source, method, draft, status, result, busy, error, stale, sample, upload, change, choose, seed, reset, run, refresh }
+  return { canReset, cancel, source, method, draft, status, result, busy, error, stale, sample, upload, change, choose, seed, reset, run, refresh }
 }

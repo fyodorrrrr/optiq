@@ -399,3 +399,10 @@
 .run-metadata .run-metadata-previous { padding: 10px 12px; background: var(--accent-soft); color: var(--accent-deep); font-size: 14px; }
 
 .lab-workspace-body-wide { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'viewers'; }
+
+/* Pending actions keep their accent fill; unavailable controls remain visibly disabled. */
+.lab-shell .lab-primary, .lab-shell .lab-button { transition: background-color 140ms ease-out, opacity 140ms ease-out; }
+.lab-shell .lab-primary[aria-busy='true'], .lab-shell .lab-primary[data-pending='true'] { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .lab-shell .lab-primary, .lab-shell .lab-button { transition: none; }
+}

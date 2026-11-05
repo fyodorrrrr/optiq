@@ -75,9 +75,9 @@ export default function Lab4() {
           <NumberField required name="ratio_threshold" error={lab.invalidField === 'ratio_threshold' ? lab.error : undefined} label="Match ratio threshold" value={lab.draft.ratio_threshold} min={0.01} max={0.99} step="any" onChange={value => lab.change('ratio_threshold', value)} />
           <NumberField required name="max_features" error={lab.invalidField === 'max_features' ? lab.error : undefined} label="Maximum features per image" value={lab.draft.max_features} min={1} max={1000} step={1} onChange={value => lab.change('max_features', value)} />
           <NumberField required name="max_matches" error={lab.invalidField === 'max_matches' ? lab.error : undefined} label="Maximum displayed matches" value={lab.draft.max_matches} min={1} max={100} step={1} onChange={value => lab.change('max_matches', value)} />
-          <div className="feature-actions"><LabButton variant="primary" type="submit" disabled={lab.busy || !lab.sources.first || !lab.sources.second}>{lab.busy ? 'Processing…' : 'Compare features'}</LabButton>
+          <div className="feature-actions"><LabButton variant="primary" type="submit" aria-busy={lab.busy} disabled={lab.busy || !lab.sources.first || !lab.sources.second}>Compare features</LabButton>
           </div></fieldset>
-          <LabButton type="button" disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>
+          {lab.canReset && <LabButton type="button" disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>}
           <SettingsHelpLink guideId="features-guide" onOpen={() => guide.current?.querySelector<HTMLButtonElement>('.learning-canvas-link')?.click()} />
         </form></>}>
       {surf && !surf.available && <LabError title="SURF is unavailable on this server." message={surf.reason ?? 'A SURF-enabled OpenCV build is required. This laboratory is partially available.'} />}

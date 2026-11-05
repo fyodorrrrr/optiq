@@ -34,15 +34,24 @@ export default function LabPreview({ lab, compact = false }: { lab: (typeof labs
   const preview = previews[lab.id]
 
   return <section className="lab-detail" id="lab-details" aria-labelledby="lab-preview-title" aria-live="polite" aria-atomic="true">
-    <div><h3 className="detail-heading" id="lab-preview-title">Lab {lab.id} · {lab.title}</h3>
+    <div className="lab-preview-content" key={lab.id}>
+    <div className="preview-heading-slot">
+      {labs.map(item => <span className="detail-heading preview-measure" aria-hidden="true" key={item.id}>Lab {item.id} · {item.title}</span>)}
+      <h3 className="detail-heading" id="lab-preview-title">Lab {lab.id} · {lab.title}</h3>
     </div>
-    {!compact && <figure className="lab-preview-figure">
+    {!compact && <figure className="lab-preview-figure" data-lab={lab.id}>
       {comparisons[lab.id]
         ? <PreviewComparison key={lab.id} before={comparisons[lab.id][0]} after={comparisons[lab.id][1]} description={preview.alt} />
-        : <img src={preview.image} alt={preview.alt} width="640" height="400" loading="lazy" decoding="async" />}
+        : <div className="lab-preview-static-stage"><div className="lab-preview-static-card">
+          <img src={preview.image} alt={preview.alt} width="640" height={lab.id === 4 ? 240 : 350} loading="lazy" decoding="async" />
+        </div></div>}
       <figcaption>{preview.caption}</figcaption>
     </figure>}
-    <p className="detail-copy">{lab.description}</p>
+    <div className="preview-copy-slot">
+      {labs.map(item => <p className="detail-copy preview-measure" aria-hidden="true" key={item.id}>{item.description}</p>)}
+      <p className="detail-copy">{lab.description}</p>
+    </div>
     <div className="detail-action"><a className="button" href={lab.href}>Open lab <span aria-hidden="true">→</span></a></div>
+    </div>
   </section>
 }

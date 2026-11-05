@@ -31,9 +31,9 @@ export default function ContrastControls({ lab, section, onRevealSettings, onOpe
         </>}
       </details>}
       </div>
-      <LabButton variant="primary" type="submit">{lab.busy ? 'Processing…' : 'Compare contrast'}</LabButton>
+      <LabButton variant="primary" type="submit" aria-busy={lab.busy}>Compare contrast</LabButton>
     </fieldset>
-    <LabButton disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>
+    {lab.canReset && <LabButton disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>}
       <SettingsHelpLink guideId="contrast-guide" onOpen={onOpenHelp} />
   </form>
 }

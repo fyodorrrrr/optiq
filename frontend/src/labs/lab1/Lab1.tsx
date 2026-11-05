@@ -71,9 +71,9 @@ export default function Lab1() {
               <fieldset disabled={lab.busy || !lab.source}>
                 <legend className="sr-only">Experiment settings</legend>
                 {lab.source && <Controls operation={lab.operation} fields={lab.fields} frame={lab.source.frame} change={lab.change} />}
-                <LabButton variant="primary" type="submit">{lab.busy ? 'Processing…' : current.action}</LabButton>
+                <LabButton variant="primary" type="submit" aria-busy={lab.busy}>{current.action}</LabButton>
               </fieldset>
-              <LabButton disabled={!lab.output && !lab.busy} onClick={lab.reset}>{lab.busy ? 'Cancel processing' : 'Clear result'}</LabButton>
+              {(lab.output || lab.busy) && <LabButton onClick={lab.reset}>{lab.busy ? 'Cancel processing' : 'Clear result'}</LabButton>}
 
             </form>
         </>}>
