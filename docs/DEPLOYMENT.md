@@ -1,4 +1,8 @@
-# Production deployment: Vercel + Oracle Linux VM
+# Oracle VM deployment reference
+
+The current demo branch targets [Render Free](RENDER_DEPLOYMENT.md). This guide
+is retained for the full backend/Oracle option; the Oracle account setup was
+blocked and no VM was provisioned.
 
 This is a prepared deployment path, not an existing live deployment. The Linux
 VM, domain/DNS, Vercel project and external uptime alert still need to be created

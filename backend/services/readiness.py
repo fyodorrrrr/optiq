@@ -6,7 +6,8 @@ from tempfile import TemporaryFile
 from threading import Lock
 from time import monotonic
 
-from services import lab4, lab5, lab6, lab7_semantic
+from services import lab4
+from services.runtime_profile import PROFILE
 
 LOGGER = logging.getLogger(__name__)
 
@@ -25,6 +26,7 @@ def _detection_runtime():
 
 
 def _semantic_weights():
+    from services import lab6, lab7_semantic
     manifest = json.loads((lab7_semantic.ROOT / 'manifest.json').read_text())
     digest = lab6.weight_hash(lab7_semantic.WEIGHTS)
     return digest.startswith('fc3c493d') and digest == manifest.get('sha256')
@@ -41,6 +43,10 @@ def inspect_resources():
             checks[name] = False
 
     check('feature_algorithms', lambda: all(item.available for item in lab4.capabilities().algorithms))
+    if PROFILE.render_free:
+        check('temporary_storage', _writable)
+        return checks
+    from services import lab5, lab6
     check('face_dataset', lambda: len(lab5.load_dataset().target) > 0)
     check('detection_runtime', _detection_runtime)
     status = None

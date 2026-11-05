@@ -1,3 +1,4 @@
+import { inputLimits } from '../../api/profile'
 import RunMetadata from '../../components/lab/RunMetadata'
 import LearningFigure from './LearningFigure'
 import { learningConcepts } from './learningContent'
@@ -81,7 +82,7 @@ export default function Lab2() {
       <details className="lab-preprocessing"><summary>Input handling & reproducibility</summary><ul>
           <li>The activity's input.jpg was not supplied. The generated samples are explicit replacements; upload the assigned image when available.</li>
           <li>The noisy sample uses Gaussian noise with seed 42 and standard deviation 18.</li>
-          <li>PNG/JPEG inputs are limited to 5 MiB, 4096px per side, and four million pixels. No automatic resizing; transparency is composited onto white and EXIF orientation is not applied.</li>
+          <li>{inputLimits} No automatic resizing; transparency is composited onto white and EXIF orientation is not applied.</li>
           <li>Baseline: Gaussian 3×3, Sobel size 3, Canny 100/200. Both algorithms run on the same blurred grayscale array.</li>
           <li>Sobel previews use round(abs(value) / maximum × 255), independently per view. Zero gradients display as black. Display brightness is not a common raw scale across runs.</li>
           {lab.source?.frame.notes.map(note => <li key={note}>{note}</li>)}

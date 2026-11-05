@@ -1,6 +1,8 @@
-// Match backend/services/images.py output limits.
-export const maxResizeSide = 4096
-export const maxResizePixels = 4_000_000
+import { maxImageSide, maxImagePixels } from '../../api/profile'
+
+// Match the selected backend profile before submitting resize requests.
+export const maxResizeSide = maxImageSide
+export const maxResizePixels = maxImagePixels
 
 export function resizeError(width: number, height: number): string | undefined {
   if (!Number.isInteger(width) || !Number.isInteger(height) || width < 1 || height < 1) {

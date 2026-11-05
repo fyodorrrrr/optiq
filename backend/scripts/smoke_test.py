@@ -16,7 +16,7 @@ def multipart(files, settings):
     return b''.join(parts), f'multipart/form-data; boundary={boundary}'
 
 
-def run(base_url, *, full=False, origin=None):
+def run(base_url, *, full=False, origin=None, profile='full'):
     def request(path, data=None, content_type=None):
         headers = {'Content-Type': content_type} if content_type else {}
         if origin:
@@ -32,7 +32,7 @@ def run(base_url, *, full=False, origin=None):
         raise RuntimeError('Health check failed')
     if request('/api/ready').get('status') != 'ready':
         raise RuntimeError('Readiness check failed')
-    for lab in range(1, 8):
+    for lab in ((1, 2, 3, 4, 7) if profile == 'render-free' else range(1, 8)):
         if lab == 5:
             if not request('/api/labs/5/dataset').get('ready'):
                 raise RuntimeError('Face dataset unavailable')
@@ -55,7 +55,7 @@ def run(base_url, *, full=False, origin=None):
                         raise RuntimeError('Empty experiment response')
                     if lab == 6:
                         experiment(lab, {'file': sample}, {'model': 'pretrained', 'confidence': .25})
-                    if lab == 7:
+                    if lab == 7 and profile != 'render-free':
                         scene = request('/api/labs/7/sample?kind=scene')
                         experiment(lab, {'file': scene}, {'method': 'semantic'})
         print(f'Lab {lab}: OK', flush=True)
@@ -66,8 +66,9 @@ def main():
     parser.add_argument('--base-url', required=True)
     parser.add_argument('--origin', help='Also verify CORS for this exact frontend origin')
     parser.add_argument('--full', action='store_true', help='Run real experiments, including PCA and both detection models.')
+    parser.add_argument('--profile', choices=('full', 'render-free'), default='full')
     args = parser.parse_args()
-    run(args.base_url, full=args.full, origin=args.origin)
+    run(args.base_url, full=args.full, origin=args.origin, profile=args.profile)
 
 
 if __name__ == '__main__':

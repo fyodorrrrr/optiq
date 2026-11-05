@@ -5,6 +5,7 @@ import numpy as np
 from schemas.lab7 import LegendItem, Result, Settings, View
 from services.images import ImageError, decode_image, encode_png, frame
 from services import lab7_semantic
+from services.runtime_profile import PROFILE
 
 
 def load(content):
@@ -34,7 +35,7 @@ def generated(kind):
 
 def sample(kind):
     if kind=='scene':
-        path=Path(__file__).resolve().parents[1]/'.cache/lab6/bus.jpg'
+        path=Path(__file__).resolve().parents[1]/('assets/scene.png' if PROFILE.render_free else '.cache/lab6/bus.jpg')
         if not path.is_file():
             raise ImageError('Natural scene sample is missing. Run the Lab 7 setup or upload an image.',503)
         image,notes=load(path.read_bytes())
@@ -81,6 +82,8 @@ def watershed(image,binary,fraction):
 
 
 def execute(content,settings):
+    if PROFILE.render_free and settings.method == 'semantic':
+        raise ImageError('Semantic classes uses saved demonstrations on this deployment.', 403)
     image,notes=load(content)
     gray=image if image.ndim==2 else cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
     bgr=cv2.cvtColor(image,cv2.COLOR_GRAY2BGR) if image.ndim==2 else image

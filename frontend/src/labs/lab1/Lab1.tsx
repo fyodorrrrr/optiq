@@ -1,3 +1,4 @@
+import { inputLimits } from '../../api/profile'
 import ImageMetadata from '../../components/lab/ImageMetadata'
 import DownloadLink from '../../components/lab/DownloadLink'
 import { useRef } from 'react'
@@ -52,7 +53,7 @@ export default function Lab1() {
               <details className="lab-metadata-handling"><summary>Upload limits & image handling</summary>
               <ul>
                 {lab.source?.frame.notes.map(note => <li key={note}>{note}</li>)}
-                <li>PNG/JPEG inputs: up to 5 MiB, 4096 pixels per side, and 4 million pixels total.</li>
+                <li>{inputLimits}</li>
                 <li>No automatic resizing. Color inputs are BGR arrays; grayscale inputs retain one channel.</li>
                 <li>Transparency, when present, is composited onto white.</li>
                 <li>Operations use the original image. Rotation advances in 90° steps and applies the accumulated angle to the original, avoiding repeated encoding.</li>

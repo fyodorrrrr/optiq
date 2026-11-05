@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: optiq-api
+    runtime: docker
+    plan: free
+    branch: feat/lab5-demo
+    dockerfilePath: deploy/render/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/ready
+    autoDeployTrigger: off
+    envVars:
+      - key: OPTIQ_ENV
+        value: production
+      - key: OPTIQ_PROFILE
+        value: render-free
+      - key: OPTIQ_ALLOWED_ORIGINS
+        sync: false
+      - key: OPTIQ_MAX_CONCURRENT_JOBS
+        value: '1'
+      - key: OPTIQ_RATE_LIMIT_PER_MINUTE
+        value: '240'
+      - key: OPTIQ_RATE_LIMIT_BURST
+        value: '24'
+      - key: OPTIQ_RATE_LIMIT_MAX_CLIENTS
+        value: '4096'

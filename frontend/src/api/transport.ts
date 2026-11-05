@@ -1,3 +1,5 @@
+import { renderFree } from './profile'
+
 // Vite replaces this at build time; keep it empty for the local /api proxy.
 const configuredOrigin = (import.meta.env.VITE_API_BASE_URL ?? '').trim().replace(/\/$/, '')
 if (configuredOrigin) {
@@ -15,7 +17,7 @@ export async function apiFetch(path: string, signal: AbortSignal, init: RequestI
   // Settle superseded effect cancellation before opening a connection.
   await Promise.resolve()
   signal.throwIfAborted()
-  const timeout = AbortSignal.timeout(init.method === 'POST' ? 120000 : 30000)
+  const timeout = AbortSignal.timeout(init.method === 'POST' ? 120000 : renderFree ? 90000 : 30000)
   try {
     // Read the response body inside the same deadline as the request.
     const response = await fetch(apiUrl(path), { ...init, signal: AbortSignal.any([signal, timeout]) })

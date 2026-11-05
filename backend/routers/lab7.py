@@ -6,12 +6,16 @@ from schemas.images import Frame
 from schemas.lab7 import Result, Settings
 from services.lab7 import execute, load_image, sample
 from services.lab7_semantic import status
+from services.runtime_profile import PROFILE
 
 router=APIRouter(prefix='/api/labs/7',tags=['Lab 7'])
 
 
 @router.get('/status')
 async def model_status():
+    if PROFILE.render_free:
+        return {'available': False, 'model': 'DeepLabV3 MobileNetV3 Large',
+                'weights': 'recorded', 'message': 'Semantic classes uses saved demonstrations.'}
     # This probe checks availability without loading the semantic model.
     return await process(status, limited=False)
 

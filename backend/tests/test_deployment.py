@@ -82,8 +82,8 @@ class DeploymentTests(unittest.TestCase):
 
     def test_readiness_failure_details_are_not_public(self):
         with (patch('services.readiness.lab4.capabilities', side_effect=RuntimeError('/private/secret/model.pt')),
-              patch('services.readiness.lab5.load_dataset', side_effect=RuntimeError('secret')),
-              patch('services.readiness.lab6.status', side_effect=RuntimeError('secret')),
+              patch('services.lab5.load_dataset', side_effect=RuntimeError('secret')),
+              patch('services.lab6.status', side_effect=RuntimeError('secret')),
               patch('services.readiness._detection_runtime', return_value=True),
               patch('services.readiness._semantic_weights', return_value=False)):
             report = inspect_resources()

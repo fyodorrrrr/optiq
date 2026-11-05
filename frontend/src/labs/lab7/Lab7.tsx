@@ -1,3 +1,4 @@
+import { inputLimitsFor, maxImagePixels } from '../../api/profile'
 import RunMetadata from '../../components/lab/RunMetadata'
 import ImageMetadata, { ImageMetadataHelp } from '../../components/lab/ImageMetadata'
 import LearningFigure from './LearningFigure'
@@ -23,6 +24,8 @@ const parameterKeys = {
   edges: ['method', 'canny_low', 'canny_high', 'closing_size', 'min_area', 'opacity'],
   semantic: ['method', 'opacity'],
 } as const
+
+const inputLimits = inputLimitsFor(Math.min(maxImagePixels, 1_000_000))
 
 export default function Lab7() {
   const lab = useSegmentation()
@@ -72,7 +75,7 @@ export default function Lab7() {
       </section>}
     </LabWorkspace>
     <LabGuide id="segmentation-guide" ref={guide} key={lab.method} title={content.heading} concept={learningConcepts[lab.method]} visual={<LearningFigure section={lab.method} />}><div className="lab-canvas-reading"><article><h3>{content.heading}</h3><p>{content.explanation}</p><section><h3>Connect it to Python</h3><pre tabIndex={0} aria-label="Python implementation"><code>{pythonExample}</code></pre></section></article><article><h3>Processing tradeoffs</h3><p>{content.cost}</p><p>Compare the same input across the three classical methods. Semantic classes uses fixed recorded samples.</p></article></div>
-      <details className="lab-preprocessing"><summary>Input handling & reproducibility</summary><ul><li>Classical methods convert color inputs to grayscale. Transparency is composited onto white; EXIF orientation is not applied.</li><li>Seed coordinates are zero-based, x moves right and y down. Fixed-range growing compares with seed intensity and uses 4-connectivity.</li><li>Watershed uses Otsu foreground, opening3×3 twice, distance-transform peaks, and dilated background markers. Colors denote region IDs; red boundaries are not an object class.</li><li>Raw watershed PNG:0 boundary/unassigned,1 background,2+ regions (uint16). Display colors are not the raw label values.</li>{lab.source?.frame.notes.map(note => <li key={note}>{note}</li>)}</ul></details>
+      <details className="lab-preprocessing"><summary>Input handling & reproducibility</summary><ul><li>{inputLimits}</li><li>Classical methods convert color inputs to grayscale. Transparency is composited onto white; EXIF orientation is not applied.</li><li>Seed coordinates are zero-based, x moves right and y down. Fixed-range growing compares with seed intensity and uses 4-connectivity.</li><li>Watershed uses Otsu foreground, opening3×3 twice, distance-transform peaks, and dilated background markers. Colors denote region IDs; red boundaries are not an object class.</li><li>Raw watershed PNG:0 boundary/unassigned,1 background,2+ regions (uint16). Display colors are not the raw label values.</li>{lab.source?.frame.notes.map(note => <li key={note}>{note}</li>)}</ul></details>
     </LabGuide>
   </LabPage>
 }

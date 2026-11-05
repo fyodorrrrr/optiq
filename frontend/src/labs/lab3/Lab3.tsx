@@ -1,3 +1,4 @@
+import { inputLimits } from '../../api/profile'
 import InfoDetails from '../../components/lab/InfoDetails'
 import LearningFigure from './LearningFigure'
 import { learningConcepts } from './learningContent'
@@ -119,7 +120,7 @@ export default function Lab3() {
               {processingNotes.map(note => <li key={note}>{note}</li>)}
             </ul></section>
             <section aria-labelledby="contrast-input-notes"><h3 id="contrast-input-notes">Input & reproducibility</h3><ul>
-              <li>PNG/JPEG inputs: up to 5 MiB, 4096 pixels per side, and four million pixels total.</li>
+              <li>{inputLimits}</li>
               <li>Transparency is composited onto white. EXIF orientation is not applied.</li>
               <li>Color inputs select color mode on load. Reset restores the grayscale baseline.</li>
               {inputNotes.map(note => <li key={note}>{note}</li>)}

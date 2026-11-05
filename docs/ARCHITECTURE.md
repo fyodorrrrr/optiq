@@ -9,10 +9,32 @@ of lab experiment code. Homepage lab links use client-side navigation. Labs 1–
 implemented. Lab 6 provides pretrained detection and local training/artifact
 review, with a completed 100-epoch custom bottle run and validation evaluation. FastAPI provides
 `/api/health` and per-lab endpoints. Vite proxies `/api` to port 8000 in
-development. Production targets a Vercel static frontend and one Oracle Linux VM running
-Caddy plus a single Uvicorn worker. `VITE_API_BASE_URL` selects direct browser-to-API
-HTTPS; exact CORS origins authorize browser access. Templates and the runbook live
-in [DEPLOYMENT.md](DEPLOYMENT.md); cloud deployment is not yet verified.
+development. Production now targets a Vercel static frontend and a Render Free classical API
+using one Uvicorn worker; the older Oracle templates remain as a reference. `VITE_API_BASE_URL` selects direct browser-to-API
+HTTPS; exact CORS origins authorize browser access. Templates and the current runbook live
+in [RENDER_DEPLOYMENT.md](RENDER_DEPLOYMENT.md); cloud deployment is not yet verified.
+
+## Runtime profiles
+
+`services/runtime_profile.py` freezes `OPTIQ_PROFILE` at process startup. `full`
+(default) preserves live local endpoints/limits. `render-free` mounts Labs1–4/7,
+rejects semantic execution in its service, caps images at350000 pixels/1024px per
+side and OpenCV to one thread. Its readiness imports no ML libraries and checks
+actual feature detectors/temp storage only. Main/readiness lazily import full
+PCA/YOLO dependencies; fixed recorded results remain Vercel assets.
+
+`requirements-render-lock.txt` pins the minimal Linux runtime closure. The Docker
+builder compiles minimal SURF-enabled OpenCV; a nonroot runtime verifies readiness
+and starts one worker/eight connections on PORT. No compilers, neural weights or
+persistent disks are needed at runtime. Full caches remain ignored/local. A
+committed480px natural-scene PNG replaces runtime sample downloads in this profile.
+
+Frontend `VITE_API_PROFILE` selects the same input/resize bounds and explanatory
+copy. Render metadata waits90s for cold starts; POST waits120s. Backend limits
+remain authoritative. Render's start script distrusts forwarding headers unless
+provider-confirmed proxy CIDRs are explicitly supplied; absent verification,
+clients may share a platform-peer quota. See the Render runbook for actual
+Docker/Linux/cloud verification boundaries and free-tier limits.
 
 ## Shared processing budget
 
