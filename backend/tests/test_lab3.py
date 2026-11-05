@@ -5,10 +5,9 @@ import unittest
 
 import cv2
 import numpy as np
-from fastapi.testclient import TestClient
 from PIL import Image
 
-from main import app
+from api_client import api_client
 
 
 def png(image):
@@ -18,7 +17,7 @@ def png(image):
 class Lab3Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.client = TestClient(app)
+        cls.client = api_client()
         cls.gray = np.tile(np.arange(80, 112, dtype=np.uint8), (24, 1))
         cls.image = png(cls.gray)
 

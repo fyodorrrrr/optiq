@@ -5,10 +5,9 @@ import unittest
 
 import cv2
 import numpy as np
-from fastapi.testclient import TestClient
 from PIL import Image
 
-from main import app
+from api_client import api_client
 
 
 def image_bytes(image):
@@ -18,7 +17,7 @@ def image_bytes(image):
 class Lab2Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.client = TestClient(app)
+        cls.client = api_client()
         cls.step = np.zeros((64, 96), np.uint8)
         cls.step[:, 48:] = 255
         cls.image = image_bytes(cls.step)

@@ -39,8 +39,51 @@ rate, multipart parsing, or response serialization. Request/form validation stil
 precedes processing admission. Frontend request helpers yield one microtask and
 check cancellation before fetch, preventing superseded initialization requests
 from consuming a slot during development effect replay. This does not retry busy
-requests. Ingress upload limits, rate limiting, readiness,
-and timeout changes are separate production-preparation steps.
+requests. Ingress upload limits, readiness, and timeout changes are separate
+production-preparation steps.
+
+## API rate limiting
+
+`middleware/rate_limits.py` checks every HTTP request under `/api/labs/` before
+FastAPI parses the request body. All lab endpoints share one allowance per
+server-provided client IP, including sample/status/download requests, invalid
+requests, and attempts that subsequently receive a processing-busy response.
+OPTIONS requests and `/api/health` are exempt. Excess traffic returns HTTP 429,
+a JSON `detail`, `Retry-After` in seconds, and `Cache-Control: no-store`. Existing
+frontend error handling displays the message; no automatic retry is added.
+
+`services/rate_limits.RateLimiter` uses a token bucket: each request consumes one
+token, tokens refill gradually, and unused tokens accumulate only up to the burst
+capacity. Positive-integer environment settings are read at app creation:
+
+| Setting | Default | Purpose |
+| --- | --- | --- |
+| `OPTIQ_RATE_LIMIT_PER_MINUTE` | 240 | Refill rate, equivalent to four requests per second |
+| `OPTIQ_RATE_LIMIT_BURST` | 24 | Maximum immediate allowance |
+| `OPTIQ_RATE_LIMIT_MAX_CLIENTS` | 4096 | Maximum tracked client buckets |
+
+These are initial defaults, not measured server capacity. The camera's maximum
+two requests per second fits this allowance. Users behind a shared public IP
+share the same quota. Buckets live only in memory, reset on restart, and are
+independent in each worker; keep the initial deployment to one worker. No Redis
+or persistent IP log is introduced. IPv4-mapped IPv6 addresses are normalized;
+missing/invalid client addresses share an `unknown` bucket. Idle buckets expire
+only after enough time to refill completely. At capacity, new clients receive
+429 until a bucket expires instead of evicting an active client's quota.
+
+**Deployment requirement:** the limiter uses ASGI `scope['client']`, never raw
+`X-Forwarded-For` or similar headers. Uvicorn may populate this address from
+trusted proxies. Configure the actual reverse-proxy chain to sanitize forwarded
+headers and trust only known proxy addresses; do not use unrestricted
+`--forwarded-allow-ips '*'`. Verify distinct client identities through the real
+Vercel/backend proxy path before launch. Incorrect configuration can pool users
+under a proxy IP or permit forged identities. That deployment check remains open.
+This application limiter does not replace edge/network abuse protection or
+request-body size/time limits.
+
+`main.create_app` creates the normal global `app` and allows tests to inject an
+isolated limiter. Algorithm/API tests use a fresh, generous finite allowance;
+dedicated limiter tests cover the production policy with a controlled clock.
 
 ## Lab 1 Request Flow
 

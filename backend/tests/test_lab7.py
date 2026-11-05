@@ -4,8 +4,7 @@ from unittest.mock import patch
 
 import cv2
 import numpy as np
-from fastapi.testclient import TestClient
-from main import app
+from api_client import api_client
 from services import lab7
 
 
@@ -19,7 +18,7 @@ def decoded(frame):
 
 class Lab7Tests(unittest.TestCase):
     def setUp(self):
-        self.client = TestClient(app)
+        self.client = api_client()
 
     def test_actual_threshold_masks(self):
         image = np.zeros((50,60), np.uint8)

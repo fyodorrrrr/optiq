@@ -2,11 +2,10 @@ import unittest
 from unittest.mock import patch
 
 import numpy as np
-from fastapi.testclient import TestClient
 from sklearn.utils import Bunch
 from sklearn.metrics import accuracy_score
 
-from main import app
+from api_client import api_client
 from services import lab5
 
 
@@ -19,7 +18,7 @@ def dataset():
 
 class Lab5Tests(unittest.TestCase):
     def setUp(self):
-        self.client = TestClient(app)
+        self.client = api_client()
 
     def test_missing_dataset_and_validation(self):
         with patch.object(lab5, 'load_dataset', side_effect=lab5.DatasetUnavailable('Prepare LFW first.')):

@@ -7,10 +7,9 @@ from unittest.mock import patch
 
 import cv2
 import numpy as np
-from fastapi.testclient import TestClient
 from PIL import Image
 
-from main import app
+from api_client import api_client
 from services import lab6
 from services.lab6_dataset import validate_dataset
 
@@ -23,7 +22,7 @@ def png():
 
 class Lab6Tests(unittest.TestCase):
     def setUp(self):
-        self.client = TestClient(app)
+        self.client = api_client()
 
     def test_validation_and_missing_weights(self):
         for settings in [{'confidence': 0}, {'confidence': 1.1}, {'model': '../anything'}, {'confidence': True}]:

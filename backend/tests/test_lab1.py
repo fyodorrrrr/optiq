@@ -2,10 +2,9 @@ import io
 import json
 import unittest
 
-from fastapi.testclient import TestClient
 from PIL import Image
 
-from main import app
+from api_client import api_client
 
 
 def png(mode="RGB", size=(3, 2), pixels=None):
@@ -20,7 +19,7 @@ def png(mode="RGB", size=(3, 2), pixels=None):
 class Lab1Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.client = TestClient(app)
+        cls.client = api_client()
         cls.image = png(pixels=[(255, 0, 0), (0, 255, 0), (0, 0, 255),
                                 (255, 255, 255), (0, 0, 0), (10, 20, 30)])
 

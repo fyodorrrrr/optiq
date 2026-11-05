@@ -5,15 +5,14 @@ from unittest.mock import patch
 
 import cv2
 import numpy as np
-from fastapi.testclient import TestClient
 
-from main import app
+from api_client import api_client
 
 
 class Lab4Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.client = TestClient(app)
+        cls.client = api_client()
 
     def pair(self, kind="rotated"):
         response = self.client.get(f"/api/labs/4/sample?kind={kind}")

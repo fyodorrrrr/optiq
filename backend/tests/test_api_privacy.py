@@ -5,8 +5,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from fastapi.testclient import TestClient
-from main import app
+from api_client import api_client
 from services import lab6
 from services.images import ImageError
 from routers.image_io import process
@@ -16,7 +15,7 @@ import asyncio
 
 class ApiPrivacyTests(unittest.TestCase):
     def setUp(self):
-        self.client = TestClient(app)
+        self.client = api_client()
 
     def test_status_filters_internal_paths_and_unrecognized_training_parameters(self):
         with tempfile.TemporaryDirectory() as directory, patch.object(lab6, 'ROOT', Path(directory)):

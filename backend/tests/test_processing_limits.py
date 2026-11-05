@@ -5,9 +5,8 @@ import unittest
 from unittest.mock import patch
 
 from fastapi import HTTPException
-from fastapi.testclient import TestClient
 
-from main import app
+from api_client import api_client
 from routers import image_io
 from services.images import ImageError
 from services.processing_limits import ProcessingBusy, ProcessingLimiter, configured_limit
@@ -55,7 +54,7 @@ class ProcessingLimiterTests(unittest.TestCase):
             raise ImageError('Deliberate processing failure', 422)
 
         with patch.object(image_io, 'processing_limiter', limiter), patch('routers.lab1.sample_image', slow_sample):
-            with TestClient(app) as client, ThreadPoolExecutor(max_workers=1) as pool:
+            with api_client() as client, ThreadPoolExecutor(max_workers=1) as pool:
                 running = pool.submit(client.get, '/api/labs/1/sample')
                 try:
                     self.assertTrue(started.wait(5))
