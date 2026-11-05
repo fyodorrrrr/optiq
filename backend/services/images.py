@@ -4,12 +4,13 @@ import io
 import cv2
 import numpy as np
 from PIL import Image, UnidentifiedImageError
+from services.runtime_profile import PROFILE
 
 from schemas.images import Frame
 
 MAX_BYTES = 5 * 1024 * 1024
-MAX_SIDE = 4096
-MAX_PIXELS = 4_000_000
+MAX_SIDE = PROFILE.max_side
+MAX_PIXELS = PROFILE.max_pixels
 
 
 class ImageError(ValueError):
@@ -20,7 +21,9 @@ class ImageError(ValueError):
 
 def check_dimensions(width, height, status=413):
     if width > MAX_SIDE or height > MAX_SIDE or width * height > MAX_PIXELS:
-        raise ImageError("Images must be at most 4096px per side and 4 million pixels total.", status)
+        message = (f'Images must be at most {MAX_SIDE}px per side and {MAX_PIXELS:,} pixels total.'
+                   if PROFILE.render_free else 'Images must be at most 4096px per side and 4 million pixels total.')
+        raise ImageError(message, status)
 
 
 def decode_image(content):

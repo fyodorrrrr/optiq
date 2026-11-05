@@ -1,3 +1,4 @@
+import { inputLimitsFor, maxImagePixels } from '../../api/profile'
 import InfoDetails from '../../components/lab/InfoDetails'
 import ImageMetadata, { ImageMetadataHelp } from '../../components/lab/ImageMetadata'
 import RunMetadata from '../../components/lab/RunMetadata'
@@ -22,6 +23,8 @@ import { sections, pythonExample } from './content'
 import type { Section } from './content'
 import type { Algorithm } from './api'
 import './Lab4.css'
+
+const inputLimits = inputLimitsFor(Math.min(maxImagePixels, 1_000_000))
 
 export default function Lab4() {
   const lab = useFeatureExperiment()
@@ -77,7 +80,7 @@ export default function Lab4() {
           <NumberField required name="max_matches" error={lab.invalidField === 'max_matches' ? lab.error : undefined} label="Maximum displayed matches" value={lab.draft.max_matches} min={1} max={100} step={1} onChange={value => lab.change('max_matches', value)} />
           <div className="feature-actions"><LabButton variant="primary" type="submit" aria-busy={lab.busy} disabled={lab.busy || !lab.sources.first || !lab.sources.second}>Compare features</LabButton>
           </div></fieldset>
-          {lab.canReset && <LabButton type="button" disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>}
+          {lab.busy ? <LabButton onClick={() => lab.clear(false)}>Cancel processing</LabButton> : lab.canReset && <LabButton type="button" onClick={lab.resetBaseline}>Reset baseline</LabButton>}
           <SettingsHelpLink guideId="features-guide" />
         </form></>}>
       {surf && !surf.available && <LabError title="SURF is unavailable on this server." message={surf.reason ?? 'A SURF-enabled OpenCV build is required. This laboratory is partially available.'} />}
@@ -119,7 +122,7 @@ export default function Lab4() {
            </>}><div className="lab-canvas-reading"><article><h3>{content.heading}</h3><p>{content.explanation}</p></article>
       <article><h3>Try thinking about this</h3><p>{content.reflection}</p></article></div>
       <section><h3>Connect it to Python</h3><pre tabIndex={0} aria-label="Python implementation"><code>{pythonExample}</code></pre></section>
-      <details className="lab-preprocessing"><summary>Input handling & reproducibility</summary><ul>
+      <details className="lab-preprocessing"><summary>Input handling & reproducibility</summary><ul><li>{inputLimits} Combined match canvas: at most {Math.min(2_000_000, maxImagePixels * 2).toLocaleString()} pixels.</li>
         <li>Both inputs are converted to grayscale. Transparency is composited onto white; EXIF orientation is not applied.</li>
         <li>Features are capped at the strongest responses before describing them. A higher ratio threshold accepts more candidates; the display limit only reduces drawn lines.</li>
         <li>Upright mode changes only SURF. Timings include detection and description separately from matching; rerun to observe variation. They exclude upload and image rendering.</li>

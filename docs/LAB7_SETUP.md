@@ -78,3 +78,24 @@ Performance and deployment concurrency limits still need target verification.
 
 References: [Torchvision model and preprocessing](https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.segmentation.deeplabv3_mobilenet_v3_large.html),
 [OpenCV watershed](https://docs.opencv.org/4.x/d3/db4/tutorial_py_watershed.html).
+
+## Recorded semantic presentation on the demo branch
+
+On `feat/lab5-demo`, Semantic classes uses actual saved DeepLab results on Bus
+and Bottle at overlay opacity .25/.5/.75. It opens a fixed recorded sample,
+independently of any uploaded classical input, and provides real class maps,
+overlays, class counts, raw VOC label IDs and measurement downloads. Inference
+and encoding timings are explicitly recorded, not a new server run.
+
+Thresholding, Regions & watershed, and Edge-guided regions retain live backend
+processing. Switching to Semantic classes makes no inference/status request;
+its own sample/opacity controls only fetch static files. Returning to a classical
+method preserves its original input and clears the prior method's result. Live
+semantic execution is guarded out of the classical frontend hook.
+
+`backend/scripts/export_heavy_demos.py` produces these real recordings alongside
+Lab 6. The 480px-longest-side samples retain attribution and input hashes; the
+existing service still performs its documented 520px preprocessing and restores
+labels to the recorded input dimensions. Files are manifest/hash-bound under
+`frontend/public/demos/lab7/`. IoU is still unavailable without compatible labels.
+The full live semantic/upload implementation is retained in GitHub `full-local`.

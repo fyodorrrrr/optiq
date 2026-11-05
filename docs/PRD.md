@@ -6,6 +6,15 @@ Optiq helps students and developers understand computer vision through hands-on 
 
 This document records the agreed product direction. Detailed laboratory obligations and source ambiguities are tracked in [LAB_REQUIREMENTS.md](LAB_REQUIREMENTS.md). The homepage and Labs 1–5 are implemented, including scikit-learn PCA and recognition in Lab 5. Lab 6 has pretrained detection and local training/artifact integration; the user-approved Open Images bottle subset completed a local 100-epoch custom training run and validation evaluation. Lab 7 segmentation is implemented with classical methods and pretrained semantic weights. Workspaces use shared UI components, left tool sidebars on wider screens, and optional learning explanations. Common UI changes propagate across labs; experiment state, specialized controls, processing, and content remain lab-specific.
 
+On `feat/lab5-demo`, the Lab 5 page displays precomputed real 25/75/150-component
+PCA/SVM runs instead of fitting on request. This hosted-style presentation is an
+approved scope adaptation, not a claim of live execution. The full live local
+application source is retained on GitHub's `full-local` branch at `729d587`;
+Lab 6 now also presents recorded detector runs and actual dataset/training/test
+snapshots. Lab 7 semantic is recorded; its classical methods remain live. These
+changes use a dedicated lightweight Render profile; actual hosting capacity still
+requires target verification.
+
 Initial visual constraints and the selected map-node treatment are recorded in [DESIGN_FOUNDATION.md](DESIGN_FOUNDATION.md). The homepage direction is a short introduction and a winding seven-lab map with shallow dimensional nodes; implemented labs remain freely accessible.
 
 ## Users and Outcomes
@@ -73,12 +82,13 @@ Use React, TypeScript, Vite, and Tailwind CSS for the frontend; Python/FastAPI f
 The current development proxy connects frontend `/api` requests to FastAPI.
 Image experiments use bounded, stateless requests; PCA uses bounded request-time
 fitting, and custom YOLO training runs through trusted local scripts. Production
-hosting targets Vercel for static frontend delivery and one Oracle Linux VM for
-the API, using direct HTTPS requests with exact CORS origins. Application
+hosting targets Vercel for static frontend delivery and Render Free for the
+classical API, using direct HTTPS requests with exact CORS origins. The earlier
+Oracle plan was blocked at account creation; its full-backend templates remain. Application
 processing/rate/upload/time limits and deployment templates are implemented;
 actual target capacity and live deployment still require verification. Persistent
 storage/background jobs remain outside scope. Current execution choices are
-documented in [ARCHITECTURE.md](ARCHITECTURE.md) and [DEPLOYMENT.md](DEPLOYMENT.md).
+documented in [ARCHITECTURE.md](ARCHITECTURE.md) and [RENDER_DEPLOYMENT.md](RENDER_DEPLOYMENT.md).
 
 ## Acceptance and Success
 
@@ -113,7 +123,7 @@ Product acceptance means students can perform and explain the intended compariso
   choice; these interpretations do not remove the source discrepancies.
 - Verify SURF builds, model execution, and resource/concurrency limits on the
   deployment target; existing verification is local.
-- Verify the prepared Vercel/Oracle configuration, public HTTPS, client-IP trust,
+- Verify the prepared Vercel/Render configuration, public HTTPS, client-IP trust,
   restarts and monitoring on the target. Revisit persistence or job infrastructure
   only if the product explicitly requires it.
 

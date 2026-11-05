@@ -8,17 +8,13 @@ from routers.lab1 import router as lab1_router
 from routers.lab2 import router as lab2_router
 from routers.lab3 import router as lab3_router
 from routers.lab4 import router as lab4_router
-
-from routers.lab5 import router as lab5_router
-
-from routers.lab6 import router as lab6_router
-
 from routers.lab7 import router as lab7_router
 
 from middleware.rate_limits import RateLimitMiddleware
 from middleware.request_body_limits import RequestBodyLimitMiddleware
 from services.rate_limits import RateLimiter
 from services.configuration import allowed_origins
+from services.runtime_profile import PROFILE
 from services.readiness import Readiness
 from middleware.request_deadline import RequestDeadlineMiddleware
 
@@ -40,9 +36,16 @@ def create_app(rate_limiter=None):
                        allow_methods=['GET', 'POST', 'OPTIONS'],
                        allow_headers=['Content-Type'], expose_headers=['Retry-After'],
                        allow_credentials=False)
-    for router in (lab1_router, lab2_router, lab3_router, lab4_router,
-                   lab5_router, lab6_router, lab7_router):
+    for router in (lab1_router, lab2_router, lab3_router, lab4_router, lab7_router):
         app.include_router(router)
+    if PROFILE.render_free:
+        import cv2
+        cv2.setNumThreads(1)
+    else:
+        from routers.lab5 import router as lab5_router
+        from routers.lab6 import router as lab6_router
+        app.include_router(lab5_router)
+        app.include_router(lab6_router)
 
     @app.get("/api/health")
     def health():

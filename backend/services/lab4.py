@@ -7,8 +7,10 @@ from schemas.lab4 import Capabilities, Capability, FeatureComparison, FeatureRes
 from services.images import ImageError, decode_image, frame
 
 ALGORITHMS = [("surf", "SURF"), ("sift", "SIFT"), ("orb", "ORB")]
-MAX_FEATURE_PIXELS = 1_000_000
-MAX_MATCH_PIXELS = 2_000_000
+from services.runtime_profile import PROFILE
+
+MAX_FEATURE_PIXELS = min(1_000_000, PROFILE.max_pixels)
+MAX_MATCH_PIXELS = min(2_000_000, PROFILE.max_pixels * 2)
 
 
 def grayscale_image(content):

@@ -159,3 +159,29 @@ run. New labels are assistant-checked and user-approved. Validation and
 test metrics remain separate in the UI and artifacts. See
 [held-out evaluation](LAB6_TEST_EVALUATION.md) for preparation/evaluation commands,
 review location, leakage checks, actual results, and remaining source limitations.
+
+## Hosted-style demonstration on the demo branch
+
+On `feat/lab5-demo`, `/labs/6` displays recorded results without calling the
+backend. Bottle and Bus samples each have actual custom/pretrained predictions
+at confidence .25/.5/.75. Choose a sample, model or threshold to load its saved
+run; the source image stays paired with its recorded result during loading/errors.
+There is no upload, camera or Detect action in this presentation.
+
+Dataset, training history, validation/test metrics and the sanitized training log
+are snapshots of the completed reviewed run, not checks of the hosting runtime.
+Original compute times are labeled recorded. PNG/JSON exports retain input,
+checkpoint and source hashes and recording time. Samples were resized to longest
+side 640 before real inference; source credits are retained in image metadata.
+
+Regenerate deliberately with the prepared local resources:
+
+```sh
+backend/.venv/bin/python backend/scripts/export_heavy_demos.py
+```
+
+The script executes actual YOLO/DeepLab services and also exports Lab 7 semantic
+examples; it never trains YOLO. Static JSON and manifest hashes live under
+`frontend/public/demos/lab6/`. Missing/corrupt runs show reloadable errors.
+The complete live webcam/upload implementation remains in GitHub branch
+`full-local` at `729d587`; ignored dataset/checkpoint caches remain separate.

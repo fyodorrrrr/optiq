@@ -9,10 +9,32 @@ of lab experiment code. Homepage lab links use client-side navigation. Labs 1–
 implemented. Lab 6 provides pretrained detection and local training/artifact
 review, with a completed 100-epoch custom bottle run and validation evaluation. FastAPI provides
 `/api/health` and per-lab endpoints. Vite proxies `/api` to port 8000 in
-development. Production targets a Vercel static frontend and one Oracle Linux VM running
-Caddy plus a single Uvicorn worker. `VITE_API_BASE_URL` selects direct browser-to-API
-HTTPS; exact CORS origins authorize browser access. Templates and the runbook live
-in [DEPLOYMENT.md](DEPLOYMENT.md); cloud deployment is not yet verified.
+development. Production now targets a Vercel static frontend and a Render Free classical API
+using one Uvicorn worker; the older Oracle templates remain as a reference. `VITE_API_BASE_URL` selects direct browser-to-API
+HTTPS; exact CORS origins authorize browser access. Templates and the current runbook live
+in [RENDER_DEPLOYMENT.md](RENDER_DEPLOYMENT.md); cloud deployment is not yet verified.
+
+## Runtime profiles
+
+`services/runtime_profile.py` freezes `OPTIQ_PROFILE` at process startup. `full`
+(default) preserves live local endpoints/limits. `render-free` mounts Labs1–4/7,
+rejects semantic execution in its service, caps images at350000 pixels/1024px per
+side and OpenCV to one thread. Its readiness imports no ML libraries and checks
+actual feature detectors/temp storage only. Main/readiness lazily import full
+PCA/YOLO dependencies; fixed recorded results remain Vercel assets.
+
+`requirements-render-lock.txt` pins the minimal Linux runtime closure. The Docker
+builder compiles minimal SURF-enabled OpenCV; a nonroot runtime verifies readiness
+and starts one worker/eight connections on PORT. No compilers, neural weights or
+persistent disks are needed at runtime. Full caches remain ignored/local. A
+committed480px natural-scene PNG replaces runtime sample downloads in this profile.
+
+Frontend `VITE_API_PROFILE` selects the same input/resize bounds and explanatory
+copy. Render metadata waits90s for cold starts; POST waits120s. Backend limits
+remain authoritative. Render's start script distrusts forwarding headers unless
+provider-confirmed proxy CIDRs are explicitly supplied; absent verification,
+clients may share a platform-peer quota. See the Render runbook for actual
+Docker/Linux/cloud verification boundaries and free-tier limits.
 
 ## Shared processing budget
 
@@ -330,6 +352,9 @@ measurements without repeating generic metadata beneath every comparison.
 
 ## Lab 5 dataset-driven PCA
 
+This describes the retained local fitting implementation; the current demo UI
+uses recorded outputs as documented below.
+
 `GET /api/labs/5/dataset` reads the local LFW subset; it never downloads from a
 request. `scripts/prepare_lfw.py` explicitly prepares ignored `.cache/lfw` data.
 `POST /api/labs/5/experiment` validates typed component settings and dispatches
@@ -381,7 +406,50 @@ dataset summary after a run, and local classification-metric definitions. These
 changes do not alter computation, activity requirements, or returned measurements.
 
 
+## Lab 5 precomputed demonstration
+
+On `feat/lab5-demo`, `/labs/5` uses `usePcaDemo` and static recorded runs. The old
+`/labs/5/demo` preview route redirects to the canonical page. There is no live-fit
+button or backend call from this Lab 5 UI. The full live application source is
+preserved in the GitHub `full-local` branch at `729d587`; local model/dataset
+caches are still separate ignored resources, not part of that Git backup.
+
+The page fetches only same-origin assets under `/demos/lab5/`, checks manifest/run
+SHA-256 and provenance, and caches validated runs. Superseded loads are aborted.
+Recorded 25/75/150-component results come from the actual existing service through
+`export_lab5_demo.py`; metrics, galleries, split information and recorded compute
+timings remain real outputs. All four views and the existing Learning Canvas are
+retained. Backend fitting/export code remains for local regeneration. This UI
+change does not yet create a lightweight deployment backend or alter other labs.
+See [LAB5_SETUP.md](LAB5_SETUP.md) for branch recovery and regeneration.
+
+## Recorded detection and semantic views
+
+On `feat/lab5-demo`, Lab 6 uses `useRecordedRuns` with the existing workspace,
+image metadata, dataset/training views and downloads. It provides 12 real saved
+YOLO runs (two samples × two models × three thresholds); uploads/camera are
+available in the preserved `full-local` source instead. Training/dataset/test
+information and the sanitized log are static snapshots. No Lab 6 API is called.
+
+Lab 7's `SemanticDemo` provides six recorded DeepLab runs (two samples × three
+overlay opacities). The classical hook remains mounted to preserve input state;
+it clears/aborts pending work on method switches and never executes semantic
+inference. Classical threshold/region/edge methods still use the API. Semantic
+source/results are separate from the classical upload, preventing saved results
+from being presented as predictions for arbitrary input.
+
+Shared `api/recorded.ts` and `hooks/useRecordedRuns.ts` verify manifest/result
+hashes and input/parameter/source identity. Loaded inputs/results update together;
+superseded loads are aborted, prior pairs remain correctly labeled, and missing
+or corrupt files expose reload. Lab 5 reuses the same static JSON reader.
+`export_heavy_demos.py` executes actual existing services on 640px detection and 480px semantic samples,
+retains credits/provenance and never trains or fabricates results. Static bundles
+are frontend assets; backend deployment slimming/resource testing is separate.
+
 ## Lab 6 inference and offline training
+
+The live camera/upload UI described in this section belongs to `full-local`.
+The current branch retains the services/export tools but uses recorded UI above.
 
 `/labs/6` uses the shared lab shell, controls, feedback, uploads and image viewers.
 Dedicated state and camera lifecycle live in `labs/lab6/`; the camera sends
@@ -461,6 +529,9 @@ intentional public dataset labels remain available.
 
 ## Lab 7 segmentation
 
+Classical methods remain live. Semantic execution below describes the retained
+local service; the current semantic UI uses recorded results as documented above.
+
 `labs/lab7/` reuses the shared shell, prediction prompts, fields, sample/upload
 controls and image viewers. Its own state/transport controls four method families.
 The input viewer supports original-coordinate seed selection plus keyboard x/y
@@ -484,3 +555,18 @@ versions and checkpoint hash are recorded. Outputs include aligned class map,
 overlay, legend and raw ID PNG. No trained-model persistence or new job system
 is added. No IoU is reported without compatible annotated ground truth. See
 `LAB7_SETUP.md` for the intentional resize adaptation and source details.
+
+## Hosted loading feedback
+
+`api/connection.ts` observes existing live requests in the Render profile; it
+never polls or starts a request itself. A first request, or one after 14 minutes
+without an API response, shows the shared mascot loader after 500 ms. Any HTTP
+response confirms connectivity; abort/failure also clears the pending indicator.
+Concurrent requests share that state. The message mentions a possible server
+wake-up after six seconds without claiming to know the provider's actual state.
+`LabWorkspace` confines the loader to the results area, with live announcements;
+settings, navigation and Cancel remain accessible. `LabButton` preserves its
+original dimensions while displaying Connecting/Processing and a small spinner.
+CSS stops indicator animation for reduced motion. Labs 2–4 expose their existing
+AbortController cancellation handlers alongside the shared button feedback.
+Recorded results do not initiate backend requests or show backend wake-up UI.

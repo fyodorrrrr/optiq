@@ -3,9 +3,27 @@
 Interactive computer vision learning and experimentation platform for Labs 1–7.
 Includes a homepage with a pixel character and introduction,
 three illustrated **How learning works** cards, a selectable seven-lab map,
-and working workspaces for Labs 1–5 and 7. Lab 5 uses
-scikit-learn for PCA and recognition. Lab 6 has pretrained detection and local
-training support; actual custom-dataset training remains pending.
+and seven laboratory workspaces. On this branch, Lab 5, Lab 6 and Lab 7's
+semantic view display real recorded results. Labs 1–4 and Lab 7's classical
+methods retain live backend processing. Dataset/training views retain the actual
+completed custom bottle model's reviewed artifacts.
+
+The full live application source is preserved in the
+[full-local branch](https://github.com/fyodorrrrr/optiq/tree/full-local).
+See the per-lab setup docs for recovery and recorded-run regeneration. Local
+model/dataset caches remain separate ignored resources.
+
+## Render Free deployment
+
+The main branch includes an explicit `render-free` backend profile for live
+Labs1–4 and classical Lab7, with no neural/PCA runtime requirements. Use the
+[root render.yaml](render.yaml), [Docker configuration](deploy/render/Dockerfile)
+and [Render deployment guide](docs/RENDER_DEPLOYMENT.md). Set backend
+`OPTIQ_PROFILE=render-free` and frontend `VITE_API_PROFILE=render-free` together.
+The full local profile remains the default. The owner has reported a successful deployment; verify production resource
+metrics in the hosting dashboards. These files do not provision a cloud account.
+GitHub Actions checks pull requests and main pushes; see the deployment guide
+for switching existing Vercel/Render services to main and requiring CI checks.
 
 ## Requirements
 
@@ -122,14 +140,15 @@ curl http://127.0.0.1:8000/api/health
 A running backend returns `{"status":"ok","message":"Optiq backend is connected"}`.
 The homepage does not include a connection-check control.
 
-Vite forwards `/api` to port 8000 during development. Production uses a Vercel
-static frontend and an Oracle Linux API behind Caddy. Set `VITE_API_BASE_URL` to
+Vite forwards `/api` to port 8000 during development. Production targets a Vercel
+static frontend and a lightweight Render Free API. Set `VITE_API_BASE_URL` to
 the API's HTTPS origin before building, and configure exact backend CORS origins.
 `frontend/vercel.json` supplies SPA fallback for direct lab URLs. The API exposes
 `/api/ready` (200/503) separately from lightweight `/api/health`.
 
-See [the deployment runbook](docs/DEPLOYMENT.md) for Linux dependencies, reviewed
-model transfer, service/HTTPS/monitoring templates, smoke checks and rollback.
+See [the Render deployment runbook](docs/RENDER_DEPLOYMENT.md) for configuration,
+SURF builds, smoke checks and rollback. The older [Oracle guide](docs/DEPLOYMENT.md)
+remains available for the full local backend.
 These files prepare deployment; public hosting has not yet been verified.
 
 ## Checks

@@ -13,14 +13,14 @@ export function NumberField({ label, onChange, error, hint, ...props }:
   </div>
 }
 
-export function SelectField({ label, value, options, onChange, hint }: {
-  label: string; value: string; hint?: string; options: { value: string | number; label: string; disabled?: boolean }[]
+export function SelectField({ label, value, options, onChange, hint, disabled = false }: {
+  label: string; value: string; hint?: string; disabled?: boolean; options: { value: string | number; label: string; disabled?: boolean }[]
   onChange: (value: string) => void
 }) {
   const id = useId()
   return <div className="lab-field"><label htmlFor={id}>{label}</label>
     <span className="lab-select-control">
-      <select id={id} aria-describedby={hint ? `${id}-hint` : undefined} value={value} onChange={event => onChange(event.target.value)}>
+      <select id={id} disabled={disabled} aria-describedby={hint ? `${id}-hint` : undefined} value={value} onChange={event => onChange(event.target.value)}>
         {options.map(option => <option key={option.value} value={option.value} disabled={option.disabled}>{option.label}</option>)}
       </select>
       <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 8 5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>

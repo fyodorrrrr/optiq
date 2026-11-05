@@ -7,8 +7,8 @@ import { LabError, LabStatus } from '../../components/lab/LabFeedback'
 import TrainingLoss from './TrainingLoss'
 import type { Status } from './api'
 
-export default function TrainingView({ status, loading, unavailable, actions }: {
-  status: Status | null; loading: boolean; unavailable: boolean; actions: ReactNode
+export default function TrainingView({ status, loading, unavailable, actions, recorded = false, trainingLogUrl }: {
+  status: Status | null; loading: boolean; unavailable: boolean; actions: ReactNode; recorded?: boolean; trainingLogUrl?: string
 }) {
   const training = status?.training
   const evaluation = status?.evaluation
@@ -23,7 +23,7 @@ export default function TrainingView({ status, loading, unavailable, actions }: 
   const sampleSplit = status?.bottle_sample_split
   return <section className="detection-training">
     <div className="detection-section-heading"><h2>Training & evaluation</h2>{actions}</div>
-    {!training && loading && <LabStatus>Checking training status…</LabStatus>}
+    {!training && loading && <LabStatus>{recorded ? 'Loading recorded training…' : 'Checking training status…'}</LabStatus>}
     {!training && unavailable ? null : training && <>
       {['failed', 'invalid'].includes(training.status) ? <LabError title="Training did not complete." message={training.message} />
         : <LabStatus>{completed ? `${training.epochs_completed} epochs completed · ${training.baseline ? '100-epoch baseline' : 'Exploratory run'}` : training.status === 'running' ? 'Local training is running.' : 'No custom training run yet.'}</LabStatus>}
@@ -35,7 +35,7 @@ export default function TrainingView({ status, loading, unavailable, actions }: 
           {splits?.train && <tr><th scope="row">Training</th><td>{splits.train.images} images</td></tr>}
           <tr><th scope="row">{training.evaluation_split === 'test' ? 'Test evaluation' : 'Validation'}</th><td>{evaluated !== undefined ? `${evaluated} images` : 'Recorded in training details'}</td></tr>
         </tbody></table></div>
-        {sampleSplit && <p>The bottle sample was used for {sampleSplit === 'val' ? 'validation' : sampleSplit === 'train' ? 'training' : 'test evaluation'}. Try your own photos to explore how the model behaves.</p>}
+        {sampleSplit && <p>The bottle sample was used for {sampleSplit === 'val' ? 'validation' : sampleSplit === 'train' ? 'training' : 'test evaluation'}. {recorded ? 'These saved detections are demonstrations, not independent test evidence.' : 'Try your own photos to explore how the model behaves.'}</p>}
         {training.metrics && <div className="detection-table"><table>
           <caption>Evaluation{evaluation?.review_status === 'pending_user_review' ? ' · test labels awaiting review' : ''}</caption>
           <thead><tr><th scope="col">Metric</th><th scope="col">{training.evaluation_split === 'test' ? 'Test' : 'Validation'}{evaluated !== undefined ? ` · ${evaluated} images` : ''}</th>{evaluation && <th scope="col">Test · {evaluation.images} images</th>}</tr></thead>
@@ -57,8 +57,10 @@ export default function TrainingView({ status, loading, unavailable, actions }: 
           label_review: evaluation.review_status, completed_utc: evaluation.completed_utc,
           dataset_sha256: evaluation.dataset_sha256, weight_sha256: evaluation.weight_sha256,
         } }} /></InfoDetails>}
-        {training.status !== 'running' && <InfoDetails title="Local commands"><ol><li>Collect and annotate objects in YOLO format.</li><li>Validate the dataset.</li><li>Train locally, then refresh status.</li></ol><pre tabIndex={0} aria-label="Local training commands"><code>{`# Replace the dataset path. Run from the repository root.\nbackend/.venv/bin/python backend/scripts/train_yolo.py \\\n  --data /path/to/dataset/data.yaml --validate-only\n\n# Source baseline: 100 epochs at 640px\nbackend/.venv/bin/python backend/scripts/train_yolo.py \\\n  --data /path/to/dataset/data.yaml --epochs 100 --batch 4 --name baseline`}</code></pre><p>CPU is the default. Use --split test only with a separate test split.</p></InfoDetails>}
-        {status?.training_log_available && <DownloadLink href={apiUrl('/api/labs/6/artifacts/log')} download>Training log</DownloadLink>}
+        {training.status !== 'running' && <InfoDetails title={recorded ? 'Full local workflow' : 'Local commands'}>{recorded
+          ? <p>These commands run in the full-local version, not this demonstration.</p>
+          : <ol><li>Collect and annotate objects in YOLO format.</li><li>Validate the dataset.</li><li>Train locally, then refresh status.</li></ol>}<pre tabIndex={0} aria-label="Local training commands"><code>{`# Replace the dataset path. Run from the repository root.\nbackend/.venv/bin/python backend/scripts/train_yolo.py \\\n  --data /path/to/dataset/data.yaml --validate-only\n\n# Source baseline: 100 epochs at 640px\nbackend/.venv/bin/python backend/scripts/train_yolo.py \\\n  --data /path/to/dataset/data.yaml --epochs 100 --batch 4 --name baseline`}</code></pre><p>CPU is the default. Use --split test only with a separate test split.</p></InfoDetails>}
+        {status?.training_log_available && (!recorded || trainingLogUrl) && <DownloadLink href={trainingLogUrl ?? apiUrl('/api/labs/6/artifacts/log')} download>Training log</DownloadLink>}
         {evaluation && <DownloadLink href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(evaluation, null, 2))}`} download="optiq-lab6-test.json">Test JSON</DownloadLink>}
         {completed && <DownloadLink href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(training, null, 2))}`} download="optiq-lab6-training.json">Training JSON</DownloadLink>}
       </div>

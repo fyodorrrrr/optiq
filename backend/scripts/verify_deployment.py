@@ -12,6 +12,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--inference', action='store_true', help='Also load local checkpoints and test real predictions.')
     args = parser.parse_args()
+    from services.runtime_profile import PROFILE
+    if args.inference and PROFILE.render_free:
+        parser.error('--inference is for the full local profile; Render serves recorded neural results.')
     from services.readiness import Readiness
     report = Readiness().report()
     if args.inference and report['status'] == 'ready':

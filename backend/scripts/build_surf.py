@@ -14,15 +14,19 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--install", action="store_true", help="Install the built wheel into this Python environment.")
     parser.add_argument("--jobs", type=int, default=4)
+    parser.add_argument("--minimal", action="store_true", help="Build only modules needed by the classical Render API.")
     args = parser.parse_args()
     if args.jobs < 1:
         parser.error("--jobs must be positive")
     version = importlib.metadata.version("opencv-contrib-python-headless")
     destination = Path(__file__).resolve().parents[1] / ".cache" / "surf-wheels"
     destination.mkdir(parents=True, exist_ok=True)
+    modules = "core,imgproc,imgcodecs,features2d,flann,calib3d,calib,3d,stereo,photo,xfeatures2d,python3"
+    if not args.minimal:
+        modules += ",dnn,video,videoio,highgui,ml,objdetect"
     flags = " ".join([
         "-DOPENCV_ENABLE_NONFREE=ON",
-        "-DBUILD_LIST=core,imgproc,imgcodecs,features2d,flann,calib3d,calib,3d,stereo,photo,xfeatures2d,python3,dnn,video,videoio,highgui,ml,objdetect",
+        f"-DBUILD_LIST={modules}",
         "-DBUILD_TESTS=OFF", "-DBUILD_PERF_TESTS=OFF", "-DBUILD_EXAMPLES=OFF",
         "-DWITH_IPP=OFF", "-DWITH_OPENCL=OFF", "-DWITH_FFMPEG=OFF",
         "-DWITH_AVFOUNDATION=OFF", "-DWITH_OBSENSOR=OFF",

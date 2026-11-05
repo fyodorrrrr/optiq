@@ -1,3 +1,6 @@
+import { renderFree } from './profile'
+import { observeConnection } from './connection'
+
 // Vite replaces this at build time; keep it empty for the local /api proxy.
 const configuredOrigin = (import.meta.env.VITE_API_BASE_URL ?? '').trim().replace(/\/$/, '')
 if (configuredOrigin) {
@@ -15,10 +18,12 @@ export async function apiFetch(path: string, signal: AbortSignal, init: RequestI
   // Settle superseded effect cancellation before opening a connection.
   await Promise.resolve()
   signal.throwIfAborted()
-  const timeout = AbortSignal.timeout(init.method === 'POST' ? 120000 : 30000)
+  const timeout = AbortSignal.timeout(init.method === 'POST' ? 120000 : renderFree ? 90000 : 30000)
+  const connection = renderFree ? observeConnection() : null
   try {
     // Read the response body inside the same deadline as the request.
     const response = await fetch(apiUrl(path), { ...init, signal: AbortSignal.any([signal, timeout]) })
+    connection?.responded()
     const data: unknown = await response.json().catch((error: unknown) => {
       if (signal.aborted || timeout.aborted) throw error
       return null
@@ -38,5 +43,7 @@ export async function apiFetch(path: string, signal: AbortSignal, init: RequestI
       throw new Error('Could not reach the service. Check your connection and try again.', { cause: error })
     }
     throw error
+  } finally {
+    connection?.finish()
   }
 }
