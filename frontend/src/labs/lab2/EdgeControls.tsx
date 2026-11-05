@@ -20,7 +20,7 @@ export default function EdgeControls({ lab, section, onRevealSettings }: { lab: 
       {(section === 'compare' || section === 'canny') && <p className="lab-hint">Lower must be below upper.</p>}
       <LabButton variant="primary" type="submit" aria-busy={lab.busy}>Run both detectors</LabButton>
     </fieldset>
-    {lab.canReset && <LabButton disabled={lab.busy} onClick={lab.resetBaseline}>Reset baseline</LabButton>}
+    {lab.busy ? <LabButton onClick={() => lab.resetResult(false)}>Cancel processing</LabButton> : lab.canReset && <LabButton onClick={lab.resetBaseline}>Reset baseline</LabButton>}
       <SettingsHelpLink guideId="edge-guide" />
   </form>
 }

@@ -555,3 +555,18 @@ versions and checkpoint hash are recorded. Outputs include aligned class map,
 overlay, legend and raw ID PNG. No trained-model persistence or new job system
 is added. No IoU is reported without compatible annotated ground truth. See
 `LAB7_SETUP.md` for the intentional resize adaptation and source details.
+
+## Hosted loading feedback
+
+`api/connection.ts` observes existing live requests in the Render profile; it
+never polls or starts a request itself. A first request, or one after 14 minutes
+without an API response, shows the shared mascot loader after 500 ms. Any HTTP
+response confirms connectivity; abort/failure also clears the pending indicator.
+Concurrent requests share that state. The message mentions a possible server
+wake-up after six seconds without claiming to know the provider's actual state.
+`LabWorkspace` confines the loader to the results area, with live announcements;
+settings, navigation and Cancel remain accessible. `LabButton` preserves its
+original dimensions while displaying Connecting/Processing and a small spinner.
+CSS stops indicator animation for reduced motion. Labs 2–4 expose their existing
+AbortController cancellation handlers alongside the shared button feedback.
+Recorded results do not initiate backend requests or show backend wake-up UI.
