@@ -128,3 +128,11 @@ stable as lab content fades in. Labs 4–5 use evenly padded natural-ratio image
 cards; Lab 6 fills its slider with identical centered crops on both sides; reduced-motion mode omits the fade. Continue validating readability, navigation, responsive behavior, and
 contrast as the application evolves. Product scope remains governed by
 [PRD.md](PRD.md).
+
+
+Homepage depth uses a short trailing glide on the hero mascot, a smaller headline
+shift, and different upward travel distances for the three card illustrations.
+The motion follows native scrolling without intercepting wheel, touch, or keyboard
+input. Mobile travel is reduced, reduced-motion preferences keep layers static,
+and the animation loop stops when settled or when the document is hidden. Map
+nodes, preview controls, and learning-card text stay stationary in their layout.

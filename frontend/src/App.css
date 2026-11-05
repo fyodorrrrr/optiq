@@ -949,3 +949,12 @@ h2 {
   font-weight: 600;
 }
 .preview-next:hover { background: var(--accent-soft); }
+
+/* Artwork trails scrolling while the map, controls, and page flow stay native. */
+@media (prefers-reduced-motion: no-preference) {
+  .page-content .hero-pixel,
+  .page-content .intro h1,
+  .page-content .learning-card-illustration {
+    transform: translateY(var(--parallax-y, 0px));
+  }
+}
