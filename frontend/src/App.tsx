@@ -2,10 +2,9 @@ import LabMap from './components/LabMap'
 import HeroPixel from './components/HeroPixel'
 import LearningCards from './components/LearningCards'
 import Wordmark from './components/Wordmark'
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect, useRef } from 'react'
 import { Link, Route, Routes, useLocation } from 'react-router'
-import useHomepageMotion from './hooks/useHomepageMotion'
-import useHomepageParallax from './hooks/useHomepageParallax'
+import useHomepageSmoothScroll from './hooks/useHomepageSmoothScroll'
 import './App.css'
 
 const Lab1 = lazy(() => import('./labs/lab1/Lab1'))
@@ -17,8 +16,8 @@ const Lab6 = lazy(() => import('./labs/lab6/Lab6'))
 const Lab7 = lazy(() => import('./labs/lab7/Lab7'))
 
 function Home() {
-  const parallax = useHomepageParallax()
-  useHomepageMotion(parallax)
+  const homepage = useRef<HTMLElement>(null)
+  useHomepageSmoothScroll(homepage)
   return <>
     <a className="skip-link" href="#main">Skip to content</a>
     <header className="site-header home-header">
@@ -27,7 +26,7 @@ function Home() {
         <a href="https://github.com/fyodorrrrr/optiq" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
       </nav>
     </header>
-    <main ref={parallax} id="main" className="page-content" tabIndex={-1}>
+    <main ref={homepage} id="main" className="page-content" tabIndex={-1}>
       <section className="intro" id="home" aria-labelledby="intro-title">
         <div className="intro-content">
           <HeroPixel />
