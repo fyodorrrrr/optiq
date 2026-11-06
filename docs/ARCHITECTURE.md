@@ -35,7 +35,7 @@ Its watershed overlay omits OpenCV's automatic outer-canvas boundary from the
 red visualization, while preserving internal boundaries and raw label IDs.
 Unrelated input/algorithm validation and shared resource admission still apply.
 
-Homepage previews for Labs 1–4/7 are offline real computations from these same sample services.
+Retained preview assets for Labs 1–4/7 are offline real computations from these same sample services. The homepage cards now use borderless mascot artwork above colon-separated titles; Labs 1–4/7 use curated transparent prop variants of the learning-card mascot poses, while Labs 5–6 retain dedicated concept art. These images are illustrative and do not replace lab input defaults.
 `export_home_previews.py --labs 1 2 3 4 7` updates only those assets/provenance,
 without running PCA or detection. Labs 5–6 instead display approved, labeled
 mascot concept illustrations on the homepage; the Lab 6 “glass” box is not a

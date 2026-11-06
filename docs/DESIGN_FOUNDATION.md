@@ -136,15 +136,15 @@ static rotations and curved dashed separators retain the informal map treatment.
 Highlighted path segments use `accent-path`; the selected lab label uses stronger
 weight and an underline.
 
-All seven previews share a bordered 4:3 frame with contained imagery on desktop
-and mobile. Labs 1–3 and 7 show a fixed vertical 50/50 split, original left and
-computed output right, without slider controls or visible image captions. Lab 4
-shows computed SIFT matches. Labs 5 and 6 use homepage-only concept illustrations;
-the existing description and accessible image text distinguish them from actual
-results. These illustrations do not become lab inputs. Hidden measurement copy
-reserves the largest heading/description footprint to keep selection stable.
-Reduced-motion mode omits the preview fade. Product scope remains governed by
-[PRD.md](PRD.md).
+All seven lab detail previews use borderless 4:3 mascot illustrations above the
+title. Titles use “Lab N: Title”; descriptions and Open lab/Next preview actions
+remain below. Labs 1–4/7 use curated transparent variants of the existing mascot poses: grayscale,
+edge outlines, contrast, keypoint matching and colored regions. Labs 5–6 retain
+their dedicated concept illustrations. These are illustrative
+artwork, not computed outputs or new lab inputs. No mockup labels, image
+captions or comparison controls appear above the title. Hidden measurement copy
+keeps headings and descriptions stable during selection. Reduced-motion mode
+omits the preview fade. Product scope remains governed by [PRD.md](PRD.md).
 
 
 Homepage wheel scrolling uses Lenis with a gentle interpolation factor of .095.

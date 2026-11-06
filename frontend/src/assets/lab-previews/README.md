@@ -1,17 +1,15 @@
 # Homepage lab examples
 
-The homepage displays these assets without calling the backend. Labs 1–4/7
-use recorded real service outputs; Labs 5–6 use approved mascot concept
-illustrations, identified as artwork in the existing preview descriptions. They are not model results
-and are never used as default lab inputs. Lab 6's illustrative “glass” label
-does not imply the detector recognizes the mascot.
+The homepage lab detail cards display borderless mascot illustrations above
+their titles. Labs 1–4/7 use curated transparent edits of the learning-card mascot poses;
+Labs 5–6 retain the approved concept illustrations here, distinguished from model
+outputs in image descriptions and existing preview copy. They are never used
+as default lab inputs. The “glass” label does not imply mascot recognition.
 
-`provenance.json` records the retained real computations, including historical
-Lab 5 eigenface and Lab 6 bus previews. `illustrations/provenance.json` separately
-records the generated artwork, prompts, reference sources, and file hashes.
-The real computed files are retained for inspection. Labs 1–3/7 use aligned
-fixed 50/50 before/after previews; Lab 4 shows SIFT candidate matches. Lab 7 shows watershed
-regions, not semantic predictions.
+The computed assets remain available for inspection and regeneration but are
+not rendered by the homepage cards. `provenance.json` records these real
+computations. `illustrations/provenance.json` separately records the generated
+artwork, prompts, references and hashes.
 
 To regenerate from the repository root:
 
@@ -28,7 +26,7 @@ components. Keep the image descriptions and provenance aligned when replacing pr
 ## Default mascot examples
 
 Labs 1–4 and classical Lab 7 now open with an emerald mascot sample. Their
-homepage previews use the same sample and actual processing services; existing
+retained computational previews use the same sample and actual processing services; existing
 shape/noise/photo samples remain in each dropdown. The default Lab 3 input is a
 labeled low-contrast color adaptation. Lab 4 uses a 25° rotated, 90%-scale pair.
 Lab 7 uses inverted foreground for a dark mascot on its light background.
@@ -61,3 +59,15 @@ a style/identity reference. WebP conversion uses `cwebp -q 90` without resizing.
 Do not run the shared mascot CSS filter over this artwork: its colors are
 already part of the approved images. Captions and alt text distinguish these
 concepts from the actual PCA and detector experiments.
+
+## Curated mascot props
+
+The Lab 1/2/3/4/7 PNG masters and WebP display assets live in `illustrations/`.
+They were edited with built-in imagegen from the existing Start and Compare
+poses: grayscale picture, edge map, contrast pair, matching keypoints and
+segmentation regions. Original learning-card PNG/Piskel sources remain intact.
+The edits have transparent backgrounds and their own emerald treatment; do not
+apply the learning-card saturation filter again. WebP conversion preserves
+alpha without resizing. Full prompts, references and output hashes are in
+`illustrations/provenance.json`. These assets are conceptual illustrations,
+not outputs from the lab algorithms.

@@ -730,7 +730,7 @@ h2 {
   align-items: stretch;
   gap: 22px;
   padding: 24px;
-  border: 1px solid var(--line);
+  border: 0;
   background: var(--paper);
   margin: 0;
 }
@@ -740,17 +740,14 @@ h2 {
 .preview-heading-slot > *, .preview-copy-slot > * { grid-area: 1 / 1; min-width: 0; }
 .preview-heading-slot .detail-heading { line-height: 1.4; margin: 0; }
 .preview-measure { visibility: hidden; pointer-events: none; user-select: none; }
-.lab-browser .preview-comparison,
 .lab-preview-image {
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-sm);
-  background: var(--paper);
+  border: 0;
+  background: transparent;
 }
-.lab-browser .lab-preview-figure .preview-comparison img,
 .lab-preview-figure .lab-preview-image img {
   position: absolute;
   inset: 0;
@@ -758,7 +755,7 @@ h2 {
   height: 100%;
   object-fit: contain;
   border-radius: 0;
-  background: var(--paper);
+  background: transparent;
 }
 @keyframes map-preview-in { from { opacity: .55; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .lab-preview-content { animation: none; } }
@@ -846,32 +843,6 @@ h2 {
   .hero-pixel[data-playing='true'] .hero-pixel-art * { animation: none; }
 }
 
-.preview-comparison {
-  position: relative;
-  overflow: hidden;
-  border-radius: 4px;
-  isolation: isolate;
-}
-.lab-preview-figure .preview-comparison img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: auto;
-  border-radius: 0;
-}
-.preview-comparison .comparison-original {
-  position: absolute;
-  inset: 0;
-  clip-path: inset(0 50% 0 0);
-}
-.comparison-divider {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 1px;
-  background: var(--accent);
-  pointer-events: none;
-}
 /* Keep navigation targets generous without changing their visual hierarchy. */
 .home-header nav a, .intro-links .quiet-link {
   display: inline-flex;
