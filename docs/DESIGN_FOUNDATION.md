@@ -72,12 +72,11 @@ Keep navigation, text, and laboratory workspaces flat. The node treatment is a f
 
 The homepage direction is a short introduction followed by a winding map of seven labeled labs. Use the map to suggest order without enforcing prerequisites: all implemented labs are directly accessible.
 
-Availability and learning progress are separate concepts. Labs 1–5 and 7 are
-labeled **Available**. Lab 6 is **Partial · custom training pending**, with
-pretrained detection and a local training workflow available. Use **Planned**
-only for an unimplemented module. These labels describe functionality, not a
-student's completion. There is no saved learning progress or completion gate;
-do not use completion checkmarks or unlocked states as decoration.
+Each map node shows its laboratory number. These labels identify modules, not
+student progress or availability gates. All seven labs are accessible; Lab 5
+presents recorded PCA/SVM runs, Lab 6 includes recorded detection and actual
+custom-model training/evaluation results, and Lab 7 combines live classical
+segmentation with saved semantic predictions. No completion state is saved.
 
 ## Laboratory Learning Content
 
@@ -126,18 +125,25 @@ live in `frontend/src/assets/learning/`.
 The lab browser has a vertical winding seven-lab map on the
 left and selected-lab information on the right. The information panel stays
 visible while scrolling on wider screens and includes saved sample outputs from
-the lab algorithms. On smaller screens, a compact preview with a static thumbnail opens immediately
-below the selected node, pushing later nodes down and adjusting the connecting path.
-Selection preserves the node’s viewport position. An outlined “Next preview” button
-advances the same selection, wrapping from Lab 7 to Lab 1 without opening a lab. Tighter stops are grouped into
-Foundations, Features & recognition, and Detection & segmentation. Group names use the locally bundled Gaegu font in the open
-lower corner of each group (below the last node on mobile), with varied static rotations and light warm-gray lettering at 85% opacity. Group spacing and handwritten captions are supported by curved dashed separators between groups: 1.3 px strokes at 85% opacity with the original dash spacing; there is no top divider.
-Highlighted path segments use muted sage to complement the pale hovered node. The selected
-label uses stronger weight and an underline. Preview text reserves the largest
-content footprint and previews share a 4:3 stage, keeping panel dimensions
-stable as lab content fades in. Labs 4–5 use evenly padded natural-ratio image
-cards; Lab 6 fills its slider with identical centered crops on both sides; reduced-motion mode omits the fade. Continue validating readability, navigation, responsive behavior, and
-contrast as the application evolves. Product scope remains governed by
+the lab algorithms. On smaller screens, the preview opens immediately below the selected node,
+pushing later nodes down and adjusting the connecting path. Selection preserves
+the node’s viewport position. An outlined “Next preview” button advances the
+selection, wrapping from Lab 7 to Lab 1 without opening a lab.
+
+The groups are Foundations, Features & recognition, and Detection & segmentation.
+Their handwritten Gaegu headings use opaque `ink-soft` for readable contrast;
+static rotations and curved dashed separators retain the informal map treatment.
+Highlighted path segments use `accent-path`; the selected lab label uses stronger
+weight and an underline.
+
+All seven previews share a bordered 4:3 frame with contained imagery on desktop
+and mobile. Labs 1–3 and 7 show a fixed vertical 50/50 split, original left and
+computed output right, without slider controls or visible image captions. Lab 4
+shows computed SIFT matches. Labs 5 and 6 use homepage-only concept illustrations;
+the existing description and accessible image text distinguish them from actual
+results. These illustrations do not become lab inputs. Hidden measurement copy
+reserves the largest heading/description footprint to keep selection stable.
+Reduced-motion mode omits the preview fade. Product scope remains governed by
 [PRD.md](PRD.md).
 
 

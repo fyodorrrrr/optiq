@@ -2,7 +2,7 @@
 
 The homepage displays these assets without calling the backend. Labs 1–4/7
 use recorded real service outputs; Labs 5–6 use approved mascot concept
-illustrations, explicitly labeled **illustration**. They are not model results
+illustrations, identified as artwork in the existing preview descriptions. They are not model results
 and are never used as default lab inputs. Lab 6's illustrative “glass” label
 does not imply the detector recognizes the mascot.
 
@@ -23,7 +23,7 @@ Prepare the local LFW dataset and YOLO11n assets first, following the existing
 Lab 5 and Lab 6 setup documentation. The exporter does not download assets.
 Lab 6 uses the Ultralytics bus demonstration image; its source URL is recorded
 in the provenance file. Other sources are generated Optiq samples or LFW PCA
-components. Keep these captions and provenance aligned when replacing previews.
+components. Keep the image descriptions and provenance aligned when replacing previews.
 
 ## Default mascot examples
 
