@@ -46,7 +46,7 @@ function LearningVisual({ kind }: { kind: (typeof cards)[number]['id'] }) {
         <rect className="learning-diagram-tape" x="132" y="4" width="56" height="20" />
         </g></g>
         <g className="learning-cursor-motion"><g className="learning-pick-cursor" transform="translate(262 168)">
-          <path d="M2 2v27l7-7 6 12 5-2-6-12h12Z" />
+          <g className="learning-cursor-press"><path d="M2 2v27l7-7 6 12 5-2-6-12h12Z" /></g>
         </g></g>
         <path className="learning-pick-strokes" pathLength="1" d="M291 161l5-9m3 18 9-5" />
       </>}
@@ -108,11 +108,10 @@ export default function LearningCards() {
   return <section ref={section} className="learning-cards-section" data-paused={paused} aria-labelledby="learning-cards-title">
     <div className="learning-cards-heading">
       <h2 id="learning-cards-title">How Optiq works</h2>
-      <button className="learning-motion-control" type="button" onClick={() => setPaused(value => !value)}>
+      <button className="learning-motion-control" type="button" aria-label={paused ? 'Resume animations' : 'Pause animations'} title={paused ? 'Resume animations' : 'Pause animations'} onClick={() => setPaused(value => !value)}>
         <svg viewBox="0 0 20 20" aria-hidden="true">{paused
           ? <path d="m6 3 10 7-10 7Z" />
           : <><rect x="5" y="3" width="3" height="14" /><rect x="12" y="3" width="3" height="14" /></>}</svg>
-        {paused ? 'Resume animations' : 'Pause animations'}
       </button>
     </div>
     <div className="learning-cards">
