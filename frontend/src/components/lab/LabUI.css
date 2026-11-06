@@ -4,10 +4,10 @@
   padding: 32px 40px;
 }
 
-.lab-introduction { display: flex; justify-content: space-between; align-items: end; gap: 28px; margin: 24px 0 16px; }
+.lab-introduction { display: flex; flex-direction: column; gap: 24px; margin: 24px 0 32px; }
 .lab-introduction h1 { font-size: clamp(28px, 3vw, 38px); line-height: 1.2; letter-spacing: -.03em; max-width: 25ch; margin-bottom: 12px; }
 .lab-introduction p { max-width: 65ch; color: var(--ink-soft); font-size: 15px; line-height: 1.7; }
-.lab-source-actions { display: flex; gap: 8px; flex-wrap: wrap; flex-shrink: 0; max-width: 410px; justify-content: end; }
+.lab-source-actions { display: flex; gap: 8px; flex-wrap: wrap; flex-shrink: 0; max-width: 410px; justify-content: start; }
 .lab-button { border: 1px solid var(--control-border); background: var(--paper-deep); border-radius: var(--radius-control); color: var(--ink); padding: 11px 14px; font-size: 14px; }
 .lab-button:hover { background: var(--accent-soft); }
 .lab-sample-picker { position: relative; }
@@ -24,18 +24,18 @@
 .lab-workspace-grid { display: grid; grid-template-columns: 180px minmax(0, 1fr); }
 .lab-tool-sidebar { min-width: 0; padding: 12px; border-right: 1px solid var(--line); }
 .lab-tool-sidebar h2 { font-size: 14px; font-weight: 600; letter-spacing: normal; padding: 0 10px; margin: 4px 0 18px; }
-.lab-tools { display: flex; flex-direction: column; gap: 6px; }
-.lab-tools button { display: flex; align-items: center; gap: 10px; padding: 12px 10px; border: 0; border-radius: var(--radius-control); background: transparent; color: var(--ink-soft); white-space: normal; overflow-wrap: anywhere; min-width: 0; font-size: 14px; text-align: left; }
+.lab-tools { display: flex; flex-direction: column; gap: 4px; }
+.lab-tools button { display: flex; align-items: center; gap: 10px; padding: 10px; min-height: 44px; border: 0; border-radius: var(--radius-control); background: transparent; color: var(--ink-soft); white-space: normal; overflow-wrap: anywhere; min-width: 0; font-size: 14px; text-align: left; }
 .lab-tool-icon { width: 18px; height: 18px; flex-shrink: 0; }
 .lab-tools button[aria-pressed='true'] { color: var(--accent-deep); background: var(--accent-soft); font-weight: 650; }
 .lab-tools button:hover { color: var(--accent-deep); }
 .lab-tools button:focus-visible { outline-offset: -4px; }
-.lab-workspace-body { display: grid; grid-template-columns: minmax(0, 1fr) 260px; grid-template-areas: 'viewers controls'; min-width: 0; }
+.lab-workspace-body { display: grid; grid-template-columns: 250px minmax(0, 1fr); grid-template-areas: 'controls viewers'; min-width: 0; }
 .lab-viewers { grid-area: viewers; padding: 22px; min-width: 0; scroll-margin-top: 24px; }
 .lab-viewers:focus-visible { outline: 3px solid var(--focus); outline-offset: -3px; }
 .lab-image-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .lab-image-panel { min-width: 0; margin: 0; }
-.lab-image-panel > figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; justify-content: space-between; font-size: 14px; line-height: 1.5; min-height: 3em; font-weight: 600; margin-bottom: 12px; }
+.lab-image-panel > figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; justify-content: space-between; font-size: 14px; line-height: 1.5; min-height: 1.5em; font-weight: 600; margin-bottom: 10px; }
 .lab-image-stage { position: relative; height: auto; aspect-ratio: 4 / 3; max-height: 320px; background: var(--paper); border-radius: var(--radius-sm); display: flex; justify-content: center; align-items: center; padding: 12px; }
 .lab-image-stage img { width: 100%; height: 100%; object-fit: contain; }
 .lab-selection { position: absolute; top: 12px; left: 12px; width: calc(100% - 24px); height: calc(100% - 24px); pointer-events: none; overflow: visible; }
@@ -52,7 +52,7 @@
 .lab-metadata-help p { color: var(--ink-soft); margin: 8px 0 0; }
 .lab-metadata dt { color: var(--ink-soft); margin-bottom: 3px; }
 .lab-metadata dd { margin: 0; overflow-wrap: anywhere; }
-.lab-controls { grid-area: controls; background: var(--paper); border-left: 1px solid var(--line); padding: 24px; }
+.lab-controls { grid-area: controls; background: var(--paper-deep); border-right: 1px solid var(--line); padding: 24px; }
 .lab-controls h2 { font-size: 19px; margin: 0 0 10px; }
 .lab-controls h3 { font-size: 14px; margin: 22px 0 8px; font-weight: 600; }
 .lab-controls p { font-size: 14px; line-height: 1.65; color: var(--ink-soft); }
@@ -90,7 +90,7 @@
   .lab-source-actions { max-width: none; justify-content: start; }
   .lab-sample-options { right: auto; left: 0; }
   .lab-workspace-body { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'controls' 'viewers'; }
-  .lab-controls { border-left: 0; border-bottom: 1px solid var(--line); }
+  .lab-controls { border-right: 0; border-bottom: 1px solid var(--line); }
   .lab-main { padding: 28px 24px; }
   .lab-workspace-grid { grid-template-columns: minmax(0, 1fr); }
   .lab-tool-sidebar { border-right: 0; border-bottom: 1px solid var(--line); }
@@ -102,6 +102,7 @@
 }
 
 @media (max-width: 640px) {
+  .lab-introduction { gap: 16px; margin-bottom: 24px; }
   .lab-source-actions { position: relative; }
   .lab-sample-picker { position: static; }
   .lab-main { padding: 24px 16px; }
@@ -119,7 +120,6 @@
 }
 
 /* Shared workspace variations change capacity, not visual identity. */
-.lab-shell-wide .lab-main { max-width: 1520px; }
 .lab-shell .lab-source-actions { max-width: none; }
 .lab-shell .lab-primary { display: inline-flex; align-items: center; justify-content: center; gap: 14px; border: 1px solid var(--accent); background: var(--accent); color: var(--paper-deep); padding: 12px 18px; border-radius: var(--radius-control); font-size: 14px; font-weight: 600; line-height: 1.5; text-decoration: none; }
 .lab-shell .lab-primary:hover { background: var(--accent-deep); }
@@ -319,7 +319,6 @@
 
 /* Match the shared lab header to the workspace container at every breakpoint. */
 .lab-page .site-header { max-width: 1360px; padding-inline: 40px; }
-.lab-shell-wide .site-header { max-width: 1520px; }
 @media (max-width: 1359px) {
   .lab-page .site-header { padding-inline: 24px; }
 }

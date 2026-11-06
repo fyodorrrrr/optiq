@@ -14,6 +14,6 @@ export function resultSummary(original: Frame, output: ExperimentResult) {
       ? 'The original is already grayscale, so the image is unchanged.'
       : 'Converted from 3 color channels to 1 grayscale channel. Width and height are unchanged.'
     case 'edit': return `Changed pixel (${output.pixel?.x}, ${output.pixel?.y}). Dimensions and neighboring pixels are unchanged; compare the magnified views below.`
-    case 'inspect': return `Inspected pixel (${output.pixel?.x}, ${output.pixel?.y}). The image is unchanged; its values appear in the magnified views below.`
+    case 'inspect': return `Inspected pixel (${output.pixel?.x}, ${output.pixel?.y}). The image is unchanged; see its channel values and magnified neighborhood.`
   }
 }

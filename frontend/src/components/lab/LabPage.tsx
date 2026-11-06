@@ -19,7 +19,7 @@ export default function LabPage({ labNumber, title, description, actions, inputN
     <main className="lab-main" id={mainId}>
       <section className="lab-introduction" aria-labelledby={`lab-${labNumber}-title`}>
         <div><h1 id={`lab-${labNumber}-title`}>{title}</h1><p>{description}</p></div>
-        <div className="lab-source-actions">{actions}</div>
+        {actions && <div className="lab-source-actions">{actions}</div>}
       </section>
       {inputNote && <p className="lab-input-note">{inputNote}</p>}
       {children}
