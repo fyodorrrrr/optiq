@@ -18,9 +18,12 @@ below reflect the working application.
   --line: #e5e5e2;
   --line-strong: #d4d4d0;
   --surface-muted: #e4e4e0;
-  --accent: #365c49;
-  --accent-deep: #254333;
-  --accent-soft: #e7eee7;
+  --accent: #087f46;
+  --accent-deep: #075a34;
+  --accent-soft: #e1f5e8;
+  --accent-path: #70bd8d;
+  --selection: #bceace;
+  --mascot-filter: saturate(2.15) brightness(1.04);
   --control-border: #8b948a;
   --error-border: #b75d4c;
   --error-surface: #fff5f1;
@@ -38,11 +41,18 @@ Use `paper` for the application background and `paper-deep` for panels and image
 
 Use 8px corners for standard controls, 12px for panels, and 4px for compact elements. Reserve pill corners for badges and tags that benefit from them. Specialized node geometry is a deliberate map treatment rather than a general component-radius convention.
 
-Keep these tokens consistent unless testing justifies a change. Forest green
-identifies primary actions and selected tools; pale sage supports softer
+Keep these tokens consistent unless testing justifies a change. The user selected
+the more saturated emerald preview on 2026-11-06. Emerald green
+identifies primary actions and selected tools; pale mint supports softer
 highlights. Use the dedicated control-border, focus, and error tokens instead
 of relying on subtle neutral dividers for interactive states. The values above
 come from `frontend/src/index.css`.
+
+The hero mascot, wordmark image and learning-card illustrations use the shared
+`mascot-filter` to match the approved emerald preview. The browser-tab SVG
+embeds the original 32px mascot PNG with the equivalent saturation/brightness
+treatment. Original PNG/Piskel sources remain unchanged and editable; experiment
+outputs and illustrative algorithm color palettes do not receive this filter.
 
 ## Surface Principles
 
@@ -100,7 +110,8 @@ The homepage has a pixel character, introduction, and links to the labs,
 followed by three **How learning works** cards and a two-column lab browser.
 The shared wordmark replaces its initial “o” with the mascot's pixel-art body,
 top stem, and blue glass, exported from `frontend/src/assets/learning/logo.piskel`.
-The browser-tab favicon uses the same artwork on a transparent 32 × 32 canvas.
+The browser-tab favicon uses the same artwork on a transparent 32 × 32 canvas,
+with the shared emerald color treatment applied by its SVG filter.
 Homepage sections use generous vertical whitespace
 instead of horizontal divider rules; laboratory dividers remain separate.
 Each learning card contains only a tagline, a short supporting sentence, and

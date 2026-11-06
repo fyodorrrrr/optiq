@@ -36,4 +36,15 @@ alone does not update the PNG on the website.
 `logo.png` exports the first frame, cropping transparent margins to 22 × 26.
 The shared `Wordmark.tsx` uses that PNG as the “o” on the homepage and lab pages.
 The same artwork is centered without resampling in `public/favicon.png` on a
-transparent 32 × 32 canvas for browser tabs, linked from `index.html`.
+transparent 32 × 32 canvas. `public/favicon.svg`, linked from `index.html`, embeds
+that PNG with the emerald color treatment used for the displayed mascot.
+
+## Emerald display palette
+
+The user selected the saturated emerald preview on 2026-11-06. The hero,
+wordmark and learning-card artwork receive the shared `--mascot-filter`
+(`saturate(2.15) brightness(1.04)`) in `src/index.css`; original PNG and Piskel
+files retain their editable source colors. The favicon SVG applies the equivalent
+saturation and brightness filter to the embedded original PNG. This is the same
+whole-artwork treatment approved in the preview, not a selective green-pixel edit.
+When changing the display treatment, keep the CSS token and favicon filter in sync.

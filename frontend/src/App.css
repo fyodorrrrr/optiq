@@ -680,7 +680,7 @@ h2 {
 
 .lab-browser .map-trail-highlight { opacity: 0; transition: opacity 160ms ease-out; }
 .lab-browser .map-trail-highlight[data-active='true'] { opacity: 1; }
-.lab-browser .map-trail-highlight path { stroke: #a2b5a0; }
+.lab-browser .map-trail-highlight path { stroke: var(--accent-path); }
 .lab-browser .node-item[data-engaged='true'] .face { transform: translateY(-4px); background: var(--accent-soft); }
 .lab-browser .node-item[aria-pressed='true'][data-engaged='true'] .face { background: var(--accent-deep); }
 .lab-browser .node-item:active .face { transform: translateY(2px); }
