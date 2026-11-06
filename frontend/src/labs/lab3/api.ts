@@ -1,7 +1,7 @@
 import { imageRequest } from '../../api/images'
 import type { ImageFrame } from '../../api/images'
 
-export type Sample = 'low-contrast' | 'uneven' | 'color'
+export type Sample = 'mascot' | 'low-contrast' | 'uneven' | 'color'
 export interface ContrastSettings {
   mode: 'grayscale' | 'color'
   clip_limit: number

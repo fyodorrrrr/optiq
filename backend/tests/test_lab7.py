@@ -46,6 +46,19 @@ class Lab7Tests(unittest.TestCase):
         self.assertEqual(labels.shape,image.shape[:2])
         self.assertIn(0,np.unique(labels))
 
+    def test_watershed_overlay_omits_automatic_canvas_rim_but_keeps_internal_boundaries(self):
+        image, _ = lab7.generated('touching')
+        result = lab7.execute(encoded(image), lab7.Settings(method='region'))
+        output = decoded(result.views[1].frame)
+        source = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
+        np.testing.assert_array_equal(output[0], source[0])
+        np.testing.assert_array_equal(output[-1], source[-1])
+        np.testing.assert_array_equal(output[:, 0], source[:, 0])
+        np.testing.assert_array_equal(output[:, -1], source[:, -1])
+        self.assertTrue(np.any(np.all(output[1:-1, 1:-1] == (30, 30, 230), axis=2)))
+        labels = cv2.imdecode(np.frombuffer(base64.b64decode(result.labels_png.split(',')[1]), np.uint8), cv2.IMREAD_UNCHANGED)
+        self.assertTrue(np.all(labels[0] == 0))  # Raw watershed boundary IDs are preserved.
+
     def test_edges_produce_filled_regions_and_blank_inputs(self):
         image=np.zeros((100,100),np.uint8)
         cv2.rectangle(image,(20,20),(80,80),220,-1)

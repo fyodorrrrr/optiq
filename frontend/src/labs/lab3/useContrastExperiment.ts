@@ -26,8 +26,8 @@ export default function useContrastExperiment() {
   useEffect(() => {
     const controller = new AbortController()
     active.current = controller
-    getSample('low-contrast', controller.signal).then(frame => {
-      if (!controller.signal.aborted) accept(frame, frameFile(frame, 'optiq-low-contrast.png'), 'Low contrast · generated sample')
+    getSample('mascot', controller.signal).then(frame => {
+      if (!controller.signal.aborted) accept(frame, frameFile(frame, 'optiq-mascot-low-contrast.png'), 'Optiq mascot · low-contrast sample')
     }).catch(error => {
       if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not load the sample.')
     }).finally(() => {
@@ -59,8 +59,8 @@ export default function useContrastExperiment() {
     const controller = begin(true)
     try {
       const frame = await getSample(kind, controller.signal)
-      const label = { 'low-contrast': 'Low contrast', uneven: 'Uneven lighting · seed 42', color: 'Color study' }[kind]
-      if (!controller.signal.aborted) accept(frame, frameFile(frame, `optiq-${kind}.png`), `${label} · generated sample`)
+      const label = { mascot: 'Optiq mascot · low-contrast sample', 'low-contrast': 'Low contrast · generated sample', uneven: 'Uneven lighting · seed 42 · generated sample', color: 'Color study · generated sample' }[kind]
+      if (!controller.signal.aborted) accept(frame, frameFile(frame, `optiq-${kind}.png`), label)
     } catch (error) {
       if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not load the sample.')
     } finally {
@@ -91,7 +91,7 @@ export default function useContrastExperiment() {
 
   function resetBaseline() {
     clear(false)
-    setDraft(baseline)
+    setDraft({ ...baseline, mode: source?.frame.channels === 3 ? 'color' : 'grayscale' })
   }
 
   async function run(onInvalid?: (field: string) => void) {
@@ -119,7 +119,8 @@ export default function useContrastExperiment() {
     }
   }
 
-  const canReset = (Object.keys(baseline) as (keyof Draft)[]).some(key => draft[key] !== baseline[key])
+  const defaults = { ...baseline, mode: source?.frame.channels === 3 ? 'color' : 'grayscale' }
+  const canReset = (Object.keys(defaults) as (keyof Draft)[]).some(key => draft[key] !== defaults[key])
 
   const resultIsPrevious = result !== null && (Object.keys(baseline) as (keyof Draft)[]).some(key =>
     result.parameters.linear_method === 'stretch' && draft.linear_method === 'stretch' && ['alpha', 'beta'].includes(key) ? false

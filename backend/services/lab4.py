@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 from schemas.lab4 import Capabilities, Capability, FeatureComparison, FeatureResult, FeatureSettings, SamplePair
-from services.images import ImageError, decode_image, frame
+from services.images import ImageError, decode_image, frame, mascot_image
 
 ALGORITHMS = [("surf", "SURF"), ("sift", "SIFT"), ("orb", "ORB")]
 from services.runtime_profile import PROFILE
@@ -113,6 +113,14 @@ def execute(first_content, second_content, settings):
 
 
 def sample_pair(kind):
+    if kind == 'mascot':
+        image, notes = mascot_image('compare')
+        height, width = image.shape[:2]
+        transform = cv2.getRotationMatrix2D((width / 2, height / 2), 25, .9)
+        target = cv2.warpAffine(image, transform, (width, height), flags=cv2.INTER_LINEAR, borderValue=(245, 247, 247))
+        return SamplePair(first=frame(image, notes), second=frame(target, [*notes, '25° rotation, scale 0.9, linear resampling.']),
+                          notes=[*notes, 'Second mascot view: 25° rotation, scale 0.9, linear resampling.',
+                                 'Candidate matches are not automatically scored against the known transform.'])
     image = np.full((480, 640), 225, np.uint8)
     rng = np.random.default_rng(42)
     for index in range(40):

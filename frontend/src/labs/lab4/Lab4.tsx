@@ -44,6 +44,7 @@ export default function Lab4() {
     actions={<><ImageUploadButton busy={lab.busy} label="Upload image A" onUpload={file => lab.upload('first', file)} />
       <ImageUploadButton busy={lab.busy} label="Upload image B" onUpload={file => lab.upload('second', file)} />
       <SamplePicker disabled={lab.busy} onSelect={lab.sample} options={[
+        { value: 'mascot', label: 'Optiq mascot pair', description: 'The mascot rotated 25° and scaled to 90%.' },
         { value: 'rotated', label: 'Rotated pair', description: 'The same target rotated 25° and scaled to 90%.' },
         { value: 'scaled', label: 'Scaled pair', description: 'The same target reduced to 65%.' },
       ]} /></>}>

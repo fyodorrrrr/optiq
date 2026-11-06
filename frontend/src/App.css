@@ -747,7 +747,11 @@ h2 {
 .lab-preview-static-stage { display: flex; align-items: center; aspect-ratio: 4 / 3; }
 .lab-preview-static-card { width: 100%; padding: 12px; border-radius: 4px; background: var(--paper-deep); }
 .lab-browser .lab-preview-static-card img { width: 100%; height: auto; aspect-ratio: auto; border-radius: 0; }
-.lab-browser .lab-preview-figure[data-lab='6'] .preview-comparison img { object-fit: cover; object-position: center; }
+.lab-browser .lab-preview-illustration { padding: 0; background: var(--paper); overflow: hidden; }
+.lab-browser .lab-preview-illustration img { aspect-ratio: 4 / 3; }
+.lab-browser .preview-comparison,
+.lab-browser .lab-preview-static-card,
+.lab-browser .lab-preview-thumbnail { border: 1px solid var(--line-strong); }
 @keyframes map-preview-in { from { opacity: .55; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .lab-preview-content { animation: none; } }
 
@@ -854,56 +858,17 @@ h2 {
 .preview-comparison .comparison-original {
   position: absolute;
   inset: 0;
-  clip-path: inset(0 calc(100% - var(--split)) 0 0);
+  clip-path: inset(0 50% 0 0);
 }
 .comparison-divider {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: var(--split);
-  width: 2px;
-  background: white;
-  transform: translateX(-50%);
+  left: 50%;
+  width: 1px;
+  background: var(--accent);
   pointer-events: none;
 }
-.comparison-divider span {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: white;
-  border: 1px solid var(--line-strong);
-  color: var(--ink);
-  font-size: 22px;
-}
-.preview-comparison input {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  opacity: 0;
-  cursor: ew-resize;
-}
-.preview-comparison:focus-within {
-  outline: 3px solid var(--accent);
-  outline-offset: 3px;
-}
-
-/* Keep the image boundary and handle synchronized with pointer updates. */
-.comparison-divider span { transition: transform 160ms ease-out; }
-.preview-comparison[data-dragging='true'] .comparison-divider span { transform: translate(-50%, -50%) scale(1.08); }
-.preview-comparison input { touch-action: pan-y; }
-@media (prefers-reduced-motion: reduce) {
-  .preview-comparison .comparison-divider span { transition: none; }
-  .preview-comparison[data-dragging='true'] .comparison-divider span { transform: translate(-50%, -50%); }
-}
-
 /* Keep navigation targets generous without changing their visual hierarchy. */
 .home-header nav a, .intro-links .quiet-link {
   display: inline-flex;

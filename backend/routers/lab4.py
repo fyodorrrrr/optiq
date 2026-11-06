@@ -18,7 +18,7 @@ async def available_algorithms():
 
 
 @router.get("/sample", response_model=SamplePair)
-async def sample(kind: Literal["rotated", "scaled"] = "rotated"):
+async def sample(kind: Literal["mascot", "rotated", "scaled"] = "rotated"):
     return await process(sample_pair, kind)
 
 

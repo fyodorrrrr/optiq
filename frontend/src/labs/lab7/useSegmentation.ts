@@ -6,23 +6,25 @@ import type { Method, Result, Sample, Settings } from './api'
 const baseline = { invert: false, adaptive_block: '31', adaptive_c: '5', seed_x: '170', seed_y: '180', tolerance: '20', watershed_fraction: '0.7', canny_low: '60', canny_high: '150', closing_size: '3', min_area: '50', opacity: '0.5' }
 export type Draft = typeof baseline
 export default function useSegmentation() {
-  const [source, setSource] = useState<{ file: File; frame: ImageFrame; name: string } | null>(null)
+  const [source, setSource] = useState<{ file: File; frame: ImageFrame; name: string; mascot: boolean } | null>(null)
   const [method, setMethod] = useState<Method>('threshold')
   const [draft, setDraft] = useState(baseline)
   const [result, setResult] = useState<Result | null>(null)
   const [busy, setBusy] = useState(true)
   const [error, setError] = useState('')
   const active = useRef<AbortController | null>(null)
-  function accept(frame: ImageFrame, file: File, name: string) {
-    setSource({ frame, file, name })
+  function accept(frame: ImageFrame, file: File, name: string, mascot?: boolean) {
+    setSource({ frame, file, name, mascot: mascot === true })
     setResult(null)
-    setDraft(previous => ({ ...previous, seed_x: String(Math.min(Number(previous.seed_x) || 0, frame.width - 1)), seed_y: String(Math.min(Number(previous.seed_y) || 0, frame.height - 1)) }))
+    setDraft(previous => ({ ...previous, ...(mascot === undefined ? {} : { invert: mascot }),
+      seed_x: String(mascot ? Math.floor(frame.width / 2) : Math.min(mascot === false ? 170 : Number(previous.seed_x) || 0, frame.width - 1)),
+      seed_y: String(mascot ? Math.floor(frame.height / 2) : Math.min(mascot === false ? 180 : Number(previous.seed_y) || 0, frame.height - 1)) }))
   }
   useEffect(() => {
     const controller = new AbortController()
     active.current = controller
-    getSample('touching', controller.signal).then(frame => {
-      if (!controller.signal.aborted) { accept(frame, frameFile(frame, 'touching.png'), 'Touching objects') }
+    getSample('mascot', controller.signal).then(frame => {
+      if (!controller.signal.aborted) { accept(frame, frameFile(frame, 'mascot.png'), 'Optiq mascot · sample', true) }
     }).catch(error => { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not load the sample.') })
       .finally(() => { if (!controller.signal.aborted) setBusy(false) })
     return () => active.current?.abort()
@@ -40,7 +42,7 @@ export default function useSegmentation() {
     const controller = begin()
     try {
       const frame = await getSample(kind, controller.signal)
-      if (!controller.signal.aborted) accept(frame, frameFile(frame, `${kind}.png`), { touching: 'Touching objects', uneven: 'Uneven lighting', contours: 'Closed contours', scene: 'Natural scene · Ultralytics bus sample' }[kind])
+      if (!controller.signal.aborted) accept(frame, frameFile(frame, `${kind}.png`), { mascot: 'Optiq mascot · sample', touching: 'Touching objects', uneven: 'Uneven lighting', contours: 'Closed contours', scene: 'Natural scene · Ultralytics bus sample' }[kind], kind === 'mascot')
     } catch (error) { if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not load this sample.') }
     finally { if (!controller.signal.aborted) setBusy(false) }
   }
@@ -59,10 +61,12 @@ export default function useSegmentation() {
     cancel()
     setResult(null)
     setMethod(value)
-    if (value !== 'semantic' && !source) void sample('touching')
+    if (value !== 'semantic' && !source) void sample('mascot')
   }
   function seed(x: number, y: number) { cancel(); setDraft(previous => ({ ...previous, seed_x: String(x), seed_y: String(y) })) }
-  const defaults = { ...baseline, seed_x: String(Math.min(170, (source?.frame.width ?? 171) - 1)), seed_y: String(Math.min(180, (source?.frame.height ?? 181) - 1)) }
+  const defaults = { ...baseline, invert: source?.mascot ?? false,
+    seed_x: String(source?.mascot ? Math.floor(source.frame.width / 2) : Math.min(170, (source?.frame.width ?? 171) - 1)),
+    seed_y: String(source?.mascot ? Math.floor(source.frame.height / 2) : Math.min(180, (source?.frame.height ?? 181) - 1)) }
   const canReset = (Object.keys(defaults) as (keyof Draft)[]).some(key => draft[key] !== defaults[key])
   function reset() { cancel(); setDraft(defaults) }
   function settings(): Settings {

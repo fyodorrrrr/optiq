@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "start": {
+      "source": "Optiq learning-card mascot scene: start",
+      "source_sha256": "28107b437a9261df207fd00339a841a39032942bb8aa460e4f6d8e31d07b3c5e",
+      "crop": [
+        15,
+        18,
+        146,
+        112
+      ],
+      "scale": 2,
+      "interpolation": "nearest neighbor; no added detail",
+      "saturation": 2.15,
+      "brightness": 1.04,
+      "background": "#f7f7f5",
+      "border": null,
+      "width": 480,
+      "height": 360,
+      "file": "mascot.png",
+      "sample_sha256": "db938cd7efa23a6816017a032a260515be5f284dcf3ebabc2451a850d59369a1"
+    },
+    "compare": {
+      "source": "Optiq learning-card mascot scene: compare",
+      "source_sha256": "fb94530efad6bf95cdea1620d8e205d0eeecb53ce33be3825c2ba8b8741da2e1",
+      "crop": [
+        13,
+        25,
+        146,
+        108
+      ],
+      "scale": 2,
+      "interpolation": "nearest neighbor; no added detail",
+      "saturation": 2.15,
+      "brightness": 1.04,
+      "background": "#f7f7f5",
+      "border": null,
+      "width": 480,
+      "height": 360,
+      "file": "mascot-compare.png",
+      "sample_sha256": "f64427e88d4b8f1a082f2ed2cbb71cee8b7ec68012dc837ec43ea9a4729af090"
+    },
+    "understand": {
+      "source": "Optiq learning-card mascot scene: understand",
+      "source_sha256": "10e9aaa01242d8a5e588fd63aa6f3b45bdf17e6075ec93b5bdaadadd89e283fc",
+      "crop": [
+        18,
+        26,
+        140,
+        109
+      ],
+      "scale": 2,
+      "interpolation": "nearest neighbor; no added detail",
+      "saturation": 2.15,
+      "brightness": 1.04,
+      "background": "#f7f7f5",
+      "border": null,
+      "width": 480,
+      "height": 360,
+      "file": "mascot-understand.png",
+      "sample_sha256": "97bb313409047ca996aa5ac7d0c4eeb1bc696f0728e15174dc7536295504d005"
+    }
+  }
+}

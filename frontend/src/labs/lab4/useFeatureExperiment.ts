@@ -30,8 +30,8 @@ export default function useFeatureExperiment() {
   useEffect(() => {
     const controller = new AbortController()
     active.current = controller
-    Promise.all([getCapabilities(controller.signal), getPair('rotated', controller.signal)]).then(([caps, pair]) => {
-      if (!controller.signal.aborted) { setCapabilities(caps); acceptPair(pair, 'Rotated sample') }
+    Promise.all([getCapabilities(controller.signal), getPair('mascot', controller.signal)]).then(([caps, pair]) => {
+      if (!controller.signal.aborted) { setCapabilities(caps); acceptPair(pair, 'Optiq mascot pair') }
     }).catch(error => {
       if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not load the image pair.')
     }).finally(() => { if (!controller.signal.aborted) setBusy(false) })
@@ -55,7 +55,7 @@ export default function useFeatureExperiment() {
     const controller = begin(true)
     try {
       const [caps, pair] = await Promise.all([getCapabilities(controller.signal), getPair(kind, controller.signal)])
-      if (!controller.signal.aborted) { setCapabilities(caps); acceptPair(pair, kind === 'rotated' ? 'Rotated sample' : 'Scaled sample') }
+      if (!controller.signal.aborted) { setCapabilities(caps); acceptPair(pair, kind === 'mascot' ? 'Optiq mascot pair' : kind === 'rotated' ? 'Rotated sample' : 'Scaled sample') }
     } catch (error) {
       if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not load the pair.')
     } finally { if (!controller.signal.aborted) setBusy(false) }

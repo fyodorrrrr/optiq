@@ -12,7 +12,7 @@ router = APIRouter(prefix="/api/labs/1", tags=["Lab 1"])
 
 
 @router.get("/sample", response_model=Frame)
-async def sample(kind: Literal["color", "grayscale"] = "color"):
+async def sample(kind: Literal["mascot", "color", "grayscale"] = "color"):
     return await process(sample_image, kind)
 
 

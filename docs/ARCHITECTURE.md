@@ -14,6 +14,34 @@ using one Uvicorn worker; the older Oracle templates remain as a reference. `VIT
 HTTPS; exact CORS origins authorize browser access. Templates and the current runbook live
 in [RENDER_DEPLOYMENT.md](RENDER_DEPLOYMENT.md); cloud deployment is not yet verified.
 
+## Default mascot samples
+
+Labs 1–4 and classical Lab 7 explicitly request `kind=mascot` when opened; all
+previous sample IDs remain in their dropdowns and keep their existing API
+defaults for compatibility. `services/images.mascot_image` validates the committed
+480×360 RGB mascot assets, independent of frontend files at runtime. Lab 1 uses
+the Start learning-card scene, Labs 2/4 use Compare, and Labs 3/7 use Understand.
+The optional preparation script derives these from the existing illustrations
+with the approved emerald treatment, 2× nearest-neighbor scaling and the app's
+neutral paper background. `mascot.json` records per-scene source and output
+hashes. Upscaling adds no detail. The single homepage preview border belongs
+to its UI wrapper; it is not baked into inputs or detected by the algorithms.
+
+Lab 2 converts it to grayscale; Lab 3 explicitly labels its compressed-channel
+low-contrast adaptation; Lab 4 provides a rotated/scaled pair. Classical Lab 7
+initializes inverted foreground and a centered seed for this light-background
+sample. Selecting an alternative sample restores normal foreground polarity.
+Its watershed overlay omits OpenCV's automatic outer-canvas boundary from the
+red visualization, while preserving internal boundaries and raw label IDs.
+Unrelated input/algorithm validation and shared resource admission still apply.
+
+Homepage previews for Labs 1–4/7 are offline real computations from these same sample services.
+`export_home_previews.py --labs 1 2 3 4 7` updates only those assets/provenance,
+without running PCA or detection. Labs 5–6 instead display approved, labeled
+mascot concept illustrations on the homepage; the Lab 6 “glass” box is not a
+detector result. They use separate static assets and provenance and never
+become lab inputs. The actual Labs 5–6 and semantic recordings are unchanged.
+
 ## Runtime profiles
 
 `services/runtime_profile.py` freezes `OPTIQ_PROFILE` at process startup. `full`

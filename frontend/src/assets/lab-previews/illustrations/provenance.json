@@ -1,0 +1,57 @@
+{
+  "kind": "concept illustrations; not computed experiments",
+  "generator": "built-in imagegen",
+  "approved": "2026-11-06",
+  "usage": "homepage previews only; not laboratory default inputs",
+  "references": [
+    "frontend/src/assets/learning/start.png",
+    "frontend/src/assets/learning/understand.png"
+  ],
+  "conversion": "cwebp -q 90; no resizing",
+  "images": [
+    {
+      "lab": 5,
+      "prompt": "Create ONE finished homepage preview illustration for Optiq, a playful computer vision learning app. Use the attached original mascot references only for identity and pixel-art style, not as editing targets. Landscape 4:3 composition on a flat neutral off-white background #F7F7F5, NO outer border. Authentic chunky pixel art, uniform square pixel grid like a 160x128 sprite enlarged with nearest neighbor. Crisp stepped shapes, heavy near-black #171717 outlines, solid fills only, no gradients, antialiasing, lighting, texture, shadows or realism. Preserve the original character: cute living magnifying-glass creature with a round emerald-green rim, small TOP handle/stem, pale blue glass face with two simple vertical dark eyes, tiny green arms and feet, small white square lens reflection. Rich emerald #087F46, deep green #075A34, pale blue lens, pale mint, charcoal, small mustard accents. Scene: illustrate dimensionality reduction / eigenfaces as an explicitly conceptual playful scene: mascot on LEFT holding a tiny grid of colored image pixels; a single simple chunky arrow leads to a compact 2x3 gallery on RIGHT showing grayscale variations of the mascot's own round silhouette. These are abstract illustrative patterns, not actual human faces. The miniature grayscale patterns differ in broad light/dark shading and should be simple clean pixel symbols. Connected, balanced scene with generous neutral margins; keep subject and props occupying middle 75% of canvas. No words, no numbers, no captions, no logos, no watermarks. This is a conceptual illustration, not a screenshot, not a plotted experiment. Match references' cute proportions and genuine pixel style. Do not draw a human, animal, robot or second large character.",
+      "png": {
+        "file": "lab5.png",
+        "sha256": "6b3eb9c7485dbe4dbb1beed29717cc65f5971bce73b020681a538e06abbc7b3d",
+        "size": [
+          1448,
+          1086
+        ]
+      },
+      "webp": {
+        "file": "lab5.webp",
+        "sha256": "de5d9691b8352ec614d069d3b7884db9de0c2b5108c245e88ada637ded4f199a",
+        "size": [
+          1448,
+          1086
+        ]
+      }
+    },
+    {
+      "lab": 6,
+      "prompt": "Create ONE finished homepage preview illustration for Optiq, a playful computer vision learning app. Use the attached original mascot references for exact character identity and pixel-art style, not as edit targets. Landscape 4:3 image on flat neutral off-white #F7F7F5, NO outer frame or border around canvas. Authentic chunky pixel art, uniform square pixel grid like a 160x128 sprite enlarged nearest neighbor. Heavy near-black #171717 stepped outlines, crisp square pixels, solid fills; no gradients, antialiasing, soft shadows, textures, lighting or realism. Mascot: living magnifying-glass creature, round saturated emerald-green #087F46 rim, short green stem/handle pointing UP from top of head, pale blue glass face with two simple vertical black eyes, small green arms and feet, square white lens glint. Cute proportions consistent with references, not a humanoid/robot/animal. Scene: one mascot centered in a curious playful pose, one little arm raised, inside ONE thin bright emerald rectangular OBJECT DETECTION BOX with four small square corner handles. The box encloses only the mascot with space around its feet and top stem; it must NOT touch the canvas edges or look like an outer decorative frame. Attach a small filled emerald label tab at the box TOP LEFT with the single exact lowercase word 'glass' in clear light pixel lettering. No confidence score, no numbers, no other text or props, no watermarks. Distinguish near-black mascot outline from green detection box. Leave generous neutral margins and keep whole scene occupying middle 70% of canvas. This is an illustrative detection concept, not a claim of a model prediction. Match original references' charming pixel-art identity.",
+      "png": {
+        "file": "lab6.png",
+        "sha256": "5d82319bb316abb1e82e8cb7e2255386400a83904667dac6451281acf7eaba18",
+        "size": [
+          1448,
+          1086
+        ]
+      },
+      "webp": {
+        "file": "lab6.webp",
+        "sha256": "a830136a12d91ceb20914c5942e62cd7048c177f97de994adb95303cb99e34e5",
+        "size": [
+          1448,
+          1086
+        ]
+      }
+    }
+  ],
+  "reference_sha256": {
+    "frontend/src/assets/learning/start.png": "28107b437a9261df207fd00339a841a39032942bb8aa460e4f6d8e31d07b3c5e",
+    "frontend/src/assets/learning/understand.png": "10e9aaa01242d8a5e588fd63aa6f3b45bdf17e6075ec93b5bdaadadd89e283fc"
+  }
+}

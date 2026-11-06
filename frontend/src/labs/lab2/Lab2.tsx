@@ -28,6 +28,7 @@ export default function Lab2() {
     description="Lab 2 — Edge detection. Compare Sobel and Canny on the same image."
     guideId="edge-guide" onOpenGuide={() => guide.current?.focus({ preventScroll: true })} wide
     actions={<SourceActions busy={lab.busy} onSample={lab.sample} onUpload={lab.upload} samples={[
+      { value: 'mascot', label: 'Optiq mascot', description: 'Find boundaries in the grayscale mascot.' },
       { value: 'shapes', label: 'Shapes sample', description: 'Compare crisp boundaries with different contrast.' },
       { value: 'noisy', label: 'Noisy sample', description: 'Investigate noise, smoothing, and thresholds.' },
     ]} />}>

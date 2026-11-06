@@ -1,5 +1,6 @@
 import base64
 import io
+from pathlib import Path
 
 import cv2
 import numpy as np
@@ -77,6 +78,9 @@ def frame(image, notes=None):
 
 
 def sample_image(kind):
+    if kind == 'mascot':
+        image, notes = mascot_image()
+        return frame(image, notes)
     image = np.full((480, 640, 3), (207, 224, 230), dtype=np.uint8)
     cv2.rectangle(image, (70, 65), (299, 234), (62, 82, 201), -1)
     cv2.circle(image, (435, 160), 95, (70, 178, 230), -1)
@@ -85,3 +89,16 @@ def sample_image(kind):
     if kind == "grayscale":
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     return frame(image, ["Optiq-generated geometric color study; no external image asset."])
+
+
+def mascot_image(variant='start'):
+    if variant not in {'start', 'compare', 'understand'}:
+        raise ValueError('Unknown mascot scene.')
+    name = 'mascot.png' if variant == 'start' else f'mascot-{variant}.png'
+    path = Path(__file__).resolve().parents[1] / 'assets' / name
+    if not path.is_file():
+        raise ImageError('The mascot sample is unavailable. Choose another sample or upload an image.', 503)
+    image, notes = decode_image(path.read_bytes())
+    return image, [*notes, f'Optiq learning-card mascot scene: {variant}; emerald display palette.',
+                   'Neutral paper background; presentation borders are not part of the processed input.',
+                   'Cropped transparent margins and enlarged 2× using nearest-neighbor interpolation; no added image detail.']

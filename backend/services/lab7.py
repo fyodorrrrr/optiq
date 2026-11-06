@@ -3,7 +3,7 @@ from time import perf_counter
 import cv2
 import numpy as np
 from schemas.lab7 import LegendItem, Result, Settings, View
-from services.images import ImageError, decode_image, encode_png, frame
+from services.images import ImageError, decode_image, encode_png, frame, mascot_image
 from services import lab7_semantic
 from services.runtime_profile import PROFILE
 
@@ -34,6 +34,9 @@ def generated(kind):
 
 
 def sample(kind):
+    if kind=='mascot':
+        image,notes=mascot_image('understand')
+        return frame(image,[*notes,'Use inverted foreground for the dark mascot on a light background; classical regions are not learned classes.'])
     if kind=='scene':
         path=Path(__file__).resolve().parents[1]/('assets/scene.png' if PROFILE.render_free else '.cache/lab6/bus.jpg')
         if not path.is_file():
@@ -113,9 +116,14 @@ def execute(content,settings):
         markers,seeds=watershed(bgr,binary,settings.watershed_fraction)
         display=np.where(markers>1,markers-1,0).astype(np.uint16)
         marked=overlay(bgr,display,settings.opacity)
-        marked[markers==-1]=(30,30,230)
+        boundaries=markers==-1
+        # OpenCV always marks the canvas rim as -1; it is not an object boundary.
+        # Omit that automatic frame only from the overlay, retaining raw labels.
+        boundaries[[0,-1],:]=False
+        boundaries[:,[0,-1]]=False
+        marked[boundaries]=(30,30,230)
         view('Seed-grown mask',grown,'4-connected pixels within tolerance of the original seed intensity.')
-        view('Watershed regions',marked,'Colors identify separate regions, not object classes. Red marks watershed boundaries.')
+        view('Watershed regions',marked,'Colors identify separate regions, not object classes. Red marks internal watershed boundaries; the automatic canvas rim is omitted.')
         view('Watershed markers',seeds,'Distance-transform peaks used as foreground markers.')
         raw=np.where(markers==-1,0,markers).astype(np.uint16)
         labels_png=encode_png(raw)

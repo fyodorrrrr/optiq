@@ -1,6 +1,4 @@
 import { Link } from 'react-router'
-import before6 from '../assets/lab-previews/lab-6-before.webp'
-import after6 from '../assets/lab-previews/lab-6-after.webp'
 import before7 from '../assets/lab-previews/lab-7-before.webp'
 import after7 from '../assets/lab-previews/lab-7-after.webp'
 import before3 from '../assets/lab-previews/lab-3-before.webp'
@@ -15,21 +13,21 @@ import pixels from '../assets/lab-previews/lab-1.webp'
 import edges from '../assets/lab-previews/lab-2.webp'
 import contrast from '../assets/lab-previews/lab-3.webp'
 import features from '../assets/lab-previews/lab-4.webp'
-import eigenfaces from '../assets/lab-previews/lab-5.webp'
-import detection from '../assets/lab-previews/lab-6.webp'
+import eigenfaces from '../assets/lab-previews/illustrations/lab5.webp'
+import detection from '../assets/lab-previews/illustrations/lab6.webp'
 import segmentation from '../assets/lab-previews/lab-7.webp'
 
-const previews: Record<number, { image: string; caption: string; alt: string }> = {
-  1: { image: pixels, caption: 'Color → grayscale', alt: 'The generated color-shapes sample beside its grayscale conversion.' },
-  2: { image: edges, caption: 'Canny edge detection', alt: 'The grayscale shapes sample beside its computed Canny edge map.' },
-  3: { image: contrast, caption: 'Histogram equalization', alt: 'Low-contrast and equalized samples, with their measured intensity histograms below.' },
-  4: { image: features, caption: 'SIFT feature matches', alt: 'Computed SIFT candidate matches connecting a sample pattern to its rotated version.' },
-  5: { image: eigenfaces, caption: 'The first six eigenfaces', alt: 'The first six PCA components fitted on training faces from the LFW dataset.' },
-  6: { image: detection, caption: 'Pretrained YOLO11n detections', alt: 'The bus demonstration photograph with computed pretrained object boxes and labels.' },
-  7: { image: segmentation, caption: 'Watershed regions', alt: 'Touching circles beside their computed watershed region overlay.' },
+const previews: Record<number, { image: string; caption: string; alt: string; illustration?: boolean }> = {
+  1: { image: pixels, caption: 'Mascot · color → grayscale', alt: 'The emerald Optiq mascot beside its computed grayscale conversion.' },
+  2: { image: edges, caption: 'Mascot · Canny edges', alt: 'The grayscale Optiq mascot beside its computed Canny edge map.' },
+  3: { image: contrast, caption: 'Mascot · histogram equalization', alt: 'The low-contrast mascot beside its equalized result, with measured histograms in the thumbnail.' },
+  4: { image: features, caption: 'Mascot · SIFT matches', alt: 'Computed SIFT candidate matches connecting the mascot to its rotated and scaled view.' },
+  5: { image: eigenfaces, caption: 'PCA patterns · illustration', alt: 'Concept illustration: the mascot compares colored pixels with grayscale variation patterns. These are not computed eigenfaces.', illustration: true },
+  6: { image: detection, caption: '“glass” detection · illustration', alt: 'Concept illustration: a box labeled glass surrounds the mascot. This is not a model prediction.', illustration: true },
+  7: { image: segmentation, caption: 'Mascot · watershed regions', alt: 'The Optiq mascot beside its computed watershed region overlay; colors identify regions, not learned classes.' },
 }
 
-const comparisons: Record<number, [string, string]> = { 1: [before1, after1], 2: [before2, after2], 3: [before3, after3], 6: [before6, after6], 7: [before7, after7] }
+const comparisons: Record<number, [string, string]> = { 1: [before1, after1], 2: [before2, after2], 3: [before3, after3], 7: [before7, after7] }
 
 export default function LabPreview({ lab, compact = false, onNext }: { lab: (typeof labs)[number]; compact?: boolean; onNext: () => void }) {
   const preview = previews[lab.id]
@@ -41,12 +39,11 @@ export default function LabPreview({ lab, compact = false, onNext }: { lab: (typ
       <h3 className="detail-heading" id="lab-preview-title">Lab {lab.id} · {lab.title}</h3>
     </div>
     <figure className="lab-preview-figure" data-lab={lab.id}>
-      {compact ? <img className="lab-preview-thumbnail" src={preview.image} alt={preview.alt} width="640" height="480" loading="lazy" decoding="async" /> : comparisons[lab.id]
+      {comparisons[lab.id]
         ? <PreviewComparison key={lab.id} before={comparisons[lab.id][0]} after={comparisons[lab.id][1]} description={preview.alt} />
-        : <div className="lab-preview-static-stage"><div className="lab-preview-static-card">
-          <img src={preview.image} alt={preview.alt} width="640" height={lab.id === 4 ? 240 : 350} loading="lazy" decoding="async" />
+        : compact ? <img className="lab-preview-thumbnail" src={preview.image} alt={preview.alt} width="640" height="480" loading="lazy" decoding="async" /> : <div className="lab-preview-static-stage"><div className={`lab-preview-static-card${preview.illustration ? ' lab-preview-illustration' : ''}`}>
+          <img src={preview.image} alt={preview.alt} width="640" height={preview.illustration ? 480 : 240} loading="lazy" decoding="async" />
         </div></div>}
-      <figcaption>{preview.caption}</figcaption>
     </figure>
     <div className="preview-copy-slot">
       {labs.map(item => <p className="detail-copy preview-measure" aria-hidden="true" key={item.id}>{item.description}</p>)}

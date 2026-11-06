@@ -25,8 +25,8 @@ export default function useEdgeExperiment() {
   useEffect(() => {
     const controller = new AbortController()
     active.current = controller
-    getSample('shapes', controller.signal).then(frame => {
-      if (!controller.signal.aborted) accept(frame, frameFile(frame, 'optiq-edges.png'), 'Shapes · generated sample')
+    getSample('mascot', controller.signal).then(frame => {
+      if (!controller.signal.aborted) accept(frame, frameFile(frame, 'optiq-mascot-edges.png'), 'Optiq mascot · grayscale sample')
     }).catch(error => {
       if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not load the sample.')
     }).finally(() => {
@@ -58,7 +58,7 @@ export default function useEdgeExperiment() {
     const controller = begin(true)
     try {
       const frame = await getSample(kind, controller.signal)
-      if (!controller.signal.aborted) accept(frame, frameFile(frame, `optiq-${kind}.png`), `${kind === 'noisy' ? 'Noisy shapes · seed 42' : 'Shapes'} · generated sample`)
+      if (!controller.signal.aborted) accept(frame, frameFile(frame, `optiq-${kind}.png`), kind === 'mascot' ? 'Optiq mascot · grayscale sample' : `${kind === 'noisy' ? 'Noisy shapes · seed 42' : 'Shapes'} · generated sample`)
     } catch (error) {
       if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not load the sample.')
     } finally {

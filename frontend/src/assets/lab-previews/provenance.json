@@ -1,11 +1,14 @@
 {
   "1": {
-    "source": "Optiq generated color sample",
+    "source": "Optiq start learning-card scene \u00b7 emerald pixel art on neutral paper",
     "operation": "grayscale",
-    "engine": "OpenCV 5.0.0"
+    "engine": "OpenCV 5.0.0",
+    "sample_file": "mascot.png",
+    "sample_sha256": "db938cd7efa23a6816017a032a260515be5f284dcf3ebabc2451a850d59369a1",
+    "execution": "recorded real lab computation; default mascot sample"
   },
   "2": {
-    "source": "Optiq shapes sample",
+    "source": "Optiq compare learning-card scene \u00b7 grayscale",
     "operation": "Canny",
     "settings": {
       "blur_kernel": 3,
@@ -13,14 +16,17 @@
       "low_threshold": 100,
       "high_threshold": 200
     },
-    "engine": "OpenCV 5.0.0"
+    "engine": "OpenCV 5.0.0",
+    "sample_file": "mascot-compare.png",
+    "sample_sha256": "f64427e88d4b8f1a082f2ed2cbb71cee8b7ec68012dc837ec43ea9a4729af090",
+    "execution": "recorded real lab computation; default mascot sample"
   },
   "3": {
-    "source": "Optiq low-contrast sample",
+    "source": "Optiq understand learning-card scene \u00b7 low contrast: round(0.35 \u00d7 channel + 90)",
     "operation": "Global histogram equalization",
     "histogram": "256 bins, shared maximum count scale",
     "settings": {
-      "mode": "grayscale",
+      "mode": "color",
       "clip_limit": 2.0,
       "tiles_x": 8,
       "tiles_y": 8,
@@ -28,12 +34,19 @@
       "alpha": 1.2,
       "beta": 0
     },
-    "engine": "OpenCV 5.0.0"
+    "engine": "OpenCV 5.0.0",
+    "sample_file": "mascot-understand.png",
+    "sample_sha256": "97bb313409047ca996aa5ac7d0c4eeb1bc696f0728e15174dc7536295504d005",
+    "execution": "recorded real lab computation; default mascot sample"
   },
   "4": {
     "source": [
-      "Optiq-generated feature target, seed 42; second image: 25\u00b0 rotation, scale 0.9, linear resampling.",
-      "No external sample asset; geometry is known for exploration, but matches are not automatically scored against it."
+      "EXIF orientation is not applied; coordinates follow the decoded pixel array.",
+      "Optiq learning-card mascot scene: compare; emerald display palette.",
+      "Neutral paper background; presentation borders are not part of the processed input.",
+      "Cropped transparent margins and enlarged 2\u00d7 using nearest-neighbor interpolation; no added image detail.",
+      "Second mascot view: 25\u00b0 rotation, scale 0.9, linear resampling.",
+      "Candidate matches are not automatically scored against the known transform."
     ],
     "operation": "SIFT candidate matches",
     "settings": {
@@ -43,7 +56,10 @@
       "max_features": 120,
       "max_matches": 20
     },
-    "verified_accuracy": false
+    "verified_accuracy": false,
+    "sample_file": "mascot-compare.png",
+    "sample_sha256": "f64427e88d4b8f1a082f2ed2cbb71cee8b7ec68012dc837ec43ea9a4729af090",
+    "execution": "recorded real lab computation; default mascot sample"
   },
   "5": {
     "source": "LFW prepared local dataset",
@@ -93,14 +109,14 @@
     "custom_training": "Not represented by this pretrained example"
   },
   "7": {
-    "source": "Optiq touching-object sample",
+    "source": "Optiq understand learning-card scene \u00b7 neutral paper background",
     "operation": "Watershed regions",
     "settings": {
       "method": "region",
-      "invert": false,
+      "invert": true,
       "adaptive_block": 31,
       "adaptive_c": 5,
-      "seed_x": 170,
+      "seed_x": 240,
       "seed_y": 180,
       "tolerance": 20,
       "watershed_fraction": 0.7,
@@ -110,6 +126,9 @@
       "min_area": 50,
       "opacity": 0.5
     },
-    "class_predictions": false
+    "class_predictions": false,
+    "sample_file": "mascot-understand.png",
+    "sample_sha256": "97bb313409047ca996aa5ac7d0c4eeb1bc696f0728e15174dc7536295504d005",
+    "execution": "recorded real lab computation; default mascot sample"
   }
 }
