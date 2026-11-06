@@ -127,9 +127,9 @@ actual green-channel component. Accessible descriptions distinguish these
 diagrams from live computation. No mascots, handwritten annotations or code
 snippets appear in these cards. Cards use three columns on desktop, pair copy
 and visuals on tablets, and stack on phones. The original PNG/Piskel artwork
-remains retained source material. The illustrations use slow eight-second loops
-with a brief active phase and a resting interval. They animate only in view,
-provide pause/resume, and show their static final state for reduced motion. The cursor remains visible while moving back to its start; the magnifier scales in and out from the selected point. These card animations do not fade.
+remains retained source material. The illustrations use a four-second first-card loop and eight-second comparison/inspection loops
+with their original holds. They animate only in view,
+provide an icon-only accessible pause/resume control, and show their static final state for reduced motion. The cursor presses briefly on contact, triggering a small print sway, and remains visible while moving back to its start; the magnifier scales in and out from the selected point. These card animations do not fade.
 
 The lab browser has a vertical winding seven-lab map on the
 left and selected-lab information on the right. The information panel stays

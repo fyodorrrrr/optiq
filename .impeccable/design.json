@@ -300,8 +300,8 @@
       },
       {
         "name": "notebook-card-loop",
-        "value": "8s cubic-bezier(.16, 1, .3, 1) infinite",
-        "purpose": "Visible cursor approaches and returns, print lifts, edges sweep, and magnifier scales in/out from selection; no opacity animation. Staggered by 0/400/800ms; pauses offscreen and by control; static for reduced motion."
+        "value": "First card: 4s; comparison/inspection: 8s with original holds; infinite",
+        "purpose": "Snappy visible cursor press and synchronized print sway; original slower edge sweep and magnifier scale in/out; no fades. Pauses offscreen and via accessible icon-only control; static for reduced motion."
       }
     ],
     "breakpoints": [
