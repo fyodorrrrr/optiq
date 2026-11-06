@@ -140,7 +140,7 @@ export default function LabMap() {
               Lab {lab.id}
             </span></span>
           </button>
-          {compact && selectedId === lab.id && <LabPreview lab={lab} compact onNext={showNextPreview} />}
+          {compact && selectedId === lab.id && <LabPreview lab={lab} onNext={showNextPreview} />}
           {groupEnds[lab.id] && <h3 className="map-group-heading" aria-label={groups[groupEnds[lab.id]]} data-group={groupEnds[lab.id]} data-align={lab.id === 5 ? 'right' : 'left'}>
             {(groups[groupEnds[lab.id]].includes(' & ')
               ? groups[groupEnds[lab.id]].replace(' & ', ' &|').split('|')
