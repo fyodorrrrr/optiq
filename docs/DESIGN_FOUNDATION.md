@@ -2,6 +2,9 @@
 
 ## Status and Scope
 
+The portable current design-system reference is [DESIGN.md](../DESIGN.md).
+This document retains project-specific rationale and historical references.
+
 This records the current implemented palette, radius conventions, learning-map
 treatment, and lab UI conventions. It is not a finalized brand system. Earlier
 mockups informed these choices; current availability and component descriptions
@@ -48,7 +51,7 @@ highlights. Use the dedicated control-border, focus, and error tokens instead
 of relying on subtle neutral dividers for interactive states. The values above
 come from `frontend/src/index.css`.
 
-The hero mascot, wordmark image and learning-card illustrations use the shared
+The hero mascot and wordmark image use the shared
 `mascot-filter` to match the approved emerald preview. The browser-tab SVG
 embeds the original 32px mascot PNG with the equivalent saturation/brightness
 treatment. Original PNG/Piskel sources remain unchanged and editable; experiment
@@ -85,7 +88,7 @@ input patterns in `frontend/src/components/lab/`. Lab 1 shows a static annotated
 Learning Canvas beneath the experiment; short explanations sit beside the
 visual on larger screens and below it on small screens. Examples are labeled
 illustrative. Its **How it works**, **Image details**, and **Run details** actions
-use the shared side drawer. Other labs currently retain `LabGuide` disclosures.
+use the shared side drawer. Other labs use `LabGuide`, which wraps the same Learning Canvas and details pattern.
 Keep specialized experiment state, algorithms, and teaching visuals per lab.
 
 ## Intentionally Open
@@ -106,26 +109,31 @@ That directory is ignored by Git and is not required in a fresh checkout;
 the durable decisions are recorded here.
 
 The homepage has a pixel character, introduction, and links to the labs,
-followed by three **How learning works** cards and a two-column lab browser.
+followed by three **How Optiq works** cards and a two-column lab browser.
 The shared wordmark replaces its initial “o” with the mascot's pixel-art body,
 top stem, and blue glass, exported from `frontend/src/assets/learning/logo.piskel`.
 The browser-tab favicon uses the same artwork on a transparent 32 × 32 canvas,
 with the shared emerald color treatment applied by its SVG filter.
 Homepage sections use generous vertical whitespace
 instead of horizontal divider rules; laboratory dividers remain separate.
-Each learning card contains only a tagline, a short supporting sentence, and
-a static pixel-art illustration of the existing magnifying-glass mascot
-acting out the tagline. The cards describe starting with an input,
-experimenting/comparing, and connecting results to explanations/Python. They
-form three columns on larger screens, use compact side-by-side copy and artwork on tablets,
-and stack with shorter illustrations on phones; text stays
-in HTML and illustrations are decorative. Source assets and generation prompts
-live in `frontend/src/assets/learning/`.
+Each “How Optiq works” card contains a short heading, one supporting sentence
+and a lightweight SVG diagram. All three diagrams share one emerald geometric
+scene and the same 320 × 220 view box, centered within equal visual stages.
+The first shows a notebook print with mint tape and a pixel cursor; the second
+reveals aligned illustrative edge outlines over the same scene. The third selects a point inside
+the scene’s solid emerald square and connects it to a magnified 3 × 3 grid.
+Its uniform pixels use `accent` (#087f46), so the label “G: 127” matches the
+actual green-channel component. Accessible descriptions distinguish these
+diagrams from live computation. No mascots, handwritten annotations or code
+snippets appear in these cards. Cards use three columns on desktop, pair copy
+and visuals on tablets, and stack on phones. The original PNG/Piskel artwork
+remains retained source material. The illustrations use slow eight-second loops
+with a brief active phase and a resting interval. They animate only in view,
+provide pause/resume, and show their static final state for reduced motion. The cursor remains visible while moving back to its start; the magnifier scales in and out from the selected point. These card animations do not fade.
 
 The lab browser has a vertical winding seven-lab map on the
 left and selected-lab information on the right. The information panel stays
-visible while scrolling on wider screens and includes saved sample outputs from
-the lab algorithms. On smaller screens, the preview opens immediately below the selected node,
+visible while scrolling on wider screens and displays curated concept illustrations. On smaller screens, the preview opens immediately below the selected node,
 pushing later nodes down and adjusting the connecting path. Selection preserves
 the node’s viewport position. An outlined “Next preview” button advances the
 selection, wrapping from Lab 7 to Lab 1 without opening a lab.
@@ -136,15 +144,15 @@ static rotations and curved dashed separators retain the informal map treatment.
 Highlighted path segments use `accent-path`; the selected lab label uses stronger
 weight and an underline.
 
-All seven previews share a bordered 4:3 frame with contained imagery on desktop
-and mobile. Labs 1–3 and 7 show a fixed vertical 50/50 split, original left and
-computed output right, without slider controls or visible image captions. Lab 4
-shows computed SIFT matches. Labs 5 and 6 use homepage-only concept illustrations;
-the existing description and accessible image text distinguish them from actual
-results. These illustrations do not become lab inputs. Hidden measurement copy
-reserves the largest heading/description footprint to keep selection stable.
-Reduced-motion mode omits the preview fade. Product scope remains governed by
-[PRD.md](PRD.md).
+All seven lab detail previews use borderless 4:3 mascot illustrations above the
+title. Titles use “Lab N: Title”; descriptions and Open lab/Next preview actions
+remain below. Labs 1–4/7 use curated transparent variants of the existing mascot poses: grayscale,
+edge outlines, contrast, keypoint matching and colored regions. Labs 5–6 retain
+their dedicated concept illustrations. These are illustrative
+artwork, not computed outputs or new lab inputs. No mockup labels, image
+captions or comparison controls appear above the title. Hidden measurement copy
+keeps headings and descriptions stable during selection. Reduced-motion mode
+omits the preview fade. Product scope remains governed by [PRD.md](PRD.md).
 
 
 Homepage wheel scrolling uses Lenis with a gentle interpolation factor of .095.

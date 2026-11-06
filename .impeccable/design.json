@@ -1,0 +1,441 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-06T15:59:13.780840+00:00",
+  "title": "Design System: Optiq",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#f7f7f5",
+        "tonalRamp": [
+          "oklch(15.0% 0.00264 106.45)",
+          "oklch(25.0% 0.00264 106.45)",
+          "oklch(35.0% 0.00264 106.45)",
+          "oklch(45.0% 0.00264 106.45)",
+          "oklch(55.0% 0.00264 106.45)",
+          "oklch(65.0% 0.00264 106.45)",
+          "oklch(80.0% 0.00264 106.45)",
+          "oklch(95.0% 0.00264 106.45)"
+        ]
+      },
+      "paper-deep": {
+        "role": "neutral",
+        "displayName": "Paper Deep",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15.0% 0.00000 89.88)",
+          "oklch(25.0% 0.00000 89.88)",
+          "oklch(35.0% 0.00000 89.88)",
+          "oklch(45.0% 0.00000 89.88)",
+          "oklch(55.0% 0.00000 89.88)",
+          "oklch(65.0% 0.00000 89.88)",
+          "oklch(80.0% 0.00000 89.88)",
+          "oklch(95.0% 0.00000 89.88)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#171717",
+        "tonalRamp": [
+          "oklch(15.0% 0.00000 89.88)",
+          "oklch(25.0% 0.00000 89.88)",
+          "oklch(35.0% 0.00000 89.88)",
+          "oklch(45.0% 0.00000 89.88)",
+          "oklch(55.0% 0.00000 89.88)",
+          "oklch(65.0% 0.00000 89.88)",
+          "oklch(80.0% 0.00000 89.88)",
+          "oklch(95.0% 0.00000 89.88)"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Ink Soft",
+        "canonical": "#656565",
+        "tonalRamp": [
+          "oklch(15.0% 0.00000 89.88)",
+          "oklch(25.0% 0.00000 89.88)",
+          "oklch(35.0% 0.00000 89.88)",
+          "oklch(45.0% 0.00000 89.88)",
+          "oklch(55.0% 0.00000 89.88)",
+          "oklch(65.0% 0.00000 89.88)",
+          "oklch(80.0% 0.00000 89.88)",
+          "oklch(95.0% 0.00000 89.88)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Line",
+        "canonical": "#e5e5e2",
+        "tonalRamp": [
+          "oklch(15.0% 0.00402 106.48)",
+          "oklch(25.0% 0.00402 106.48)",
+          "oklch(35.0% 0.00402 106.48)",
+          "oklch(45.0% 0.00402 106.48)",
+          "oklch(55.0% 0.00402 106.48)",
+          "oklch(65.0% 0.00402 106.48)",
+          "oklch(80.0% 0.00402 106.48)",
+          "oklch(95.0% 0.00402 106.48)"
+        ]
+      },
+      "line-strong": {
+        "role": "neutral",
+        "displayName": "Line Strong",
+        "canonical": "#d4d4d0",
+        "tonalRamp": [
+          "oklch(15.0% 0.00544 106.51)",
+          "oklch(25.0% 0.00544 106.51)",
+          "oklch(35.0% 0.00544 106.51)",
+          "oklch(45.0% 0.00544 106.51)",
+          "oklch(55.0% 0.00544 106.51)",
+          "oklch(65.0% 0.00544 106.51)",
+          "oklch(80.0% 0.00544 106.51)",
+          "oklch(95.0% 0.00544 106.51)"
+        ]
+      },
+      "surface-muted": {
+        "role": "neutral",
+        "displayName": "Surface Muted",
+        "canonical": "#e4e4e0",
+        "tonalRamp": [
+          "oklch(15.0% 0.00536 106.50)",
+          "oklch(25.0% 0.00536 106.50)",
+          "oklch(35.0% 0.00536 106.50)",
+          "oklch(45.0% 0.00536 106.50)",
+          "oklch(55.0% 0.00536 106.50)",
+          "oklch(65.0% 0.00536 106.50)",
+          "oklch(80.0% 0.00536 106.50)",
+          "oklch(95.0% 0.00536 106.50)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Accent",
+        "canonical": "#087f46",
+        "tonalRamp": [
+          "oklch(15.0% 0.12951 154.15)",
+          "oklch(25.0% 0.12951 154.15)",
+          "oklch(35.0% 0.12951 154.15)",
+          "oklch(45.0% 0.12951 154.15)",
+          "oklch(55.0% 0.12951 154.15)",
+          "oklch(65.0% 0.12951 154.15)",
+          "oklch(80.0% 0.12951 154.15)",
+          "oklch(95.0% 0.12951 154.15)"
+        ]
+      },
+      "accent-deep": {
+        "role": "primary",
+        "displayName": "Accent Deep",
+        "canonical": "#075a34",
+        "tonalRamp": [
+          "oklch(15.0% 0.09660 156.13)",
+          "oklch(25.0% 0.09660 156.13)",
+          "oklch(35.0% 0.09660 156.13)",
+          "oklch(45.0% 0.09660 156.13)",
+          "oklch(55.0% 0.09660 156.13)",
+          "oklch(65.0% 0.09660 156.13)",
+          "oklch(80.0% 0.09660 156.13)",
+          "oklch(95.0% 0.09660 156.13)"
+        ]
+      },
+      "accent-soft": {
+        "role": "primary",
+        "displayName": "Accent Soft",
+        "canonical": "#e1f5e8",
+        "tonalRamp": [
+          "oklch(15.0% 0.02721 157.37)",
+          "oklch(25.0% 0.02721 157.37)",
+          "oklch(35.0% 0.02721 157.37)",
+          "oklch(45.0% 0.02721 157.37)",
+          "oklch(55.0% 0.02721 157.37)",
+          "oklch(65.0% 0.02721 157.37)",
+          "oklch(80.0% 0.02721 157.37)",
+          "oklch(95.0% 0.02721 157.37)"
+        ]
+      },
+      "accent-path": {
+        "role": "primary",
+        "displayName": "Accent Path",
+        "canonical": "#70bd8d",
+        "tonalRamp": [
+          "oklch(15.0% 0.10419 155.47)",
+          "oklch(25.0% 0.10419 155.47)",
+          "oklch(35.0% 0.10419 155.47)",
+          "oklch(45.0% 0.10419 155.47)",
+          "oklch(55.0% 0.10419 155.47)",
+          "oklch(65.0% 0.10419 155.47)",
+          "oklch(80.0% 0.10419 155.47)",
+          "oklch(95.0% 0.10419 155.47)"
+        ]
+      },
+      "selection": {
+        "role": "primary",
+        "displayName": "Selection",
+        "canonical": "#bceace",
+        "tonalRamp": [
+          "oklch(15.0% 0.06103 158.19)",
+          "oklch(25.0% 0.06103 158.19)",
+          "oklch(35.0% 0.06103 158.19)",
+          "oklch(45.0% 0.06103 158.19)",
+          "oklch(55.0% 0.06103 158.19)",
+          "oklch(65.0% 0.06103 158.19)",
+          "oklch(80.0% 0.06103 158.19)",
+          "oklch(95.0% 0.06103 158.19)"
+        ]
+      },
+      "control-border": {
+        "role": "neutral",
+        "displayName": "Control Border",
+        "canonical": "#8b948a",
+        "tonalRamp": [
+          "oklch(15.0% 0.01790 142.52)",
+          "oklch(25.0% 0.01790 142.52)",
+          "oklch(35.0% 0.01790 142.52)",
+          "oklch(45.0% 0.01790 142.52)",
+          "oklch(55.0% 0.01790 142.52)",
+          "oklch(65.0% 0.01790 142.52)",
+          "oklch(80.0% 0.01790 142.52)",
+          "oklch(95.0% 0.01790 142.52)"
+        ]
+      },
+      "error-border": {
+        "role": "functional",
+        "displayName": "Error Border",
+        "canonical": "#b75d4c",
+        "tonalRamp": [
+          "oklch(15.0% 0.12018 32.03)",
+          "oklch(25.0% 0.12018 32.03)",
+          "oklch(35.0% 0.12018 32.03)",
+          "oklch(45.0% 0.12018 32.03)",
+          "oklch(55.0% 0.12018 32.03)",
+          "oklch(65.0% 0.12018 32.03)",
+          "oklch(80.0% 0.12018 32.03)",
+          "oklch(95.0% 0.12018 32.03)"
+        ]
+      },
+      "error-surface": {
+        "role": "functional",
+        "displayName": "Error Surface",
+        "canonical": "#fff5f1",
+        "tonalRamp": [
+          "oklch(15.0% 0.01204 43.28)",
+          "oklch(25.0% 0.01204 43.28)",
+          "oklch(35.0% 0.01204 43.28)",
+          "oklch(45.0% 0.01204 43.28)",
+          "oklch(55.0% 0.01204 43.28)",
+          "oklch(65.0% 0.01204 43.28)",
+          "oklch(80.0% 0.01204 43.28)",
+          "oklch(95.0% 0.01204 43.28)"
+        ]
+      },
+      "error-ink": {
+        "role": "functional",
+        "displayName": "Error Ink",
+        "canonical": "#823a2b",
+        "tonalRamp": [
+          "oklch(15.0% 0.10313 33.25)",
+          "oklch(25.0% 0.10313 33.25)",
+          "oklch(35.0% 0.10313 33.25)",
+          "oklch(45.0% 0.10313 33.25)",
+          "oklch(55.0% 0.10313 33.25)",
+          "oklch(65.0% 0.10313 33.25)",
+          "oklch(80.0% 0.10313 33.25)",
+          "oklch(95.0% 0.10313 33.25)"
+        ]
+      },
+      "focus": {
+        "role": "functional",
+        "displayName": "Focus",
+        "canonical": "#90541a",
+        "tonalRamp": [
+          "oklch(15.0% 0.10571 59.68)",
+          "oklch(25.0% 0.10571 59.68)",
+          "oklch(35.0% 0.10571 59.68)",
+          "oklch(45.0% 0.10571 59.68)",
+          "oklch(55.0% 0.10571 59.68)",
+          "oklch(65.0% 0.10571 59.68)",
+          "oklch(80.0% 0.10571 59.68)",
+          "oklch(95.0% 0.10571 59.68)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Homepage hero."
+      },
+      "lab-title": {
+        "displayName": "Lab Title",
+        "purpose": "Observed role in the current Optiq interface."
+      },
+      "card-title": {
+        "displayName": "Card Title",
+        "purpose": "Observed role in the current Optiq interface."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Observed role in the current Optiq interface."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Observed role in the current Optiq interface."
+      },
+      "map-annotation": {
+        "displayName": "Map Annotation",
+        "purpose": "Handwritten map group names only."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "map-state",
+        "value": "160ms ease-out",
+        "purpose": "Trail opacity and shallow node feedback; reduced-motion overrides apply."
+      },
+      {
+        "name": "lab-action",
+        "value": "140ms ease-out",
+        "purpose": "Button background and opacity changes; disabled for reduced motion."
+      },
+      {
+        "name": "notebook-card-loop",
+        "value": "8s cubic-bezier(.16, 1, .3, 1) infinite",
+        "purpose": "Visible cursor approaches and returns, print lifts, edges sweep, and magnifier scales in/out from selection; no opacity animation. Staggered by 0/400/800ms; pauses offscreen and by control; static for reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "lab-stack",
+        "value": "1359px"
+      },
+      {
+        "name": "card-padding",
+        "value": "1050px"
+      },
+      {
+        "name": "card-stack",
+        "value": "900px"
+      },
+      {
+        "name": "map-stack",
+        "value": "760px"
+      },
+      {
+        "name": "lab-phone",
+        "value": "640px"
+      },
+      {
+        "name": "card-phone",
+        "value": "480px"
+      }
+    ],
+    "rampNote": "Eight-step OKLCH ramps are synthesized preview metadata; they are not implemented application tokens.",
+    "assetTreatment": {
+      "mascotFilter": "saturate(2.15) brightness(1.04)",
+      "scope": "Hero and wordmark only; preserve scientific output colors and do not refilter generated artwork."
+    }
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary action as implemented in Optiq; standalone representative markup.",
+      "html": "<button class=\"ds-primary\">Run experiment</button>",
+      "css": ".ds-primary{font-family:ui-sans-serif,system-ui,sans-serif;background:var(--accent,#087f46);color:var(--paper-deep,#fff);border:1px solid var(--accent,#087f46);border-radius:var(--radius-control,8px);padding:12px 18px;font-size:14px;font-weight:600;line-height:1.5;cursor:pointer}.ds-primary:hover{background:var(--accent-deep,#075a34)}.ds-primary:focus-visible{outline:3px solid var(--focus,#90541a);outline-offset:4px;}.ds-primary:disabled{opacity:.65;cursor:not-allowed}"
+    },
+    {
+      "name": "Secondary action",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Secondary action as implemented in Optiq; standalone representative markup.",
+      "html": "<button class=\"ds-secondary\">Reset baseline</button>",
+      "css": ".ds-secondary{font-family:ui-sans-serif,system-ui,sans-serif;background:var(--paper-deep,#fff);color:var(--ink,#171717);border:1px solid var(--control-border,#8b948a);border-radius:8px;padding:11px 14px;font-size:14px;cursor:pointer}.ds-secondary:hover{background:var(--accent-soft,#e1f5e8)}.ds-secondary:focus-visible{outline:3px solid var(--focus,#90541a);outline-offset:4px;}"
+    },
+    {
+      "name": "Next preview",
+      "kind": "button",
+      "refersTo": "button-preview-next",
+      "description": "Next preview as implemented in Optiq; standalone representative markup.",
+      "html": "<button class=\"ds-next\">Next preview <span aria-hidden=\"true\">\u2192</span></button>",
+      "css": ".ds-next{font-family:ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:12px 16px;background:transparent;color:var(--accent-deep,#075a34);border:1px solid var(--control-border,#8b948a);border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}.ds-next:hover{background:var(--accent-soft,#e1f5e8)}.ds-next:focus-visible{outline:3px solid var(--focus,#90541a);outline-offset:4px;}"
+    },
+    {
+      "name": "Number field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Number field as implemented in Optiq; standalone representative markup.",
+      "html": "<label class=\"ds-field\">X coordinate<input type=\"number\" value=\"0\" min=\"0\" max=\"479\"></label>",
+      "css": ".ds-field{font-family:ui-sans-serif,system-ui,sans-serif;display:flex;flex-direction:column;gap:8px;color:var(--ink,#171717);font-size:13px;max-width:200px}.ds-field input{font-family:ui-sans-serif,system-ui,sans-serif;width:100%;box-sizing:border-box;min-width:0;padding:10px;border:1px solid var(--control-border,#8b948a);border-radius:8px;background:var(--paper-deep,#fff);color:var(--ink,#171717);font-size:16px}.ds-field input:focus-visible{outline:3px solid var(--focus,#90541a);outline-offset:4px;}"
+    },
+    {
+      "name": "Notebook card",
+      "kind": "card",
+      "refersTo": "notebook-card",
+      "description": "Notebook card as implemented in Optiq; standalone representative markup.",
+      "html": "<article class=\"ds-card\"><h3>Pick an image.</h3><p>Use a sample, upload your own, or explore a prepared dataset.</p><svg viewBox=\"0 0 160 120\" aria-label=\"Illustrative emerald geometric scene\" role=\"img\"><rect width=\"160\" height=\"120\" fill=\"#e1f5e8\"/><rect x=\"14\" y=\"18\" width=\"54\" height=\"44\" fill=\"#087f46\"/><circle cx=\"115\" cy=\"39\" r=\"23\" fill=\"#a8ddbb\"/><path d=\"M16 104 44 65 72 104Z\" fill=\"#51a878\"/><path d=\"M72 104V67h73v37Z\" fill=\"#075a34\"/></svg></article>",
+      "css": ".ds-card{font-family:ui-sans-serif,system-ui,sans-serif;max-width:300px;padding:28px 28px 24px;background:var(--paper-deep,#fff);color:var(--ink,#171717);border-radius:12px}.ds-card h3{font-size:25px;line-height:1.25;letter-spacing:-.025em;margin:0;font-weight:650}.ds-card p{font-size:16px;line-height:1.7;color:var(--ink-soft,#656565);margin:20px 0 24px}.ds-card svg{display:block;width:100%;height:160px}"
+    },
+    {
+      "name": "Borderless lab preview",
+      "kind": "card",
+      "refersTo": "preview-panel",
+      "description": "Borderless lab preview as implemented in Optiq; standalone representative markup.",
+      "html": "<section class=\"ds-preview\"><h3>Lab 6: Object detection</h3><p>Compare recorded detections and inspect training and evaluation results.</p><a href=\"#lab6\">Open lab \u2192</a></section>",
+      "css": ".ds-preview{font-family:ui-sans-serif,system-ui,sans-serif;max-width:300px;background:var(--paper,#f7f7f5);color:var(--ink,#171717);border:0;border-radius:12px;padding:24px}.ds-preview h3{font-size:19px;line-height:1.4;font-weight:600;margin:0 0 22px}.ds-preview p{font-size:14px;line-height:1.65;color:var(--ink-soft,#656565);margin:0 0 22px}.ds-preview a{display:inline-flex;text-decoration:none;background:var(--accent,#087f46);color:#fff;padding:12px 18px;border-radius:8px;font-size:14px;font-weight:600}.ds-preview a:hover{background:var(--accent-deep,#075a34)}.ds-preview a:focus-visible{outline:3px solid var(--focus,#90541a);outline-offset:4px;}"
+    },
+    {
+      "name": "Map node",
+      "kind": "nav",
+      "description": "Map node as implemented in Optiq; standalone representative markup.",
+      "html": "<button class=\"ds-node\" aria-pressed=\"true\"><span class=\"ds-hex\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\"><path d=\"M3 3h7v7H3ZM14 3h7v7h-7ZM3 14h7v7H3ZM14 14h7v7h-7Z\"/></svg></span><span>Image fundamentals<small>Lab 1</small></span></button>",
+      "css": ".ds-node{font-family:ui-sans-serif,system-ui,sans-serif;display:flex;align-items:center;gap:22px;text-align:left;background:transparent;border:0;border-radius:8px;color:var(--accent-deep,#075a34);font-size:14px;font-weight:700;padding:8px;cursor:pointer}.ds-hex{display:grid;place-items:center;width:70px;height:66px;background:var(--accent,#087f46);clip-path:polygon(50% 0,94% 24%,94% 76%,50% 100%,6% 76%,6% 24%)}.ds-hex svg{width:29px;height:29px;fill:none;stroke:#fff;stroke-width:1.7}.ds-node small{display:block;font-size:12px;font-weight:400;margin-top:6px}.ds-node:hover .ds-hex{background:var(--accent-deep,#075a34)}.ds-node:focus-visible{outline:3px solid var(--focus,#90541a);outline-offset:4px;}"
+    },
+    {
+      "name": "Details drawer",
+      "kind": "custom",
+      "refersTo": "details-drawer",
+      "description": "Details drawer as implemented in Optiq; standalone representative markup.",
+      "html": "<aside class=\"ds-drawer\"><header><h2>Image details</h2><button aria-label=\"Close details\">\u00d7</button></header><p>Measured dimensions, color space and image handling notes.</p></aside>",
+      "css": ".ds-drawer{font-family:ui-sans-serif,system-ui,sans-serif;width:min(560px,100%);box-sizing:border-box;padding:0 28px 28px;background:var(--paper-deep,#fff);color:var(--ink,#171717);border-left:1px solid var(--line-strong,#d4d4d0)}.ds-drawer header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:24px 0 20px;border-bottom:1px solid var(--line,#e5e5e2)}.ds-drawer h2{font-size:22px;line-height:1.4;margin:0;font-weight:600}.ds-drawer button{width:44px;height:44px;background:var(--paper,#f7f7f5);border:1px solid var(--line-strong,#d4d4d0);border-radius:8px;color:var(--ink,#171717);font-size:22px;cursor:pointer}.ds-drawer button:hover{background:var(--accent-soft,#e1f5e8)}.ds-drawer button:focus-visible{outline:3px solid var(--focus,#90541a);outline-offset:4px;}.ds-drawer p{font-size:14px;line-height:1.7;color:var(--ink-soft,#656565)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Curious Lab Notebook",
+    "overview": "Optiq is a computer vision experimentation tool with a curious, friendly and playful personality grounded in real techniques and results. Neutral paper, emerald actions and image-led layouts make exploration approachable without making laboratory workspaces childish. The voice is a knowledgeable classmate: direct, encouraging and precise.",
+    "keyCharacteristics": [
+      "Emerald-led, light-only interface with neutral paper and white surfaces.",
+      "Pixel mascot identity in the hero, wordmark and curated lab-map artwork.",
+      "Native notebook diagrams explain experimentation without repeating the mascot.",
+      "Quiet technical workspaces with optional explanations and truthful result states."
+    ],
+    "rules": [
+      {
+        "name": "The Scientific Color Rule",
+        "body": "Emerald identifies Optiq controls and illustrative artwork. Real image colors, edge maps, labels and scientific overlays retain their algorithm-specific meaning.",
+        "section": "colors"
+      },
+      {
+        "name": "The Plain Labels Rule",
+        "body": "Use familiar sentence-case wording. Keep exact algorithm names, but place brief contextual explanations near meaningful settings. Do not add playful fonts to numbers, validation or code.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "Use the existing emerald, paper, text, focus and error roles consistently.",
+      "Keep input, settings, results and explanations visually distinct.",
+      "Describe diagrams and concept art as illustrative; identify recorded runs.",
+      "Keep original samples and actual algorithm outputs faithful to their computation.",
+      "Preserve keyboard focus, labeled controls, reduced-motion behavior and responsive layouts."
+    ],
+    "donts": [
+      "Do not add decorative mascots to laboratory headings.",
+      "Do not restore comparison sliders, image captions or mockup banners on lab-map detail cards.",
+      "Do not add handwritten captions or code blocks to the How Optiq works cards.",
+      "Do not present the map as locked progression, scored practice or saved completion.",
+      "Do not recolor scientific outputs to force the emerald brand palette.",
+      "Do not invent tokens, controls or functionality merely because a preview snippet exists."
+    ]
+  }
+}

@@ -26,7 +26,9 @@ cutouts of that generated artwork; covered details have not been reconstructed.
 
 After editing, export each frame as a transparent PNG at **1×** scale and replace
 the matching `start.png`, `compare.png`, or `understand.png` beside these files.
-`LearningCards.tsx` imports these previews directly. Keep their 160 × 128 canvas
+These originals remain the editable sources for derived mascot samples; the
+homepage learning cards now use native emerald notebook diagrams in
+`LearningCards.tsx` rather than these mascot images. Keep their 160 × 128 canvas
 size; the website scales them with crisp pixel rendering. Saving the `.piskel`
 alone does not update the PNG on the website.
 
@@ -41,8 +43,8 @@ that PNG with the emerald color treatment used for the displayed mascot.
 
 ## Emerald display palette
 
-The user selected the saturated emerald preview on 2026-11-06. The hero,
-wordmark and learning-card artwork receive the shared `--mascot-filter`
+The user selected the saturated emerald preview on 2026-11-06. The hero and
+wordmark receive the shared `--mascot-filter`
 (`saturate(2.15) brightness(1.04)`) in `src/index.css`; original PNG and Piskel
 files retain their editable source colors. The favicon SVG applies the equivalent
 saturation and brightness filter to the embedded original PNG. This is the same

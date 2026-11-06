@@ -35,7 +35,7 @@ Its watershed overlay omits OpenCV's automatic outer-canvas boundary from the
 red visualization, while preserving internal boundaries and raw label IDs.
 Unrelated input/algorithm validation and shared resource admission still apply.
 
-Homepage previews for Labs 1–4/7 are offline real computations from these same sample services.
+Retained preview assets for Labs 1–4/7 are offline real computations from these same sample services. The homepage cards now use borderless mascot artwork above colon-separated titles; Labs 1–4/7 use curated transparent prop variants of the learning-card mascot poses, while Labs 5–6 retain dedicated concept art. These images are illustrative and do not replace lab input defaults.
 `export_home_previews.py --labs 1 2 3 4 7` updates only those assets/provenance,
 without running PCA or detection. Labs 5–6 instead display approved, labeled
 mascot concept illustrations on the homepage; the Lab 6 “glass” box is not a
@@ -325,7 +325,7 @@ cover specialized results such as pixel zoom, edge information, PCA galleries,
 and detection/segmentation outputs. Hooks and settings remain independent:
 sharing UI does not share experiment state or algorithms.
 
-On wider screens, tools occupy the left sidebar, image comparisons the center, and settings the right. Smaller layouts place settings before image comparisons; mobile tools wrap into two columns. Numerical controls provide keyboard alternatives to clicking pixels. Original-image overlays preview the selected pixel or valid crop region, using the same contained image coordinates as pointer selection.
+On wider screens, tools occupy the left sidebar, settings the middle column, and image comparisons the right. The shared lab heading contains its title and description; source actions remain below the heading. Smaller layouts place settings before image comparisons; mobile tools wrap into two columns. Numerical controls provide keyboard alternatives to clicking pixels. Original-image overlays preview the selected pixel or valid crop region, using the same contained image coordinates as pointer selection.
 
 Lab 1 retains separate settings for each operation. Editing settings cancels superseded processing while retaining the last completed result, labeled as previous output with its original operation and parameters. Switching tools aborts pending processing and clears results, errors, and accumulated rotation while preserving the source image and each tool’s saved settings. A new source clears results and initializes settings. Resize controls display the requested pixel count and validate the 4096px-per-side/four-million-pixel output limits before an API request; backend validation remains authoritative. Result summaries describe the actual returned changes; previews explicitly fit images to their panels and do not imply a shared display scale.
 

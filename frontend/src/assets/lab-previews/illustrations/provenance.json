@@ -2,13 +2,109 @@
   "kind": "concept illustrations; not computed experiments",
   "generator": "built-in imagegen",
   "approved": "2026-11-06",
-  "usage": "homepage previews only; not laboratory default inputs",
+  "usage": "homepage previews only; not laboratory default inputs; Labs 1\u20134/7 are transparent prop variants of existing poses",
   "references": [
     "frontend/src/assets/learning/start.png",
     "frontend/src/assets/learning/understand.png"
   ],
   "conversion": "cwebp -q 90; no resizing",
   "images": [
+    {
+      "lab": 1,
+      "prompt": "Use case: precise-object-edit. Edit target: the attached Optiq mascot artwork. Create one separate finished homepage illustration for Lab 1. Preserve the exact character identity, round magnifying-glass body, top stem, pale blue face, black eyes, white glint, limbs, proportions, pose, and chunky square-pixel outlines of the reference. Keep a consistent rich emerald green body suited to Optiq #087F46. Change ONLY the pictures the mascot holds: the large front picture becomes a GRAYSCALE version of the same mountain, lake and sun scene; keep a rear overlapping picture in color so color-to-grayscale is obvious. Mascot face and body stay colored. Preserve the pose and arrangement. Transparent background, no background rectangle, no enclosing frame, no text, letters, numbers, captions, logos or watermarks. Keep genuine pixel art: uniform square grid, hard stepped outlines, solid flat fills, no gradients, no antialiasing, no soft shadows, no realism. Landscape 4:3 canvas; center mascot-and-props together, occupying middle 75% with comfortable equal margins. This is conceptual educational artwork, not a computed result. Modify props only; do not redesign mascot or add extra characters.",
+      "reference": "frontend/src/assets/learning/start.png",
+      "reference_sha256": "28107b437a9261df207fd00339a841a39032942bb8aa460e4f6d8e31d07b3c5e",
+      "generator": "built-in imagegen",
+      "created": "2026-11-06",
+      "png": {
+        "file": "lab1.png",
+        "sha256": "1989776e1ff9faf7114a27bd7792a5fc7581b1944ee8a401c83a6c834e238300",
+        "size": [
+          1448,
+          1086
+        ]
+      },
+      "webp": {
+        "file": "lab1.webp",
+        "sha256": "bae5726aaab45e83079695bf65536ddebd617d829b011aa5c90af89dab7bfc0d",
+        "size": [
+          1448,
+          1086
+        ]
+      }
+    },
+    {
+      "lab": 2,
+      "prompt": "Use case: precise-object-edit. Edit target: the attached Optiq mascot artwork. Create one separate finished homepage illustration for Lab 2. Preserve the exact character identity, round magnifying-glass body, top stem, pale blue face, black eyes, white glint, limbs, proportions, pose, and chunky square-pixel outlines of the reference. Keep a consistent rich emerald green body suited to Optiq #087F46. Keep the mascot between two small pictures. Left picture is the original colored mountain-and-lake landscape. Right picture is the same landscape shown as thin white edge outlines on a black field, representing edge detection. Preserve the comparison pose and lower curved yellow arrow. Transparent background, no background rectangle, no enclosing frame, no text, letters, numbers, captions, logos or watermarks. Keep genuine pixel art: uniform square grid, hard stepped outlines, solid flat fills, no gradients, no antialiasing, no soft shadows, no realism. Landscape 4:3 canvas; center mascot-and-props together, occupying middle 75% with comfortable equal margins. This is conceptual educational artwork, not a computed result. Modify props only; do not redesign mascot or add extra characters.",
+      "reference": "frontend/src/assets/learning/compare.png",
+      "reference_sha256": "fb94530efad6bf95cdea1620d8e205d0eeecb53ce33be3825c2ba8b8741da2e1",
+      "generator": "built-in imagegen",
+      "created": "2026-11-06",
+      "png": {
+        "file": "lab2.png",
+        "sha256": "2061f4d7a4a49401ae6fcb8d1b32e266d86336cea9c2b9e6f47320bb0caff4fa",
+        "size": [
+          1448,
+          1086
+        ]
+      },
+      "webp": {
+        "file": "lab2.webp",
+        "sha256": "1c71c7fb298b3f9799f35fa3c36c206371764e9224eb2df1cfcb0dd2e812aab3",
+        "size": [
+          1448,
+          1086
+        ]
+      }
+    },
+    {
+      "lab": 3,
+      "prompt": "Use case: precise-object-edit. Edit target: the attached Optiq mascot artwork. Create one separate finished homepage illustration for Lab 3. Preserve the exact character identity, round magnifying-glass body, top stem, pale blue face, black eyes, white glint, limbs, proportions, pose, and chunky square-pixel outlines of the reference. Keep a consistent rich emerald green body suited to Optiq #087F46. Change ONLY the held pictures: a rear landscape picture has low contrast, pale muted gray middle tones; the large front picture shows the SAME mountain/lake/sun composition with clear high contrast, dark green mountain, pale blue water and bright sky. This is an illustration of contrast adjustment. Mascot unchanged, preserve the holding pose. Transparent background, no background rectangle, no enclosing frame, no text, letters, numbers, captions, logos or watermarks. Keep genuine pixel art: uniform square grid, hard stepped outlines, solid flat fills, no gradients, no antialiasing, no soft shadows, no realism. Landscape 4:3 canvas; center mascot-and-props together, occupying middle 75% with comfortable equal margins. This is conceptual educational artwork, not a computed result. Modify props only; do not redesign mascot or add extra characters.",
+      "reference": "frontend/src/assets/learning/start.png",
+      "reference_sha256": "28107b437a9261df207fd00339a841a39032942bb8aa460e4f6d8e31d07b3c5e",
+      "generator": "built-in imagegen",
+      "created": "2026-11-06",
+      "png": {
+        "file": "lab3.png",
+        "sha256": "b4e74139aa1c5c1c65938ad4d165dab66a8735244e51fccb6048ddd2a420a0c6",
+        "size": [
+          1448,
+          1086
+        ]
+      },
+      "webp": {
+        "file": "lab3.webp",
+        "sha256": "ca406cc086b487758de5dd6dddb380c305de403477337864ea6efebf88f0e1ec",
+        "size": [
+          1448,
+          1086
+        ]
+      }
+    },
+    {
+      "lab": 4,
+      "prompt": "Use case: precise-object-edit. Edit target: the attached Optiq mascot artwork. Create one separate finished homepage illustration for Lab 4. Preserve the exact character identity, round magnifying-glass body, top stem, pale blue face, black eyes, white glint, limbs, proportions, pose, and chunky square-pixel outlines of the reference. Keep a consistent rich emerald green body suited to Optiq #087F46. Keep the mascot comparing two small picture panels with the same mountain/lake landscape, one slightly rotated. Add three tiny matching colored square keypoints in each panel and three thin clearly corresponding lines connecting the matching points, routing above or below the mascot so its face remains unobscured. Sparse, clean, readable at small card scale. Retain the comparison pose. Transparent background, no background rectangle, no enclosing frame, no text, letters, numbers, captions, logos or watermarks. Keep genuine pixel art: uniform square grid, hard stepped outlines, solid flat fills, no gradients, no antialiasing, no soft shadows, no realism. Landscape 4:3 canvas; center mascot-and-props together, occupying middle 75% with comfortable equal margins. This is conceptual educational artwork, not a computed result. Modify props only; do not redesign mascot or add extra characters.",
+      "reference": "frontend/src/assets/learning/compare.png",
+      "reference_sha256": "fb94530efad6bf95cdea1620d8e205d0eeecb53ce33be3825c2ba8b8741da2e1",
+      "generator": "built-in imagegen",
+      "created": "2026-11-06",
+      "png": {
+        "file": "lab4.png",
+        "sha256": "820fdcf66adb56d7e03c62a603b076e85e83e983e4d8f3ecae6be3a5dc863a49",
+        "size": [
+          1448,
+          1086
+        ]
+      },
+      "webp": {
+        "file": "lab4.webp",
+        "sha256": "c81f31e4d5a0f394827b76784eacd948d33298460c1e25c9eecb6e1d802c3964",
+        "size": [
+          1448,
+          1086
+        ]
+      }
+    },
     {
       "lab": 5,
       "prompt": "Create ONE finished homepage preview illustration for Optiq, a playful computer vision learning app. Use the attached original mascot references only for identity and pixel-art style, not as editing targets. Landscape 4:3 composition on a flat neutral off-white background #F7F7F5, NO outer border. Authentic chunky pixel art, uniform square pixel grid like a 160x128 sprite enlarged with nearest neighbor. Crisp stepped shapes, heavy near-black #171717 outlines, solid fills only, no gradients, antialiasing, lighting, texture, shadows or realism. Preserve the original character: cute living magnifying-glass creature with a round emerald-green rim, small TOP handle/stem, pale blue glass face with two simple vertical dark eyes, tiny green arms and feet, small white square lens reflection. Rich emerald #087F46, deep green #075A34, pale blue lens, pale mint, charcoal, small mustard accents. Scene: illustrate dimensionality reduction / eigenfaces as an explicitly conceptual playful scene: mascot on LEFT holding a tiny grid of colored image pixels; a single simple chunky arrow leads to a compact 2x3 gallery on RIGHT showing grayscale variations of the mascot's own round silhouette. These are abstract illustrative patterns, not actual human faces. The miniature grayscale patterns differ in broad light/dark shading and should be simple clean pixel symbols. Connected, balanced scene with generous neutral margins; keep subject and props occupying middle 75% of canvas. No words, no numbers, no captions, no logos, no watermarks. This is a conceptual illustration, not a screenshot, not a plotted experiment. Match references' cute proportions and genuine pixel style. Do not draw a human, animal, robot or second large character.",
@@ -43,6 +139,30 @@
       "webp": {
         "file": "lab6.webp",
         "sha256": "a830136a12d91ceb20914c5942e62cd7048c177f97de994adb95303cb99e34e5",
+        "size": [
+          1448,
+          1086
+        ]
+      }
+    },
+    {
+      "lab": 7,
+      "prompt": "Use case: precise-object-edit. Edit target: the attached Optiq mascot artwork. Create one separate finished homepage illustration for Lab 7. Preserve the exact character identity, round magnifying-glass body, top stem, pale blue face, black eyes, white glint, limbs, proportions, pose, and chunky square-pixel outlines of the reference. Keep a consistent rich emerald green body suited to Optiq #087F46. Change ONLY the large held landscape picture into a simple segmentation illustration: the SAME mountain/lake/sky scene separated into four contiguous flat-color regions: blue sky, green mountain, yellow sun, lavender water, crisp boundaries, no outlines within each region and no texture. Rear held image stays natural colored landscape for comparison. Mascot stays colored, same holding pose. Transparent background, no background rectangle, no enclosing frame, no text, letters, numbers, captions, logos or watermarks. Keep genuine pixel art: uniform square grid, hard stepped outlines, solid flat fills, no gradients, no antialiasing, no soft shadows, no realism. Landscape 4:3 canvas; center mascot-and-props together, occupying middle 75% with comfortable equal margins. This is conceptual educational artwork, not a computed result. Modify props only; do not redesign mascot or add extra characters.",
+      "reference": "frontend/src/assets/learning/start.png",
+      "reference_sha256": "28107b437a9261df207fd00339a841a39032942bb8aa460e4f6d8e31d07b3c5e",
+      "generator": "built-in imagegen",
+      "created": "2026-11-06",
+      "png": {
+        "file": "lab7.png",
+        "sha256": "2a047c22860cfeeab8629419546bd6572995c7eff518083a1b88140438e861b7",
+        "size": [
+          1448,
+          1086
+        ]
+      },
+      "webp": {
+        "file": "lab7.webp",
+        "sha256": "bdc3cbbc9414efeac4dd8bf7fbc65df12983a60f49be89ae71b1b76dd2aac300",
         "size": [
           1448,
           1086

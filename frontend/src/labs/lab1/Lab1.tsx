@@ -7,6 +7,7 @@ import { experiments } from './content'
 import Controls from './Controls'
 import ImagePanel from './ImagePanel'
 import PixelComparison from './PixelComparison'
+import PixelInspection from './PixelInspection'
 import useLab1 from './useLab1'
 import ToolIcon from './ToolIcon'
 import { resultSummary } from './resultSummary'
@@ -65,7 +66,7 @@ export default function Lab1() {
         ]}
         controls={<>
 
-            <div className="lab-control-introduction"><h2>{current.title}</h2><p>{current.description}</p></div>
+            <div className="lab-control-introduction"><h2>{lab.operation === 'inspect' ? 'Pixel location' : current.title}</h2><p>{current.description}</p></div>
 
             {lab.operation === 'rotate' && <p className="lab-rotation-angle">Rotation: {lab.rotationTurns * 90}°{lab.rotationTurns === 0 ? ' · original orientation' : ' clockwise'}</p>}
             <form onSubmit={event => { event.preventDefault(); void lab.run() }}>
@@ -82,9 +83,11 @@ export default function Lab1() {
               <p className="lab-result-summary">{summary}</p></>}
             <div className="lab-image-grid">
               <ImagePanel showMetadata={false} title="Original" pixelOverlay={pixelMode ? lab.pixelSelected ? 'selected' : 'prompt' : undefined} frame={lab.source?.frame ?? null} onPick={pixelMode && !lab.busy ? lab.pick : undefined} onMoveSelection={lab.operation === 'crop' && !lab.busy ? lab.pick : undefined} selection={selection} empty={lab.busy ? 'Loading image…' : 'Choose a sample or upload an image.'} />
-              <ImagePanel showMetadata={false} title="Result" frame={lab.output?.result ?? null} empty={lab.busy ? 'Processing the image…' : 'Run an experiment to see its result.'} />
+              {lab.operation === 'inspect'
+                ? <PixelInspection pixel={lab.output?.pixel ?? null} busy={lab.busy} />
+                : <ImagePanel showMetadata={false} title="Result" frame={lab.output?.result ?? null} empty={lab.busy ? 'Processing the image…' : 'Run an experiment to see its result.'} />}
             </div>
-            {lab.output?.pixel && <PixelComparison pixel={lab.output.pixel} />}
+            {lab.operation === 'edit' && lab.output?.pixel && <PixelComparison pixel={lab.output.pixel} />}
             {lab.error && <LabError message={lab.error} />}
             {(lab.busy || lab.error || lab.notice || lab.output) && <LabStatus>{lab.busy ? 'Working with the image service…'
               : lab.error ? 'The request failed. Check the message above and try again.'
