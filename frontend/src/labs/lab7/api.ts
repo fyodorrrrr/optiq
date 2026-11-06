@@ -1,7 +1,7 @@
 import { imageRequest } from '../../api/images'
 import type { ImageFrame } from '../../api/images'
 export type Method = 'threshold' | 'region' | 'edges' | 'semantic'
-export type Sample = 'touching' | 'uneven' | 'contours' | 'scene'
+export type Sample = 'mascot' | 'touching' | 'uneven' | 'contours' | 'scene'
 export interface Settings {
   method: Method; invert: boolean; adaptive_block: number; adaptive_c: number
   seed_x: number; seed_y: number; tolerance: number; watershed_fraction: number

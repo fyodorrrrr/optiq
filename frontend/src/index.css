@@ -12,9 +12,12 @@
   --radius-control: 8px;
   --radius-panel: 12px;
   --radius-pill: 999px;
-  --accent: #365c49;
-  --accent-deep: #254333;
-  --accent-soft: #e7eee7;
+  --accent: #087f46;
+  --accent-deep: #075a34;
+  --accent-soft: #e1f5e8;
+  --accent-path: #70bd8d;
+  --selection: #bceace;
+  --mascot-filter: saturate(2.15) brightness(1.04);
   --control-border: #8b948a;
   --error-border: #b75d4c;
   --error-surface: #fff5f1;
@@ -41,7 +44,12 @@ button:focus-visible, a:focus-visible, summary:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 6px;
 }
-::selection { background: #d6e5d8; }
+::selection { background: var(--selection); }
+
+/* Match the emerald brand treatment without altering editable pixel-art sources. */
+.hero-pixel-art, .brand-mark, .learning-card-illustration {
+  filter: var(--mascot-filter);
+}
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }

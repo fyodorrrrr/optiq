@@ -21,7 +21,7 @@ async def model_status():
 
 
 @router.get('/sample',response_model=Frame)
-async def sample_image(kind: Literal['touching','uneven','contours','scene']='touching'):
+async def sample_image(kind: Literal['mascot','touching','uneven','contours','scene']='touching'):
     return await process(sample,kind)
 
 

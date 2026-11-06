@@ -40,7 +40,9 @@ async function request<T>(path: string, signal: AbortSignal, body?: FormData): P
   }) as T
 }
 
-export function getSample(kind: 'color' | 'grayscale', signal: AbortSignal) {
+export type Sample = 'mascot' | 'color' | 'grayscale'
+
+export function getSample(kind: Sample, signal: AbortSignal) {
   return request<Frame>(`sample?kind=${kind}`, signal)
 }
 

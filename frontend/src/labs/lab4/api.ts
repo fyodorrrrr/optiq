@@ -2,7 +2,7 @@ import { imageRequest } from '../../api/images'
 import type { ImageFrame } from '../../api/images'
 
 export type Algorithm = 'surf' | 'sift' | 'orb'
-export type Sample = 'rotated' | 'scaled'
+export type Sample = 'mascot' | 'rotated' | 'scaled'
 export interface FeatureSettings {
   hessian_threshold: number; upright: boolean; ratio_threshold: number; max_features: number; max_matches: number
 }

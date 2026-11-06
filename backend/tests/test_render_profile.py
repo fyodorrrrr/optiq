@@ -41,6 +41,11 @@ class RenderProfileTests(unittest.TestCase):
                 for lab in (1,2,3,4,7):
                     response = client.get(f'/api/labs/{lab}/sample')
                     assert response.status_code == 200, response.text[:240]
+                    mascot = client.get(f'/api/labs/{lab}/sample?kind=mascot')
+                    assert mascot.status_code == 200, mascot.text[:240]
+                    frame = mascot.json()['first'] if lab == 4 else mascot.json()
+                    assert frame['width'] == 480 and frame['height'] == 360
+                    assert frame['width'] * frame['height'] <= 350000
                 assert client.get('/api/labs/5/dataset').status_code == 404
                 assert client.get('/api/labs/6/status').status_code == 404
             assert not any(name.split('.')[0] in {'sklearn','scipy','torch','torchvision','ultralytics'} for name in sys.modules)

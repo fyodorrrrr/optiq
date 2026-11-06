@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 from schemas.lab2 import EdgeResult, EdgeStatistics
-from services.images import decode_image, frame
+from services.images import decode_image, frame, mascot_image
 
 
 def grayscale_image(content):
@@ -50,6 +50,9 @@ def execute(content, settings):
 
 
 def sample_image(kind):
+    if kind == 'mascot':
+        image, notes = mascot_image('compare')
+        return frame(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), [*notes, 'Converted to grayscale for edge detection.'])
     image = np.full((480, 640), 80, np.uint8)
     cv2.rectangle(image, (70, 65), (299, 234), 210, -1)
     cv2.circle(image, (435, 160), 95, 130, -1)

@@ -37,6 +37,7 @@ export default function Lab7() {
     description="Lab 7 — Segmentation. Run classical methods on your images and inspect saved semantic predictions."
     guideId="segmentation-guide" onOpenGuide={() => guide.current?.focus({ preventScroll: true })} wide
     actions={<SourceActions busy={lab.busy} onUpload={lab.upload} onSample={lab.sample} samples={[
+      { value: 'mascot', label: 'Optiq mascot', description: 'Separate the dark mascot from its light background.' },
       { value: 'touching', label: 'Touching objects', description: 'Compare one foreground mask with separated watershed regions.' },
       { value: 'uneven', label: 'Uneven lighting', description: 'Compare a global threshold with local neighborhoods.' },
       { value: 'contours', label: 'Closed contours', description: 'Turn boundaries into filled regions.' },

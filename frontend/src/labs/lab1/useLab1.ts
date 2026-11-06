@@ -1,7 +1,7 @@
 import { resizeError } from './resizeLimits'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { getSample, loadImage, runExperiment, sampleFile } from './api'
-import type { ExperimentResult, Frame, Operation } from './api'
+import type { ExperimentResult, Frame, Operation, Sample } from './api'
 
 export interface Fields {
   x: string; y: string; width: string; height: string
@@ -47,11 +47,11 @@ export default function useLab1() {
     setRotationTurns(0)
   }, [])
 
-  const loadSample = useCallback(async (kind: 'color' | 'grayscale') => {
+  const loadSample = useCallback(async (kind: Sample) => {
     const controller = begin(true)
     try {
       const frame = await getSample(kind, controller.signal)
-      if (!controller.signal.aborted) acceptSource(frame, sampleFile(frame), `${kind === 'color' ? 'Color' : 'Grayscale'} study · sample`)
+      if (!controller.signal.aborted) acceptSource(frame, sampleFile(frame), kind === 'mascot' ? 'Optiq mascot · sample' : `${kind === 'color' ? 'Color' : 'Grayscale'} study · sample`)
     } catch (error) {
       if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'The sample could not load.')
     } finally {
@@ -62,8 +62,8 @@ export default function useLab1() {
   useEffect(() => {
     const controller = new AbortController()
     active.current = controller
-    getSample('color', controller.signal).then(frame => {
-      if (!controller.signal.aborted) acceptSource(frame, sampleFile(frame), 'Color study · sample')
+    getSample('mascot', controller.signal).then(frame => {
+      if (!controller.signal.aborted) acceptSource(frame, sampleFile(frame), 'Optiq mascot · sample')
     }).catch(error => {
       if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'The sample could not load.')
     }).finally(() => {

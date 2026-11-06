@@ -29,7 +29,7 @@ export interface EdgeResult {
   }
 }
 
-export type Sample = 'shapes' | 'noisy'
+export type Sample = 'mascot' | 'shapes' | 'noisy'
 
 export function getSample(kind: Sample, signal: AbortSignal) {
   return imageRequest<ImageFrame>(2, `sample?kind=${kind}`, signal)

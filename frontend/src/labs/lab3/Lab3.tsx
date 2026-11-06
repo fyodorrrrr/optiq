@@ -41,6 +41,7 @@ export default function Lab3() {
     description="Lab 3 — Histograms & contrast. Compare global equalization, CLAHE, and linear adjustment."
     guideId="contrast-guide" onOpenGuide={() => guide.current?.focus({ preventScroll: true })} wide
     actions={<SourceActions busy={lab.busy} onSample={lab.sample} onUpload={lab.upload} samples={[
+      { value: 'mascot', label: 'Optiq mascot · low contrast', description: 'Restore contrast in a softened mascot image.' },
       { value: 'low-contrast', label: 'Low contrast', description: 'Expand a narrow range of brightness values.' },
       { value: 'uneven', label: 'Uneven lighting', description: 'Compare local enhancement and noise; seed 42.' },
       { value: 'color', label: 'Color study', description: 'Adjust brightness while retaining color information.' },

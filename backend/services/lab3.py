@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 from schemas.lab3 import ContrastResult, ContrastView, IntensityStatistics, LinearTransform
-from services.images import ImageError, decode_image, frame
+from services.images import ImageError, decode_image, frame, mascot_image
 
 
 def channel_of(image):
@@ -72,6 +72,10 @@ def execute(content, settings):
 
 
 def sample_image(kind):
+    if kind == 'mascot':
+        image, notes = mascot_image('understand')
+        image = np.rint(image.astype(np.float64) * .35 + 90).astype(np.uint8)
+        return frame(image, [*notes, 'Low-contrast mascot adaptation: round(0.35 × channel + 90), applied to each BGR channel.'])
     x = np.linspace(0, 1, 640)
     base = np.tile(85 + 25 * x, (480, 1)).astype(np.uint8)
     cv2.rectangle(base, (65, 70), (300, 240), 115, -1)
