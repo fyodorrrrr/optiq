@@ -2,9 +2,12 @@
   padding: 64px 0 96px;
 }
 
-.learning-cards-section > h2 {
-  margin-bottom: 24px;
-}
+.learning-cards-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+.learning-cards-heading h2 { margin: 0; }
+.learning-motion-control { display: inline-flex; align-items: center; gap: 6px; padding: 8px 0; min-height: 44px; border: 0; background: transparent; color: var(--ink-soft); font-size: 12px; }
+.learning-motion-control svg { width: 12px; height: 12px; fill: currentColor; }
+.learning-motion-control:hover { color: var(--accent-deep); }
+@media (prefers-reduced-motion: reduce) { .learning-motion-control { display: none; } }
 
 .learning-cards {
   display: grid;
@@ -91,4 +94,42 @@
   .learning-card h3 { font-size: 23px; }
   .learning-card p { margin-top: 16px; }
   .learning-card-visual { height: 230px; margin-top: 8px; padding: 28px 0 24px; width: 100%; }
+}
+
+/* Static final diagrams are the baseline. Loops run only while visible. */
+.learning-pick-cursor { fill: var(--paper-deep); stroke: var(--ink); stroke-width: 1.75; stroke-linejoin: round; }
+.learning-pick-strokes { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+.learning-zoom-detail { transform-origin: 62px 95px; transform-box: view-box; }
+.learning-reveal-line, .learning-reveal-arrow { fill: none; stroke: var(--accent); stroke-width: 1.5; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-print-lift { animation: learning-print-lift 8s cubic-bezier(.16, 1, .3, 1) infinite backwards; }
+  .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-cursor-motion { animation: learning-cursor-pick 8s cubic-bezier(.16, 1, .3, 1) infinite backwards; }
+  .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-pick-strokes { stroke-dasharray: 1; animation: learning-pick-strokes 8s ease-out infinite backwards; }
+  .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-edge-clip,
+  .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-reveal-line { animation: learning-edge-reveal 8s 400ms cubic-bezier(.16, 1, .3, 1) infinite backwards; }
+  .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-zoom-detail { animation: learning-pixel-reveal 8s 800ms cubic-bezier(.16, 1, .3, 1) infinite backwards; }
+  .learning-card[data-motion='paused'] .learning-card-diagram *,
+  .learning-cards-section[data-paused='true'] .learning-card-diagram * { animation-play-state: paused; }
+}
+
+@keyframes learning-print-lift {
+  0%, 10%, 30%, 100% { transform: translateY(0); }
+  18% { transform: translateY(-4px); }
+}
+@keyframes learning-cursor-pick {
+  0%, 4%, 94%, 100% { transform: translate(14px, 12px); }
+  12%, 75% { transform: translate(0, 0); }
+}
+@keyframes learning-pick-strokes {
+  0%, 12%, 94%, 100% { stroke-dashoffset: 1; }
+  18%, 75% { stroke-dashoffset: 0; }
+}
+@keyframes learning-edge-reveal {
+  0%, 5%, 100% { transform: translateX(138px); }
+  24%, 82% { transform: translateX(0); }
+}
+@keyframes learning-pixel-reveal {
+  0%, 15%, 100% { transform: scale(.04); }
+  30%, 82% { transform: scale(1); }
 }

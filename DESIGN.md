@@ -171,7 +171,7 @@ Spacing values are observed component values, not a strict universal grid. Exist
 
 The interface is flat by default. Paper/white tonal separation, whitespace and fine borders establish hierarchy; cards and lab panels do not use decorative shadows. Map nodes are the intentional exception: clipped top faces sit over a shallow solid base, with small hover/focus movement. Pixel/crop selection markers use a tiny contrast halo so the outline remains visible over real images; this is functional, not ambient elevation. Drawers use a fine edge and a translucent backdrop.
 
-Motion stays purposeful: the hero animation is explicitly activated, selected map paths use short opacity transitions, and detail content fades briefly. Lenis smooths homepage wheel scrolling only; touch and keyboard behavior stay native. Reduced motion disables the appropriate movement/fades and smooth scrolling. The notebook cards are currently static; animation is still a separate to-do.
+Motion stays purposeful: the hero animation is explicitly activated, selected map paths use short opacity transitions, and detail content fades briefly. Lenis smooths homepage wheel scrolling only; touch and keyboard behavior stay native. Reduced motion disables the appropriate movement/fades and smooth scrolling. The notebook cards use gentle eight-second loops with a resting interval and a slight stagger: a continuously visible cursor that returns to its starting position, print lift, edge reveal and a magnifier that expands from and contracts toward the selected pixel. The card loops do not animate opacity. Each card starts when visible and pauses off-screen; a quiet pause/resume control is provided. Reduced motion shows static final diagrams.
 
 ## Shapes
 
@@ -185,7 +185,7 @@ Primary buttons are emerald with white text and deepen on hover. Secondary lab b
 
 ### How Optiq works cards
 
-Use three white notebook-style cards: image input, original/edge comparison and pixel inspection. All reuse the same emerald geometric scene. The third selects a point within the solid emerald square, connects it to a uniform magnified pixel grid and labels the green channel G: 127, consistent with the accent color. Diagrams are illustrative, not live processing. No repeated mascots, handwritten annotations or code visual belong here.
+Use three white notebook-style cards titled Pick an image, See what changes and Look a little closer: image input, original/edge comparison and pixel inspection. All reuse the same emerald geometric scene. The third selects a point within the solid emerald square, connects it to a uniform magnified pixel grid and labels the green channel G: 127, consistent with the accent color. Diagrams are illustrative, not live processing. No repeated mascots, handwritten annotations or code visual belong here.
 
 ### Lab map and detail panel
 
