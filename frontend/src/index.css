@@ -47,7 +47,7 @@ button:focus-visible, a:focus-visible, summary:focus-visible {
 ::selection { background: var(--selection); }
 
 /* Match the emerald brand treatment without altering editable pixel-art sources. */
-.hero-pixel-art, .brand-mark {
+.hero-pixel-art {
   filter: var(--mascot-filter);
 }
 @media (prefers-reduced-motion: reduce) {

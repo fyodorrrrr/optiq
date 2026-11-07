@@ -3,28 +3,30 @@
 .brand {
   text-decoration:none;
   font-size:28px;
-  font-weight:750;
+  font-weight:700;
   letter-spacing:-1px;
 }
 
 .brand-wordmark {
   display: inline-flex;
   align-items: baseline;
-  gap: 1px;
+  gap: 3px;
 }
 
 .brand-mark {
   position: relative;
-  top: .04em;
+  top: .03em;
   display: block;
   flex: none;
-  width: 22px;
-  height: 26px;
+  width: 20px;
+  height: 24px;
   image-rendering: pixelated;
 }
 
 .brand .brand-dot {
   color:var(--accent);
+  font-size: .8em;
+  margin-left: 1px;
 }
 
 nav {

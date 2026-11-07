@@ -5,7 +5,7 @@ export const experiments: Record<Operation, {
   heading: string; explanation: string; reflection: string; code: string
 }> = {
   inspect: {
-    title: 'Inspect pixels', action: 'Inspect pixel', description: 'Choose a pixel to inspect its values.',
+    title: 'Inspect pixels', action: 'Inspect pixel', description: 'Click the image or enter coordinates, then inspect the pixel.',
     prediction: 'What values would you expect inside a bright red area?', heading: 'An image is an array of measurements.',
     explanation: 'A color image has shape (height, width, 3). OpenCV stores each pixel as blue, green, red; your browser displays red, green, blue. Coordinates start at the top-left: x moves right, y moves down. NumPy indexes the same location as image[y, x].',
     reflection: 'Inspect the red and blue areas. Which channel changes most? How could these values help a program identify a colored region?',

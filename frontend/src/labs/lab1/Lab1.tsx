@@ -81,13 +81,13 @@ export default function Lab1() {
             </form>
         </>}>
             <div className={`lab-image-grid${lab.operation === 'inspect' ? ' lab1-inspection-grid' : ''}`}>
-              <ImagePanel showMetadata={false} title="Original" pixelOverlay={pixelMode ? lab.pixelSelected ? 'selected' : 'prompt' : undefined} frame={lab.source?.frame ?? null} onPick={pixelMode && !lab.busy ? lab.pick : undefined} onMoveSelection={lab.operation === 'crop' && !lab.busy ? lab.pick : undefined} selection={selection} empty={lab.busy ? 'Loading image…' : 'Choose a sample or upload an image.'} />
+              <ImagePanel showMetadata={false} showSelectedPixelLabel={lab.operation !== 'inspect'} title="Original" pixelOverlay={pixelMode ? lab.pixelSelected ? 'selected' : 'prompt' : undefined} frame={lab.source?.frame ?? null} onPick={pixelMode && !lab.busy ? lab.pick : undefined} onMoveSelection={lab.operation === 'crop' && !lab.busy ? lab.pick : undefined} selection={selection} empty={lab.busy ? 'Loading image…' : 'Choose a sample or upload an image.'} />
               {lab.operation === 'inspect'
-                ? <PixelInspection pixel={lab.output?.pixel ?? null} busy={lab.busy} />
+                ? <PixelInspection pixel={lab.output?.pixel ?? null} busy={lab.busy} imageSize={lab.output?.result} />
                 : <ImagePanel showMetadata={false} title="Result" frame={lab.output?.result ?? null} empty={lab.busy ? 'Processing the image…' : 'Run an experiment to see its result.'} />}
             </div>
             {lab.operation === 'edit' && lab.output?.pixel && <PixelComparison pixel={lab.output.pixel} />}
-            {lab.output && <div className="lab1-result-details">
+            {lab.output && lab.operation !== 'inspect' && <div className="lab1-result-details">
               <p className="lab-result-notice">{lab.resultIsPrevious || lab.busy ? `Previous result · ${experiments[lab.output.operation].title}. Run to apply the current settings.` : `${experiments[lab.output.operation].title} result`}</p>
               <p className="lab-result-summary">{summary}</p>
             </div>}
@@ -97,7 +97,7 @@ export default function Lab1() {
                 : lab.notice ? lab.notice
                   : lab.resultIsPrevious ? 'Settings changed. The previous result is still shown; run the experiment to update it.'
                     : lab.output ? `${experiments[lab.output.operation].title} complete. The original is unchanged.` : null}</LabStatus>}
-            {lab.output && <div className="lab-result-actions"><DownloadLink href={lab.output.result.image} download={`optiq-lab1-${lab.output.operation}.png`}>Result PNG</DownloadLink>
+            {lab.output && lab.operation !== 'inspect' && <div className="lab-result-actions"><DownloadLink href={lab.output.result.image} download={`optiq-lab1-${lab.output.operation}.png`}>Result PNG</DownloadLink>
 
             </div>}
       </LabWorkspace>

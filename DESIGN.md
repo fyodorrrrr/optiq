@@ -147,7 +147,7 @@ Focus uses the dedicated warm-brown `focus` role. Error border, surface and text
 
 **The Scientific Color Rule.** Emerald identifies Optiq controls and illustrative artwork. Real image colors, edge maps, labels and scientific overlays retain their algorithm-specific meaning.
 
-The hero mascot and wordmark receive the shared saturation/brightness filter; generated lab illustrations already contain their intended emerald treatment and must not receive it again. There is no implemented dark theme.
+The hero mascot receives the shared saturation/brightness filter; the wordmark uses a simplified 20×24 pixel SVG with its final colors baked in; generated lab illustrations already contain their intended emerald treatment and must not receive it again. There is no implemented dark theme.
 
 ## Typography
 
