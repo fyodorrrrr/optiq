@@ -32,8 +32,7 @@ function Home() {
         <HeroShapes />
         <div className="intro-content">
           <HeroPixel />
-          <p className="intro-category">Interactive computer vision labs</p>
-          <h1 id="intro-title">A different way<br />to see.</h1>
+          <h1 id="intro-title">Computer vision,<br />explored.</h1>
           <div className="intro-copy">
             <p>Explore images, adjust parameters, and understand what changes—and why.</p>
             <div className="intro-links">
