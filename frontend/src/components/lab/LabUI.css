@@ -23,6 +23,8 @@
 .lab-workspace { background: var(--paper-deep); border: 1px solid var(--line); border-radius: var(--radius-panel); padding: 12px; }
 .lab-workspace-grid { display: grid; grid-template-columns: 180px minmax(0, 1fr); }
 .lab-tool-sidebar { min-width: 0; padding: 12px; border-right: 1px solid var(--line); }
+.lab-page[data-connecting='true'] { cursor: wait; }
+.lab-page[data-connecting='true'] :is(button, input, select, .brand, nav a, .lab-source-actions a, .lab-download-link, summary) { opacity: .5; }
 .lab-tool-sidebar h2 { font-size: 14px; font-weight: 600; letter-spacing: normal; padding: 0 10px; margin: 4px 0 18px; }
 .lab-tools { display: flex; flex-direction: column; gap: 4px; }
 .lab-tools button { display: flex; align-items: center; gap: 10px; padding: 10px; min-height: 44px; border: 0; border-radius: var(--radius-control); background: transparent; color: var(--ink-soft); white-space: normal; overflow-wrap: anywhere; min-width: 0; font-size: 14px; text-align: left; }
