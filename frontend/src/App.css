@@ -485,14 +485,6 @@ h2 {
   line-height: 1.04;
 }
 
-.intro-category {
-  margin: 0 0 -10px;
-  color: var(--accent-deep);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.5;
-}
-
 .labs {
   scroll-margin-top: 32px;
   padding-top: 40px;
