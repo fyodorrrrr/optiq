@@ -7,22 +7,22 @@ export default function PixelInspection({ pixel, busy }: { pixel: ExperimentResu
 
   return <section className="pixel-inspection" aria-labelledby="pixel-inspection-title">
     <h3 id="pixel-inspection-title">Pixel values</h3>
-    {pixel && value ? <>
+    {pixel && value ? <div className="pixel-inspection-content">
       <div className="pixel-inspection-color">
         {rgb && <span className="pixel-inspection-swatch" style={{ backgroundColor: `rgb(${rgb.join(', ')})` }} aria-hidden="true" />}
         <strong>Pixel ({pixel.x}, {pixel.y})</strong>
       </div>
+      <figure className="pixel-inspection-neighborhood">
+        <div className="lab-zoom"><img src={pixel.before_zoom} alt={`Magnified neighborhood around pixel (${pixel.x}, ${pixel.y})`} /><span aria-hidden="true" /></div>
+        <figcaption>9 × 9 neighborhood</figcaption>
+      </figure>
       <dl className="pixel-inspection-values">
         {value.intensity !== null ? <div><dt>Intensity</dt><dd>{value.intensity}</dd></div> : <>
           <div><dt>RGB</dt><dd>[{value.rgb?.join(', ')}]</dd></div>
           <div><dt>BGR · OpenCV</dt><dd>[{value.bgr?.join(', ')}]</dd></div>
         </>}
       </dl>
-      <figure className="pixel-inspection-neighborhood">
-        <div className="lab-zoom"><img src={pixel.before_zoom} alt={`Magnified neighborhood around pixel (${pixel.x}, ${pixel.y})`} /><span aria-hidden="true" /></div>
-        <figcaption>9 × 9 neighborhood · selected pixel outlined</figcaption>
-      </figure>
-      <p>Edge pixels are replicated to fill the zoom view.</p>
-    </> : <p className="pixel-inspection-empty">{busy ? 'Reading pixel values…' : 'Choose a pixel, then select Inspect pixel to see its color and channel values.'}</p>}
+    </div> : <p className="pixel-inspection-empty">{busy ? 'Reading pixel values…' : 'Choose a pixel, then select Inspect pixel to see its color and channel values.'}</p>}
+    {pixel && value && <p className="pixel-inspection-note">Edge pixels are replicated to fill the zoom view.</p>}
   </section>
 }
