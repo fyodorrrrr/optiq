@@ -1,9 +1,11 @@
 import type { ExperimentResult } from './api'
 
-export default function PixelInspection({ pixel, busy }: { pixel: ExperimentResult['pixel']; busy: boolean }) {
+export default function PixelInspection({ pixel, busy, imageSize }: { pixel: ExperimentResult['pixel']; busy: boolean; imageSize?: { width: number; height: number } }) {
   const value = pixel?.before
   const rgb = value?.rgb ?? (value?.intensity !== null && value?.intensity !== undefined
     ? [value.intensity, value.intensity, value.intensity] : null)
+  const replicatedEdges = pixel && imageSize && (pixel.x < 4 || pixel.y < 4
+    || pixel.x + 4 >= imageSize.width || pixel.y + 4 >= imageSize.height)
 
   return <section className="pixel-inspection" aria-labelledby="pixel-inspection-title">
     <h3 id="pixel-inspection-title">Pixel values</h3>
@@ -23,6 +25,6 @@ export default function PixelInspection({ pixel, busy }: { pixel: ExperimentResu
         </>}
       </dl>
     </div> : <p className="pixel-inspection-empty">{busy ? 'Reading pixel values…' : 'Choose a pixel, then select Inspect pixel to see its color and channel values.'}</p>}
-    {pixel && value && <p className="pixel-inspection-note">Edge pixels are replicated to fill the zoom view.</p>}
+    {value && replicatedEdges && <p className="pixel-inspection-note">Edge pixels are replicated to fill the zoom view.</p>}
   </section>
 }

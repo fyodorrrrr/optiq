@@ -5,7 +5,8 @@ import ImageMetadata from './ImageMetadata'
 import InfoDetails from './InfoDetails'
 import LabEmptyState from './LabEmptyState'
 
-export default function ImagePanel({ title, frame, onPick, empty, selection, description, showMetadata = true, metadataEssential = false, compact = false, imageAlt, pixelOverlay, onMoveSelection }: {
+export default function ImagePanel({ title, frame, onPick, empty, selection, description, showMetadata = true, metadataEssential = false, compact = false, imageAlt, pixelOverlay, showSelectedPixelLabel = true, onMoveSelection }: {
+  showSelectedPixelLabel?: boolean
   onMoveSelection?: (x: number, y: number) => void
   pixelOverlay?: 'prompt' | 'selected'
   compact?: boolean; imageAlt?: string; title: string; frame: Frame | null; showMetadata?: boolean; metadataEssential?: boolean; description?: string; onPick?: (x: number, y: number) => void; empty?: string
@@ -93,7 +94,7 @@ export default function ImagePanel({ title, frame, onPick, empty, selection, des
       </>
         : <LabEmptyState><p>{empty ?? 'Choose an image to begin.'}</p></LabEmptyState>}
     </div>
-    {frame && pixelOverlay && <span className="lab-pixel-hint" role="status">{!validSelection
+    {frame && pixelOverlay && (showSelectedPixelLabel || !validSelection || pixelOverlay === 'prompt') && <span className="lab-pixel-hint" role="status">{!validSelection
       ? 'Check pixel coordinates'
       : pixelOverlay === 'selected' ? `Selected pixel: (${selection!.x}, ${selection!.y})` : 'Click to select a pixel'}</span>}
     {description && <p className="lab-image-description">{description}</p>}
