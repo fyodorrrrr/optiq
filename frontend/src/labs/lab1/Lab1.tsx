@@ -97,7 +97,7 @@ export default function Lab1() {
                 : lab.notice ? lab.notice
                   : lab.resultIsPrevious ? 'Settings changed. The previous result is still shown; run the experiment to update it.'
                     : lab.output ? `${experiments[lab.output.operation].title} complete. The original is unchanged.` : null}</LabStatus>}
-            {lab.output && lab.operation !== 'inspect' && <div className="lab-result-actions"><DownloadLink href={lab.output.result.image} download={`optiq-lab1-${lab.output.operation}.png`}>Result PNG</DownloadLink>
+            {lab.output && lab.operation !== 'inspect' && <div className="lab-result-actions lab-downloads"><DownloadLink href={lab.output.result.image} download={`optiq-lab1-${lab.output.operation}.png`}>Result PNG</DownloadLink>
 
             </div>}
       </LabWorkspace>

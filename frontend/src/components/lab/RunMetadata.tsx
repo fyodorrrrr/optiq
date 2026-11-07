@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 const names: Record<string, string> = {
   pca: 'PCA', svm: 'SVM', iou: 'IoU', opencv: 'OpenCV', numpy: 'NumPy', sklearn: 'scikit-learn',
   imgsz: 'Image size', stages_ms: 'Timings', adaptive_c: 'Adaptive constant C', adaptive_block: 'Adaptive block size',
@@ -31,13 +33,12 @@ function Fields({ value, group }: { value: Record<string, unknown>; group: strin
   )}</tbody></table>
 }
 
-export default function RunMetadata({ value, previous = false, parameterKeys }: {
-  value: Record<string, unknown>; previous?: boolean; parameterKeys?: readonly string[]
+export default function RunMetadata({ value, previous = false, parameterKeys, summary }: {
+  value: Record<string, unknown>; previous?: boolean; parameterKeys?: readonly string[]; summary?: ReactNode
 }) {
   // The compact view can filter irrelevant settings; raw JSON always preserves the complete response.
   const sections = Object.entries(value).filter(([key]) => key !== 'provenance' && key !== 'notes')
-  return <div className="run-metadata">
-    {previous && <p className="run-metadata-previous">Previous result</p>}
+  const metadata = <>
     {sections.map(([key, item]) => {
       const fields = item && typeof item === 'object' && !Array.isArray(item) ? item as Record<string, unknown> : null
       const relevant = fields && key === 'parameters' && parameterKeys
@@ -45,13 +46,20 @@ export default function RunMetadata({ value, previous = false, parameterKeys }: 
       return relevant ? <section key={key}><h3>{label(key)}</h3><Fields value={relevant} group={key} /></section>
         : <Fields key={key} value={{ [key]: item }} group={key} />
     })}
-    {value.provenance && typeof value.provenance === 'object' ? <details className="lab-drawer-raw run-metadata-provenance">
-      <summary>Provenance</summary><Fields value={value.provenance as Record<string, unknown>} group="provenance" />
-    </details> : null}
+    {value.provenance && typeof value.provenance === 'object' ? summary
+      ? <section><h3>Provenance</h3><Fields value={value.provenance as Record<string, unknown>} group="provenance" /></section>
+      : <details className="lab-drawer-raw run-metadata-provenance">
+        <summary>Provenance</summary><Fields value={value.provenance as Record<string, unknown>} group="provenance" />
+      </details> : null}
     {value.notes ? <details className="lab-drawer-raw"><summary>Notes</summary>
       {Array.isArray(value.notes) ? <ul>{value.notes.map((note, index) => <li key={index}>{String(note)}</li>)}</ul> : <p>{String(value.notes)}</p>}
     </details> : null}
-    <details className="lab-drawer-raw"><summary>View raw JSON</summary>
+  </>
+  return <div className="run-metadata">
+    {previous && <p className="run-metadata-previous">Previous result</p>}
+    {summary}
+    {summary ? <details className="lab-drawer-raw"><summary>Reproducibility details</summary>{metadata}</details> : metadata}
+    <details className="lab-drawer-raw"><summary>{summary ? 'Raw JSON' : 'View raw JSON'}</summary>
       <pre tabIndex={0} aria-label="Raw run details"><code>{JSON.stringify(value, null, 2)}</code></pre>
     </details>
   </div>
