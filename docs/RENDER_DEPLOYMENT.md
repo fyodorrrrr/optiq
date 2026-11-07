@@ -217,3 +217,13 @@ change its dashboard configuration. After merging:
 Vercel's native Git deployment does not automatically wait for unrelated GitHub
 Actions. Requiring passing PR checks on main is the frontend release gate.
 Render directly supports waiting for CI; do not switch it to On Commit.
+
+## Frontend page analytics
+
+Enable Web Analytics in the Vercel project dashboard, then deploy the updated
+frontend. Production builds mount `SiteAnalytics` once inside React Router and
+report the current pathname on navigation. Query strings, fragments and lab
+experiment values are not passed to the analytics component. Vite development
+does not mount analytics. Confirm collection in the Vercel Analytics dashboard
+after visiting the deployed homepage and navigating to a lab; local checks do
+not verify ingestion by Vercel.
