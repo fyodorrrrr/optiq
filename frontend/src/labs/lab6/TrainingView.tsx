@@ -47,7 +47,8 @@ export default function TrainingView({ status, loading, unavailable, actions, re
         </table></div>}
         {history.length > 0 && <TrainingLoss history={history} />}
       </>}
-      <div className="detection-reference-actions">
+      <div className="detection-reference-actions lab-resource-actions">
+        <div className="lab-resource-links" role="group" aria-label="Training details and workflow">
         {completed && <InfoDetails title="Training details"><RunMetadata value={{ parameters: training.parameters, provenance: {
           evaluation_split: training.evaluation_split, dataset_sha256: training.dataset_sha256, weight_sha256: training.weight_sha256,
           started_utc: training.started_utc, completed_utc: training.completed_utc, ultralytics: training.ultralytics, torch: training.torch,
@@ -60,9 +61,12 @@ export default function TrainingView({ status, loading, unavailable, actions, re
         {training.status !== 'running' && <InfoDetails title={recorded ? 'Full local workflow' : 'Local commands'}>{recorded
           ? <p>These commands run in the full-local version, not this demonstration.</p>
           : <ol><li>Collect and annotate objects in YOLO format.</li><li>Validate the dataset.</li><li>Train locally, then refresh status.</li></ol>}<pre tabIndex={0} aria-label="Local training commands"><code>{`# Replace the dataset path. Run from the repository root.\nbackend/.venv/bin/python backend/scripts/train_yolo.py \\\n  --data /path/to/dataset/data.yaml --validate-only\n\n# Source baseline: 100 epochs at 640px\nbackend/.venv/bin/python backend/scripts/train_yolo.py \\\n  --data /path/to/dataset/data.yaml --epochs 100 --batch 4 --name baseline`}</code></pre><p>CPU is the default. Use --split test only with a separate test split.</p></InfoDetails>}
+        </div>
+        {(completed || evaluation || (status?.training_log_available && (!recorded || trainingLogUrl))) && <div className="lab-downloads lab-resource-downloads" role="group" aria-label="Training and test downloads">
         {status?.training_log_available && (!recorded || trainingLogUrl) && <DownloadLink href={trainingLogUrl ?? apiUrl('/api/labs/6/artifacts/log')} download>Training log</DownloadLink>}
         {evaluation && <DownloadLink href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(evaluation, null, 2))}`} download="optiq-lab6-test.json">Test JSON</DownloadLink>}
         {completed && <DownloadLink href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(training, null, 2))}`} download="optiq-lab6-training.json">Training JSON</DownloadLink>}
+        </div>}
       </div>
     </>}
   </section>
