@@ -70,10 +70,6 @@
 .learning-image-study.is-edges .study-background { fill: var(--ink); }
 .learning-image-study.is-edges :not(.study-background) { fill: none; stroke: var(--paper-deep); stroke-width: 1; }
 .learning-diagram-label { fill: var(--ink-soft); font-size: 14px; font-variant-numeric: tabular-nums; }
-.learning-magnifier { fill: var(--paper-deep); stroke: var(--ink); stroke-width: 1.5; }
-.learning-inspection-lines { fill: none; stroke: var(--ink); stroke-width: 1.25; }
-.learning-image-selection { fill: none; stroke: var(--paper-deep); stroke-width: 1.5; }
-.learning-magnified-pixel { fill: var(--accent); }
 .learning-selected-pixel { fill: none; stroke: var(--ink); stroke-width: 1.5; }
 
 @media (max-width: 1050px) {
@@ -101,17 +97,27 @@
 .learning-cursor-press { transform-origin: 2px 2px; transform-box: view-box; }
 .learning-pick-cursor { fill: var(--paper-deep); stroke: var(--ink); stroke-width: 1.75; stroke-linejoin: round; }
 .learning-pick-strokes { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
-.learning-zoom-detail { transform-origin: 62px 95px; transform-box: view-box; }
+.learning-glass-motion { transform: translate(85.45px, 88px); transform-origin: 0 0; transform-box: view-box; }
+.learning-glass-handle-outline { fill: none; stroke: var(--ink); stroke-width: 14; stroke-linecap: round; }
+.learning-glass-handle { fill: none; stroke: var(--accent-deep); stroke-width: 9; stroke-linecap: round; }
+.learning-glass-rim { fill: var(--accent); stroke: var(--ink); stroke-width: 2; }
+.learning-glass-window, .learning-lens-label-paper { fill: var(--paper-deep); }
+.learning-glass-window { stroke: var(--accent-deep); stroke-width: 1; }
+.learning-lens-pixel { fill: var(--accent); }
+.learning-lens-value-right { visibility: hidden; }
 .learning-reveal-line, .learning-reveal-arrow { fill: none; stroke: var(--accent); stroke-width: 1.5; }
 
 @media (prefers-reduced-motion: no-preference) {
   .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-print-lift { animation: learning-print-lift 4s cubic-bezier(.2, .8, .2, 1) infinite backwards; }
-  .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-cursor-motion { animation: learning-cursor-pick 4s ease-in-out infinite backwards; }
+  .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-cursor-motion { animation: learning-cursor-pick 4s cubic-bezier(.2, .8, .2, 1) infinite backwards; }
   .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-cursor-press { animation: learning-cursor-press 4s cubic-bezier(.2, .8, .2, 1) infinite backwards; }
   .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-pick-strokes { stroke-dasharray: 1; animation: learning-pick-strokes 4s ease-in-out infinite backwards; }
   .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-edge-clip,
-  .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-reveal-line { animation: learning-edge-reveal 8s 400ms cubic-bezier(.16, 1, .3, 1) infinite backwards; }
-  .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-zoom-detail { animation: learning-pixel-reveal 8s 800ms cubic-bezier(.16, 1, .3, 1) infinite backwards; }
+  .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-reveal-line { animation: learning-edge-reveal 8s 400ms cubic-bezier(.2, .8, .2, 1) infinite backwards; }
+  .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-glass-motion { animation: learning-glass-scan 4.8s cubic-bezier(.2, .8, .2, 1) infinite backwards; }
+  .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-lens-pixel { animation: learning-lens-color 4.8s step-end infinite backwards; }
+  .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-lens-value-left { animation: learning-lens-value-left 4.8s step-end infinite backwards; }
+  .learning-card:is([data-motion='playing'], [data-motion='paused']) .learning-lens-value-right { animation: learning-lens-value-right 4.8s step-end infinite backwards; }
   .learning-card[data-motion='paused'] .learning-card-diagram *,
   .learning-cards-section[data-paused='true'] .learning-card-diagram * { animation-play-state: paused; }
 }
@@ -136,9 +142,31 @@
 }
 @keyframes learning-edge-reveal {
   0%, 5%, 100% { transform: translateX(138px); }
-  24%, 82% { transform: translateX(0); }
+  12% { transform: translateX(-4px); }
+  15% { transform: translateX(2px); }
+  18%, 82% { transform: translateX(0); }
+  89% { transform: translateX(142px); }
+  92% { transform: translateX(136px); }
+  95% { transform: translateX(138px); }
 }
-@keyframes learning-pixel-reveal {
-  0%, 15%, 100% { transform: scale(.04); }
-  30%, 82% { transform: scale(1); }
+@keyframes learning-glass-scan {
+  0%, 66%, 100% { transform: translate(85.45px, 88px) rotate(0deg); }
+  8% { transform: translate(174px, 85px) rotate(-6deg); }
+  12% { transform: translate(195px, 86.55px) rotate(1.5deg); }
+  16%, 50% { transform: translate(192.75px, 86.55px) rotate(0deg); }
+  58% { transform: translate(104px, 86px) rotate(6deg); }
+  62% { transform: translate(83px, 88px) rotate(-1.5deg); }
+}
+@keyframes learning-lens-color {
+  0%, 62%, 100% { fill: var(--accent); }
+  12% { fill: #a8ddbb; }
+}
+/* Readouts appear only during inspection holds, never as stale values in transit. */
+@keyframes learning-lens-value-left {
+  0%, 66%, 100% { visibility: visible; }
+  .1% { visibility: hidden; }
+}
+@keyframes learning-lens-value-right {
+  0%, 50%, 100% { visibility: hidden; }
+  16% { visibility: visible; }
 }

@@ -34,7 +34,7 @@ function LearningVisual({ kind }: { kind: (typeof cards)[number]['id'] }) {
   const descriptions = {
     start: 'Illustrative emerald image print containing a square, circle, triangle and rectangle.',
     compare: 'Illustrative comparison of the same geometric scene in emerald colors and white edge outlines. This is a diagram, not a live computation.',
-    understand: 'Illustrative inspection of the same geometric scene. A selection inside the emerald square connects to a magnified 3 by 3 grid. The outlined center pixel has a green-channel value of 127.',
+    understand: 'Illustrative magnifying glass inspecting the emerald square and mint circle in the same geometric scene. Their green-channel values are 127 and 221. The magnified grid highlights its center pixel.',
   }
 
   return <div className="learning-card-visual">
@@ -59,16 +59,29 @@ function LearningVisual({ kind }: { kind: (typeof cards)[number]['id'] }) {
         <path className="learning-reveal-arrow" d="M181 16h-42m6-5-6 5 6 5" />
       </>}
       {kind === 'understand' && <>
-        <rect className="learning-diagram-paper" x="6" y="40" width="188" height="148" />
-        <ImageStudy x={12} y={46} width={176} height={136} />
-        <rect className="learning-image-selection" x="54" y="91" width="8" height="8" />
-        <g className="learning-zoom-detail">
-        <circle className="learning-magnifier" cx="246" cy="116" r="64" />
-        <path className="learning-inspection-lines" d="M62 91 225 55M62 99 225 177" />
-        {Array.from({ length: 9 }, (_, index) => <rect className="learning-magnified-pixel" key={index}
-          x={209 + index % 3 * 25} y={79 + Math.floor(index / 3) * 25} width="23" height="23" />)}
-        <rect className="learning-selected-pixel" x="233" y="103" width="25" height="25" />
-        <text className="learning-diagram-label" x="246" y="207" textAnchor="middle">G: 127</text>
+        <rect className="learning-diagram-paper" x="20" y="24" width="244" height="186" />
+        <ImageStudy x={26} y={30} width={232} height={174} />
+        <defs><clipPath id={clipId}><circle r="48" /></clipPath></defs>
+        <g className="learning-glass-motion">
+          <g transform="scale(.82)">
+            <path className="learning-glass-handle-outline" d="M37 37 63 63" />
+            <path className="learning-glass-handle" d="M37 37 63 63" />
+            <circle className="learning-glass-rim" r="54" />
+            <circle className="learning-glass-window" r="48" />
+            <g clipPath={`url(#${clipId})`}>
+              {Array.from({ length: 9 }, (_, index) => <rect className="learning-lens-pixel" key={index}
+                x={-35 + index % 3 * 24} y={-35 + Math.floor(index / 3) * 24} width="22" height="22" />)}
+            </g>
+            <rect className="learning-selected-pixel" x="-12" y="-12" width="24" height="24" />
+          </g>
+          <g className="learning-lens-value-left">
+            <rect className="learning-lens-label-paper" x="-32" y="60" width="64" height="24" rx="4" />
+            <text className="learning-diagram-label" x="0" y="77" textAnchor="middle">G: 127</text>
+          </g>
+          <g className="learning-lens-value-right">
+            <rect className="learning-lens-label-paper" x="-32" y="60" width="64" height="24" rx="4" />
+            <text className="learning-diagram-label" x="0" y="77" textAnchor="middle">G: 221</text>
+          </g>
         </g>
       </>}
     </svg>

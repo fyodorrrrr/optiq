@@ -1,4 +1,5 @@
 import LabMap from './components/LabMap'
+import HeroShapes from './components/HeroShapes'
 import HeroPixel from './components/HeroPixel'
 import LearningCards from './components/LearningCards'
 import Wordmark from './components/Wordmark'
@@ -28,14 +29,16 @@ function Home() {
     </header>
     <main ref={homepage} id="main" className="page-content" tabIndex={-1}>
       <section className="intro" id="home" aria-labelledby="intro-title">
+        <HeroShapes />
         <div className="intro-content">
           <HeroPixel />
+          <p className="intro-category">Interactive computer vision labs</p>
           <h1 id="intro-title">A different way<br />to see.</h1>
           <div className="intro-copy">
-            <p>Get hands-on with computer vision. Explore an image, change the parameters, and discover why the result changes.</p>
+            <p>Explore images, adjust parameters, and understand what changes—and why.</p>
             <div className="intro-links">
               <a className="button" href="#labs">Explore the labs <span aria-hidden="true">→</span></a>
-              <Link className="quiet-link" to="/labs/1">Open Lab 1</Link>
+              <Link className="quiet-link" to="/labs/1">Start with Lab 1</Link>
             </div>
           </div>
         </div>

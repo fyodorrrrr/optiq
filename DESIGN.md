@@ -121,7 +121,7 @@ This guide records the current working tree, including the approved notebook-car
 
 **Key Characteristics:**
 - Emerald-led, light-only interface with neutral paper and white surfaces.
-- Pixel mascot identity in the hero, wordmark and curated lab-map artwork.
+- Pixel mascot identity in the hero, wordmark and curated lab-map artwork, with four chunky filled pixel shapes framing only the hero, in pale gray with two muted mint accents (two shapes on mobile). The colored mascot stays close to the headline.
 - Native notebook diagrams explain experimentation without repeating the mascot.
 - Quiet technical workspaces with optional explanations and truthful result states.
 
@@ -147,7 +147,7 @@ Focus uses the dedicated warm-brown `focus` role. Error border, surface and text
 
 **The Scientific Color Rule.** Emerald identifies Optiq controls and illustrative artwork. Real image colors, edge maps, labels and scientific overlays retain their algorithm-specific meaning.
 
-The hero and wordmark receive the shared saturation/brightness filter; generated lab illustrations already contain their intended emerald treatment and must not receive it again. There is no implemented dark theme.
+The hero mascot and wordmark receive the shared saturation/brightness filter; generated lab illustrations already contain their intended emerald treatment and must not receive it again. There is no implemented dark theme.
 
 ## Typography
 
@@ -171,7 +171,7 @@ Spacing values are observed component values, not a strict universal grid. Exist
 
 The interface is flat by default. Paper/white tonal separation, whitespace and fine borders establish hierarchy; cards and lab panels do not use decorative shadows. Map nodes are the intentional exception: clipped top faces sit over a shallow solid base, with small hover/focus movement. Pixel/crop selection markers use a tiny contrast halo so the outline remains visible over real images; this is functional, not ambient elevation. Drawers use a fine edge and a translucent backdrop.
 
-Motion stays purposeful: the hero animation is explicitly activated, selected map paths use short opacity transitions, and detail content fades briefly. Lenis smooths homepage wheel scrolling only; touch and keyboard behavior stay native. Reduced motion disables the appropriate movement/fades and smooth scrolling. The notebook cards use a four-second first-card loop and the original eight-second second/third-card loops, with a slight stagger: a continuously visible cursor that returns to its starting position, a brief cursor press with synchronized print sway, edge reveal and a magnifier that expands from and contracts toward the selected pixel. The card loops do not animate opacity. Each card starts when visible and pauses off-screen; an icon-only pause/resume control with an accessible name and tooltip is provided. Reduced motion shows static final diagrams.
+Motion stays purposeful: the hero pixel shapes follow desktop pointer movement at two shallow depths (8px and 16px), easing back to rest on pointer leave; updates stop when settled, offscreen or hidden, and touch/reduced-motion settings keep shapes static, selected map paths use short opacity transitions, and detail content fades briefly. Lenis smooths homepage wheel scrolling only; touch and keyboard behavior stay native. Reduced motion disables the appropriate movement/fades and smooth scrolling. The notebook cards use a four-second first-card loop and the original eight-second second/third-card loops, with a slight stagger: a continuously visible cursor that returns to its starting position, a brief cursor press with synchronized print sway, edge reveal and a magnifier that expands from and contracts toward the selected pixel. The card loops do not animate opacity. Each card starts when visible and pauses off-screen; an icon-only pause/resume control with an accessible name and tooltip is provided. Reduced motion shows static final diagrams.
 
 ## Shapes
 

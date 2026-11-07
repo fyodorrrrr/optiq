@@ -1,0 +1,19 @@
+/* Hero-only decoration; content and controls stay above the shapes. */
+.intro:has(.hero-shapes) { isolation: isolate; overflow: clip; }
+.intro:has(.hero-shapes) .intro-content { position: relative; z-index: 1; max-width: 600px; margin-inline: auto; }
+.intro:has(.hero-shapes) .hero-pixel { margin-bottom: -12px; }
+.hero-shapes { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.hero-shapes svg { position: absolute; width: 80px; height: 80px; fill: #dfe1df; }
+.hero-shapes svg:nth-child(1) { left: 5%; top: 14%; fill: #cce3d4; }
+.hero-shapes svg:nth-child(2) { right: 5%; top: 20%; }
+.hero-shapes svg:nth-child(3) { left: 9%; bottom: 15%; }
+.hero-shapes svg:nth-child(4) { right: 8%; bottom: 12%; fill: #cce3d4; }
+@media (max-width: 1000px) {
+  .hero-shapes svg { scale: .75; }
+}
+@media (max-width: 680px) {
+  .hero-shapes svg { scale: .5; }
+  .hero-shapes svg:nth-child(1) { left: -20px; top: 48px; }
+  .hero-shapes svg:nth-child(2) { right: -18px; top: 76px; }
+  .hero-shapes svg:nth-child(n+3) { display: none; }
+}
