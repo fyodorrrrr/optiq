@@ -593,10 +593,18 @@ response confirms connectivity; abort/failure also clears the pending indicator.
 Concurrent requests share that state. The message mentions a possible server
 wake-up after six seconds without claiming to know the provider's actual state.
 `LabWorkspace` confines the loader to the results area, with live announcements;
-settings and navigation remain accessible. Cancel processing is hidden during
-connection waits and before the initial input has loaded; it remains available
-for normal processing with loaded input. `LabButton` preserves its
+the lab page becomes inert as soon as a cold-start request begins, before the
+500 ms loader delay. Controls and navigation remain locked until all requests
+that started during that connection wait finish, including response-body reads.
+A separate live announcement remains accessible outside the inert page. Errors,
+timeouts and cancellations release the lock; normal warm processing does not lock
+the page. Cancel processing is hidden during connection waits and before the
+initial input has loaded; it remains available for normal processing with loaded
+input. `LabButton` preserves its
 original dimensions while displaying Connecting/Processing and a small spinner.
 CSS stops indicator animation for reduced motion. Labs 2–4 expose their existing
 AbortController cancellation handlers alongside the shared button feedback.
 Recorded results do not initiate backend requests or show backend wake-up UI.
+Run `npm run test:connection` from `frontend/` for the connection-state regression
+checks. They use Node's built-in test runner, the existing TypeScript compiler
+and a simulated clock; no browser or backend is required for those checks.

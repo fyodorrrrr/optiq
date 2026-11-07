@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react'
+import { useSyncExternalStore, type ReactNode } from 'react'
+import { connectionPendingSnapshot, subscribeConnection } from '../../api/connection'
 import { Link } from 'react-router'
 import { labs } from '../../data/labs'
 import Wordmark from '../Wordmark'
@@ -9,9 +10,10 @@ export default function LabPage({ labNumber, title, description, actions, inputN
   inputNote?: string; guideId: string; onOpenGuide: () => void; wide?: boolean; children: ReactNode
 }) {
   const mainId = `lab-${labNumber}-main`
+  const connecting = useSyncExternalStore(subscribeConnection, connectionPendingSnapshot, () => false)
   const previousLab = labs.find(lab => lab.id === labNumber - 1)
   const nextLab = labs.find(lab => lab.id === labNumber + 1)
-  return <div className={`lab-page lab-shell${wide ? ' lab-shell-wide' : ''}`}>
+  return <><div className={`lab-page lab-shell${wide ? ' lab-shell-wide' : ''}`} inert={connecting} data-connecting={connecting || undefined}>
     <a className="skip-link" href={`#${mainId}`}>Skip to workspace</a>
     <header className="site-header"><Link className="brand" to="/" aria-label="Optiq home"><Wordmark /></Link>
       <nav aria-label="Lab navigation"><Link to="/#labs">All labs</Link><a href={`#${guideId}`} onClick={onOpenGuide}>How it works</a></nav>
@@ -32,4 +34,6 @@ export default function LabPage({ labNumber, title, description, actions, inputN
       </footer>
     </main>
   </div>
+    {connecting && <p className="sr-only" role="status" aria-live="polite">Connecting to the lab. Controls and navigation will be available when the request finishes.</p>}
+  </>
 }
