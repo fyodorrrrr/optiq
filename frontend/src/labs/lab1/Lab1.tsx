@@ -75,19 +75,22 @@ export default function Lab1() {
                 {lab.source && <Controls operation={lab.operation} fields={lab.fields} frame={lab.source.frame} change={lab.change} />}
                 <LabButton variant="primary" type="submit" aria-busy={lab.busy}>{current.action}</LabButton>
               </fieldset>
-              {(lab.output || lab.busy) && <LabButton onClick={lab.reset}>{lab.busy ? 'Cancel processing' : 'Clear result'}</LabButton>}
+              {lab.busy ? lab.source && <LabButton hideWhileConnecting onClick={lab.reset}>Cancel processing</LabButton>
+                : lab.output && <LabButton onClick={lab.reset}>Clear result</LabButton>}
 
             </form>
         </>}>
-            {lab.output && <><p className="lab-result-notice">{lab.resultIsPrevious || lab.busy ? `Previous result · ${experiments[lab.output.operation].title}. Run to apply the current settings.` : `${experiments[lab.output.operation].title} result`}</p>
-              <p className="lab-result-summary">{summary}</p></>}
-            <div className="lab-image-grid">
+            <div className={`lab-image-grid${lab.operation === 'inspect' ? ' lab1-inspection-grid' : ''}`}>
               <ImagePanel showMetadata={false} title="Original" pixelOverlay={pixelMode ? lab.pixelSelected ? 'selected' : 'prompt' : undefined} frame={lab.source?.frame ?? null} onPick={pixelMode && !lab.busy ? lab.pick : undefined} onMoveSelection={lab.operation === 'crop' && !lab.busy ? lab.pick : undefined} selection={selection} empty={lab.busy ? 'Loading image…' : 'Choose a sample or upload an image.'} />
               {lab.operation === 'inspect'
                 ? <PixelInspection pixel={lab.output?.pixel ?? null} busy={lab.busy} />
                 : <ImagePanel showMetadata={false} title="Result" frame={lab.output?.result ?? null} empty={lab.busy ? 'Processing the image…' : 'Run an experiment to see its result.'} />}
             </div>
             {lab.operation === 'edit' && lab.output?.pixel && <PixelComparison pixel={lab.output.pixel} />}
+            {lab.output && <div className="lab1-result-details">
+              <p className="lab-result-notice">{lab.resultIsPrevious || lab.busy ? `Previous result · ${experiments[lab.output.operation].title}. Run to apply the current settings.` : `${experiments[lab.output.operation].title} result`}</p>
+              <p className="lab-result-summary">{summary}</p>
+            </div>}
             {lab.error && <LabError message={lab.error} />}
             {(lab.busy || lab.error || lab.notice || lab.output) && <LabStatus>{lab.busy ? 'Working with the image service…'
               : lab.error ? 'The request failed. Check the message above and try again.'

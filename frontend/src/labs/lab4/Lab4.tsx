@@ -81,7 +81,7 @@ export default function Lab4() {
           <NumberField required name="max_matches" error={lab.invalidField === 'max_matches' ? lab.error : undefined} label="Maximum displayed matches" value={lab.draft.max_matches} min={1} max={100} step={1} onChange={value => lab.change('max_matches', value)} />
           <div className="feature-actions"><LabButton variant="primary" type="submit" aria-busy={lab.busy} disabled={lab.busy || !lab.sources.first || !lab.sources.second}>Compare features</LabButton>
           </div></fieldset>
-          {lab.busy ? <LabButton onClick={() => lab.clear(false)}>Cancel processing</LabButton> : lab.canReset && <LabButton type="button" onClick={lab.resetBaseline}>Reset baseline</LabButton>}
+          {lab.busy ? lab.sources.first && lab.sources.second && <LabButton hideWhileConnecting onClick={() => lab.clear(false)}>Cancel processing</LabButton> : lab.canReset && <LabButton type="button" onClick={lab.resetBaseline}>Reset baseline</LabButton>}
           <SettingsHelpLink guideId="features-guide" />
         </form></>}>
       {surf && !surf.available && <LabError title="SURF is unavailable on this server." message={surf.reason ?? 'A SURF-enabled OpenCV build is required. This laboratory is partially available.'} />}
